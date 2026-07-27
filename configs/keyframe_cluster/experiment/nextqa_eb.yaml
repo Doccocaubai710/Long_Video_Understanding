@@ -1,9 +1,0 @@
-# @package _global_
-# Cluster DINOv2 frame features and rank NExTQA keyframes with CLIP.
-json_path: playground/gt_qa_files/NExTQA/val_qa.json
-video_path: Datasets/NExTQA/videos
-video_frame_tensor_path: ktv/save_tensor/NExTQA
-save_cluster_path:    outputs/nextqa_eb_keyframes          
-combined_output_path: outputs/nextqa_eb_keyframe_order.json
-dataset: NExTQA
-device: auto
