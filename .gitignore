@@ -1,13 +1,117 @@
+# ============================================================
+# DATA — video, feature tensor, ground-truth nang (KHONG up)
+# ============================================================
+KTV/Datasets/
+KTV/datasets/
+KTV/datasets_raw/
+KTV/data/
+KTV/**/save_tensor/
+
 Datasets/
-liuhaotian/
-outputs/
-.venv/
-
-__pycache__/
-
-demo.ipynb
-
-ktv/save_tensor/
-**.ipynb_checkpoints/
-ktv.egg-info/
+datasets/
 datasets_raw/
+data/
+**/save_tensor/
+ktv/save_tensor/
+*.npz
+*.npy
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# ============================================================
+# MODEL WEIGHTS / CHECKPOINTS
+# ============================================================
+liuhaotian/
+checkpoints/
+*.ckpt
+*.h5
+*.onnx
+
+# ============================================================
+# OUTPUTS — ket qua chay, keyframe cache, prediction, log
+# ============================================================
+outputs/
+**/casqta_stage1/
+**/*_kf/
+*_kf.json
+pred_*.json
+*_stats.txt
+*.log
+wandb/
+runs/
+lightning_logs/
+
+# ============================================================
+# HINH ANH / VISUALIZE sinh ra khi phan tich
+# ============================================================
+cluster_analysis*/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+# giu lai anh trong docs/assets neu can:
+!docs/**/*.png
+!assets/**/*.png
+
+# ============================================================
+# PYTHON
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+ktv.egg-info/
+.eggs/
+.installed.cfg
+*.egg
+
+# ============================================================
+# MOI TRUONG AO / PACKAGE MANAGER
+# ============================================================
+.venv/
+venv/
+env/
+ENV/
+.python-version
+# uv.lock NEN giu (khoa version) -> khong ignore
+
+# ============================================================
+# JUPYTER / NOTEBOOK
+# ============================================================
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+demo.ipynb
+*.ipynb
+
+# ============================================================
+# HYDRA — thu muc output tu dong sinh moi lan chay
+# ============================================================
+outputs/
+multirun/
+.hydra/
+
+# ============================================================
+# IDE / OS
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# FILE RAC
+# ============================================================
+untitled.txt
+untitled1.txt
+*.tmp
+*.bak
+tmp/
