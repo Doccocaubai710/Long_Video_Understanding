@@ -1,0 +1,16 @@
+# @package _global_
+# Example Video-MME experiment matching the README command style.
+video_dir: Datasets/Video-MME/data/data
+gt_file: playground/gt_qa_files/VideoMME/val_qa.json
+output_dir: outputs
+output_name: pred_casqta
+model_path: liuhaotian/llava-v1.6-vicuna-7b
+
+conv_mode: multiple_choice_allvideo_34b_v4
+num_frames: 6
+image_aspect_ratio: resize
+rope_scaling_factor: 2
+key_frame_path: outputs/videomme_tc_f2c_kf.json
+prune_mode: cls_new_token_sim
+rate: 0.2
+tokens_num: 1872

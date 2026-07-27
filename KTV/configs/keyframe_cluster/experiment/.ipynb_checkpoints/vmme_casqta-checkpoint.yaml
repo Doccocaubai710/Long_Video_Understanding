@@ -1,0 +1,31 @@
+# @package _global_
+json_path: playground/gt_qa_files/VideoMME/val_qa.json
+video_path: datasets/Video-MME/data
+video_frame_tensor_path: ktv/save_tensor/Video-MME
+dataset: Video-MME
+device: auto
+
+# --- Tang 1 (RECON) ---
+stage1_dir: outputs/casqta_stage1
+stage1_stats: outputs/casqta_stage1_stats.txt
+gamma: 0.90          # energy stop -> K adaptive
+rho: 0.2             # nguong tau tuong doi
+k_min: 8
+k_max: 48
+theta: 0.4           # nguong mo clip theo residual
+l_max: 4
+target_fps: 1.0      # ha ve ~1 FPS truoc khi chay
+max_keep: 1200
+center: true
+compute_clip: true   # cache CLIP image-embed cho Tang 2
+
+# --- Tang 2 (QTA) ---
+save_cluster_path: outputs/vmme_casqta_kf
+combined_output_path: outputs/vmme_casqta.json
+tokens_num: 1872     # B
+b_min: 18
+alpha: 1.0           # trong so relevance (0 = agnostic alloc)
+beta: 0.5            # trong so importance noi tai (0 = thuan aware)
+temperature: 0.5
+min_tok_per_frame: 16
+use_query: true

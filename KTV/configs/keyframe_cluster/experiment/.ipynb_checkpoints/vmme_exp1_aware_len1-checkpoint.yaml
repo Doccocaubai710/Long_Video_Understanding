@@ -1,0 +1,12 @@
+# @package _global_
+json_path: playground/gt_qa_files/VideoMME/val_qa.json
+video_path: Datasets/Video-MME/data/data
+video_frame_tensor_path: ktv/save_tensor/Video-MME
+save_cluster_path: outputs/vmme_exp1_aware_len1_kf
+combined_output_path: outputs/vmme_exp1_aware_len1.json
+dataset: Video-MME
+device: auto
+num_clips: 12
+fixed_clip_len: 1
+query_aware: true
+tokens_num: 1872

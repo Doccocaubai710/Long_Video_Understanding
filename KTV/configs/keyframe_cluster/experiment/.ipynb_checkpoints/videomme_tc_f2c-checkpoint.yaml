@@ -1,0 +1,18 @@
+# @package _global_
+json_path: playground/gt_qa_files/VideoMME/val_qa.json
+video_path: datasets/Video-MME/data
+video_frame_tensor_path: ktv/save_tensor/Video-MME
+save_cluster_path: outputs/videomme_tc_f2c_keyframes
+combined_output_path: outputs/videomme_tc_f2c_kf.json
+dataset: Video-MME
+device: auto
+
+num_clips: 12           # K_anchor = K = 12  -> ratio 1.0 (F2C best)
+l_max: 4                # s_max = 2 -> l_max = 4
+tokens_num: 1872        # phải khớp tokens_num lúc infer
+lambda_event: 0.5
+alpha_gap: 0.6
+beta_redundancy: 0.8
+lambda_r: 0.5
+lambda_l: 0.05
+min_tokens_per_frame: 16
