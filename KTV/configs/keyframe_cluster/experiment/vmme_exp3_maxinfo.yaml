@@ -1,0 +1,14 @@
+# @package _global_
+json_path: playground/gt_qa_files/VideoMME/val_qa.json
+video_path: datasets/Video-MME/data/data
+video_frame_tensor_path: ktv/save_tensor/Video-MME
+save_cluster_path: outputs/vmme_exp3_maxinfo_kf
+combined_output_path: outputs/vmme_exp3_maxinfo.json
+dataset: Video-MME
+device: auto
+fixed_clip_len: 4
+query_aware: false      # doi thanh true neu muon ban query-aware
+svd_rank: 32
+tol_ratio: 0.05
+max_peaks: 64
+tokens_num: 1872

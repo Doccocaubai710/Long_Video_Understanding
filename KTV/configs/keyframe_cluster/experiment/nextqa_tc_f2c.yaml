@@ -1,0 +1,14 @@
+# @package _global_
+json_path: playground/gt_qa_files/NExTQA/val_qa.json
+video_path: Datasets/NExTQA/videos
+video_frame_tensor_path: ktv/save_tensor/NExTQA
+save_cluster_path: outputs/nextqa_tc_f2c_keyframes
+combined_output_path: outputs/nextqa_tc_f2c_kf.json
+dataset: NExTQA
+device: auto
+num_anchors: 15
+lambda_event: 0.2
+alpha_gap: 0.8
+beta_redundancy: 0.2
+target_total: 12
+smax: 2

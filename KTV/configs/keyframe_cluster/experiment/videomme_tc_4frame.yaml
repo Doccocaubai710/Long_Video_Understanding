@@ -1,0 +1,18 @@
+# @package _global_
+json_path: playground/gt_qa_files/NExTQA/val_qa.json
+video_path: Datasets/NExTQA/data/data
+video_frame_tensor_path: ktv/save_tensor/NExTQA
+save_cluster_path: outputs/nextqa_tc_f2c_keyframes
+combined_output_path: outputs/nextqa_tc_f2c_kf.json
+dataset: NExTQA
+device: auto
+
+num_clips: 12        # K_anchor = K = 12  -> ratio K_anchor/K = 1.0 (F2C best)
+l_max: 4             # s_max = 2  -> l_max = 4
+tokens_num: 1872     # phải khớp tokens_num lúc infer
+lambda_event: 0.5    # Stage 1
+alpha_gap: 0.6       # Stage 1
+beta_redundancy: 0.8 # Stage 1
+lambda_r: 0.5        # Stage 2 redundancy (F2C default)
+lambda_l: 0.05       # Stage 2 temporal reward (F2C default)
+min_tokens_per_frame: 16
