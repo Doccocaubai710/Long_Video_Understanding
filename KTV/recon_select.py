@@ -74,18 +74,22 @@ def recon_greedy(X, gamma=0.90, rho=0.2, k_min=8, k_max=48):
     Dung khi: max||r|| < tau  HOAC  energy tich luy >= gamma  HOAC |S| >= k_max.
 
     Returns:
-      anchors : list[int]  chi so frame (trong X)
-      values  : list[float] v_a = residual ma anchor do giai thich
-      R_final : np.ndarray residual con lai (dung cho clip extension)
+      anchors      : list[int]  chi so frame (trong X)
+      values       : list[float] v_a = residual ma anchor do giai thich
+      R_final      : np.ndarray residual con lai (dung cho clip extension)
+      energy_frac  : float, nang luong tich luy da giai thich / tong nang luong
+                     goc (== reconstruction_coverage(X, anchors), dung de bao cao)
     """
     n = X.shape[0]
     if n == 0:
-        return [], [], np.zeros((0, 0))
+        return [], [], np.zeros((0, 0)), 0.0
     R = X.copy()
     norms0 = np.linalg.norm(X, axis=1)
     tau = rho * float(np.median(norms0)) if norms0.size else 0.0
+    total_energy = float(np.sum(X ** 2))   # ||X||^2, KHONG DOI trong suot qua trinh
 
     anchors, values = [], []
+    cumulative_removed = 0.0
     k_max = int(min(k_max, n))
 
     for _ in range(k_max):
@@ -102,29 +106,23 @@ def recon_greedy(X, gamma=0.90, rho=0.2, k_min=8, k_max=48):
         values.append(v)
 
         q = R[a] / (v + 1e-12)
-        R = R - np.outer(R @ q, q)      # Gram-Schmidt mot buoc
+        proj = R @ q                     # <r_j, q> cho MOI diem j (khong chi anchor)
+        # nang luong THUC SU bi loai bo o buoc nay tren TOAN BO tap diem --
+        # truoc day code cu dung v^2 (chi 1 diem = anchor) lam xap xi cho dai
+        # luong nay, danh gia thap nghiem trong tong nang luong da giai thich
+        # (vi N ~ hang tram-nghin diem, khong phai 1) -> dieu kien dung gamma
+        # gan nhu khong bao gio kich hoat, luon roi vao k_max.
+        cumulative_removed += float(np.sum(proj ** 2))
+        R = R - np.outer(proj, q)        # Gram-Schmidt mot buoc
         R[a] = 0.0                       # anchor da duoc giai thich hoan toan
 
         # dieu kien dung 2: nang luong tich luy >= gamma
-        if len(anchors) >= k_min:
-            vv = np.asarray(values, dtype=np.float64) ** 2
-            total = float(np.sum(np.asarray(values, np.float64) ** 2) + np.sum(np.linalg.norm(R, axis=1) ** 2))
-            if total > 0 and float(np.sum(vv)) / total >= gamma:
+        if len(anchors) >= k_min and total_energy > 0:
+            if cumulative_removed / total_energy >= gamma:
                 break
 
-    return anchors, values, R
-
-
-def energy_stop_k(values, residual_R, gamma=0.90, k_min=8):
-    """K* = min{k : sum_{t<=k} v_t^2 / total_energy >= gamma} (bao cao/kiem tra)."""
-    v = np.asarray(values, dtype=np.float64) ** 2
-    tail = float(np.sum(np.linalg.norm(residual_R, axis=1) ** 2)) if residual_R.size else 0.0
-    total = float(v.sum() + tail)
-    if total <= 0:
-        return max(k_min, len(values))
-    c = np.cumsum(v) / total
-    idx = np.searchsorted(c, gamma) + 1
-    return int(max(k_min, min(idx, len(values))))
+    energy_frac = (cumulative_removed / total_energy) if total_energy > 0 else 0.0
+    return anchors, values, R, energy_frac
 
 
 # ======================================================================
@@ -258,10 +256,9 @@ def run(json_path, video_path, video_frame_tensor_path, stage1_dir, dataset,
 
         # (b) greedy reconstruction
         X = prepare_matrix(feats, center=center)
-        anchors, values, R = recon_greedy(X, gamma=gamma, rho=rho, k_min=k_min, k_max=k_max)
+        anchors, values, R, energy_frac = recon_greedy(X, gamma=gamma, rho=rho, k_min=k_min, k_max=k_max)
         if not anchors:
             continue
-        K_star = energy_stop_k(values, R, gamma=gamma, k_min=k_min)
         rc = reconstruction_coverage(X, anchors)
 
         # (c) mo rong clip theo residual
@@ -302,7 +299,7 @@ def run(json_path, video_path, video_frame_tensor_path, stage1_dir, dataset,
         json.dump({
             "video_name": vname,
             "K": len(rec_clips),
-            "K_star_energy": int(K_star),
+            "energy_frac": float(energy_frac),   # nang luong thuc su da giai thich (sua bug, ~= recon_coverage)
             "recon_coverage": float(rc),
             "n_feat_used": int(X.shape[0]),
             "anchors_orig": anchor_orig,
@@ -311,7 +308,7 @@ def run(json_path, video_path, video_frame_tensor_path, stage1_dir, dataset,
         }, open(out_json, "w"), indent=2)
 
         stats.append({"video_name": vname, "K": len(rec_clips),
-                      "K_star": int(K_star), "RC": float(rc)})
+                      "energy_frac": float(energy_frac), "RC": float(rc)})
 
     if stats_path and stats:
         os.makedirs(os.path.dirname(stats_path) or ".", exist_ok=True)

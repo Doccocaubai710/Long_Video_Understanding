@@ -11,9 +11,9 @@ stage1_stats: outputs/casqta_stage1_stats.txt
 gamma: 0.90          # energy stop -> K adaptive
 rho: 0.2             # nguong tau tuong doi
 k_min: 8
-k_max: 48
-theta: 0.4           # nguong mo clip theo residual
-l_max: 4
+k_max: 28
+theta: 0.55           # nguong mo clip theo residual
+l_max: 2
 target_fps: 1.0      # ha ve ~1 FPS truoc khi chay
 max_keep: 1200
 center: true
@@ -22,10 +22,25 @@ compute_clip: true   # cache CLIP image-embed cho Tang 2
 # --- Tang 2 (QTA) ---
 save_cluster_path: outputs/vmme_casqta_kf
 combined_output_path: outputs/vmme_casqta.json
-tokens_num: 1872     # B
+tokens_num: 1872     # B co dinh, CHI dung khi b_bar=0 (tuong thich nguoc)
 b_min: 18
 alpha: 1.0           # trong so relevance (0 = agnostic alloc)
 beta: 0.5            # trong so importance noi tai (0 = thuan aware)
 temperature: 0.5
 min_tok_per_frame: 16
 use_query: true
+
+# Cach A (muc 7 file idea): B thich ung theo K thay vi hang so co dinh.
+# b_bar > 0 -> B_video = clip(K * b_bar, K * b_min, b_max). Dat b_bar=0 de
+# quay lai B co dinh (tokens_num) nhu truoc.
+b_bar: 144           # b_bar de xuat trong file idea (muc 6)
+# Tran vat ly: context_len(4096) * rope_scaling_factor - text_reserve.
+# Voi rope_scaling_factor=2 trong config inference -> ~7792. De du an toan.
+b_max: 7200
+
+# Dam bao cung (hard top-M guarantee): top_m anchor diem cao nhat luon nhan
+# top_m_level token/frame, KHONG qua softmax -> tai tao co che dam bao cua
+# KTV cu (2 frame luon 288...) nhung chon anchor bang diem RECON+QTA.
+# top_m=0 -> tat, giu hanh vi thuan softmax nhu truoc.
+top_m: 4
+top_m_level: 144

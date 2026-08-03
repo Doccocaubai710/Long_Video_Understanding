@@ -203,7 +203,11 @@ class LlavaMetaForCausalLM(ABC):
             # Decide how many tokens to keep for this frame.
             if keyframe_order:
                 order = keyframe_order[frame_idx]
-                if num_frames == 6:
+                if order >= 12:
+                    # CAS-QTA (recon_select.py + qta_allocated.py): order IS
+                    # already the per-frame token budget, not a cluster rank.
+                    remain_tokens_num = order
+                elif num_frames == 6:
                     if order == 0:
                         remain_tokens_num = 288
                     elif order in [1, 2, 3, 4]:
