@@ -19,6 +19,16 @@ ktv/save_tensor/
 *.pth
 *.bin
 *.safetensors
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.zip
+
+# ============================================================
+# EMBEDDED / NESTED GIT REPOS — clone rieng, khong submodule hoa
+# ============================================================
+FastVID/
 
 # ============================================================
 # MODEL WEIGHTS / CHECKPOINTS

@@ -1,3 +1,4 @@
+import re
 import torch
 import clip
 from sklearn.cluster import KMeans
@@ -350,6 +351,14 @@ def get_tensor_for_video(video_frame_tensor, video_name):
     return None
 
 
+CHOICE_PREFIX_RE = re.compile(r"^[A-Za-z][\).:]\s*")
+
+
+def strip_choice_prefix(text):
+    """Strip a leading multiple-choice letter (e.g. 'C. Berries.' -> 'Berries.')."""
+    return CHOICE_PREFIX_RE.sub("", text or "").strip()
+
+
 def cluster(
     json_path,
     video_path,
@@ -357,11 +366,30 @@ def cluster(
     save_cluster_path,
     dataset,
     combined_output_path=None,
+    use_oracle_answer=False,
+    num_candidates=None,
 ):
-    """Select question-aware keyframes and save their ranked order per question."""
+    """Select keyframes and save their ranked order per question.
+
+    use_oracle_answer=False (default): question-aware, unchanged behavior.
+    use_oracle_answer=True: Phase-0 oracle upper bound -- rank candidate
+    frames by CLIP similarity to the ground-truth answer text instead of
+    the question.
+
+    num_candidates=None (default): candidate pool == num_keyframes (12),
+    original behavior -- CLIP only re-orders a fixed set of 12, it never
+    actually discards any of them.
+    num_candidates=N (N > 12): KMeans draws N diverse candidates, CLIP
+    ranks all N against the query, and only the top 12 (num_keyframes)
+    survive into the output -- final K and downstream token budget/pruning
+    stay identical, only the upstream candidate pool widens. This is the
+    "is K=12 candidate generation the bottleneck, not the ranking signal"
+    test from the Phase-0 oracle discussion.
+    """
     # This function first uses precomputed DINOv2 frame features to find diverse
     # candidate frames, then uses CLIP to rank those candidates against the question.
     num_keyframes = 12
+    num_candidates = num_candidates or num_keyframes
     max_frames_to_extract = 5400
 
     # Create the output folder that will hold one JSON file per question.
@@ -381,7 +409,10 @@ def cluster(
         # Pull the fields needed to locate the video, rank frames for the question,
         # and name the per-question output JSON.
         video_name = sample["video_name"]
-        prompt = sample["question"]
+        if use_oracle_answer:
+            prompt = strip_choice_prefix(sample["answer"])
+        else:
+            prompt = sample["question"]
         question_id = sample["question_id"]
 
         # Skip samples that were already processed in a previous run.
@@ -412,7 +443,7 @@ def cluster(
         # KMeans selects diverse candidate frames by finding the frame nearest to
         # each cluster center in DINOv2 feature space.
         print(len(tensor))
-        clustered_indices = video_frame_clustering(tensor, num_keyframes)
+        clustered_indices = video_frame_clustering(tensor, num_candidates)
         print("clustered_indices", clustered_indices)
 
         # DINO features may have been extracted from at most max_frames_to_extract
@@ -428,12 +459,12 @@ def cluster(
         ]
 
         # If mapping creates duplicate original frame IDs, fall back to evenly spaced
-        # frames so the downstream CLIP ranking still receives num_keyframes candidates.
-        if len(set(candidate_frame_indices)) != num_keyframes:
+        # frames so the downstream CLIP ranking still receives num_candidates candidates.
+        if len(set(candidate_frame_indices)) != num_candidates:
             candidate_frame_indices = [
                 int(index)
                 for index in np.linspace(
-                    0, float(total_frames), num_keyframes, endpoint=False
+                    0, float(total_frames), num_candidates, endpoint=False
                 )
             ]
 
@@ -536,6 +567,8 @@ def main(cfg: DictConfig):
         resolve_path(cfg.save_cluster_path),
         cfg.dataset,
         combined_output_path=resolve_path(cfg.combined_output_path),
+        use_oracle_answer=cfg.get("oracle", False),
+        num_candidates=cfg.get("num_candidates", None),
     )
 
 

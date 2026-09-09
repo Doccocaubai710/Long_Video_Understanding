@@ -1,0 +1,11 @@
+# @package _global_
+# Phase-0 oracle upper bound: same K=12 CLIP-rank selector as nextqa.yaml,
+# but ranked against the ground-truth answer text instead of the question.
+json_path: playground/gt_qa_files/NExTQA/val_qa.json
+video_path: Datasets/NExTQA/videos
+video_frame_tensor_path: ktv/save_tensor/NExTQA
+save_cluster_path: outputs/nextqa_oracle_keyframes
+combined_output_path: outputs/nextqa_oracle_keyframe6_order.json
+dataset: NExTQA
+device: auto
+oracle: true

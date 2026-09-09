@@ -1,0 +1,18 @@
+# @package _global_
+# Phase-0.5: same oracle (rank by ground-truth answer text) as
+# videomme_oracle.yaml, but KMeans draws num_candidates=30 diverse
+# candidates (matching the measured median optimal k from Section 4)
+# instead of 12. CLIP still only keeps the top 12 (num_keyframes, fixed
+# in code) for the final output, so downstream K / token budget / pruning
+# stay identical to every other run -- only the upstream candidate pool
+# widens. Tests whether the K=12 candidate-generation stage was throwing
+# away evidence before ranking ever got a chance to use it.
+json_path: playground/gt_qa_files/Videomme/val_qa.json
+video_path: datasets/Video-MME/data
+video_frame_tensor_path: ktv/save_tensor/Video-MME
+save_cluster_path: outputs/videomme_oracle_wide_keyframes
+combined_output_path: outputs/videomme_oracle_wide_keyframe6_order.json
+dataset: Video-MME
+device: auto
+oracle: true
+num_candidates: 30
