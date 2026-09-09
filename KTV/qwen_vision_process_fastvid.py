@@ -313,8 +313,20 @@ def _read_video_decord(
         total_frames,
         video_fps,
     )
-    nframes = smart_nframes(ele, total_frames=total_frames, video_fps=video_fps)
-    idx = torch.linspace(start_frame, end_frame, nframes).round().long().tolist()
+    if "frame_indices" in ele:
+        # Explicit, precomputed (possibly non-uniform) raw frame indices --
+        # bypasses smart_nframes()/linspace entirely. Used by the DPC-based
+        # frame preselection (precompute_frame_dpc.py) to hand Qwen exactly
+        # the frames it chose, instead of letting fps=2.0/FPS_MAX_FRAMES
+        # decide uniformly. Clamp to the valid range and round to
+        # FRAME_FACTOR as smart_nframes would.
+        idx = sorted(int(i) for i in ele["frame_indices"])
+        idx = [min(max(i, start_frame), end_frame) for i in idx]
+        nframes = floor_by_factor(len(idx), FRAME_FACTOR)
+        idx = idx[:nframes] if nframes > 0 else idx
+    else:
+        nframes = smart_nframes(ele, total_frames=total_frames, video_fps=video_fps)
+        idx = torch.linspace(start_frame, end_frame, nframes).round().long().tolist()
     video = vr.get_batch(idx).asnumpy()
     video = torch.tensor(video).permute(0, 3, 1, 2)  # Convert to TCHW format
     logger.info(f"decord:  {video_path=}, {total_frames=}, {video_fps=}, time={time.time() - st:.3f}s")

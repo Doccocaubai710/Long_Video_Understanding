@@ -132,13 +132,20 @@ VIDEOMME_OPTION_PROMPT = (
 VIDEOMME_POST_PROMPT = "\nAnswer with the option's letter from the given choices directly."
 
 
-def build_messages(video_path, question, candidates, max_pixels, min_pixels=MIN_PIXELS, force_nframes=None):
+def build_messages(video_path, question, candidates, max_pixels, min_pixels=MIN_PIXELS, force_nframes=None,
+                    frame_indices=None):
     option_block = "\n".join(candidates)
     text = (
         f"{VIDEOMME_OPTION_PROMPT}\n{question}\n{option_block}\n{VIDEOMME_POST_PROMPT}"
     )
     video_item = {"type": "video", "video": video_path, "max_pixels": max_pixels, "min_pixels": min_pixels}
-    if force_nframes:
+    if frame_indices is not None:
+        # Explicit raw frame indices chosen by the DPC-based frame
+        # preselection (precompute_frame_dpc.py) -- overrides force_nframes
+        # and the default fps=2.0/FPS_MAX_FRAMES uniform sampling entirely.
+        # See qwen_vision_process_fastvid._read_video_decord.
+        video_item["frame_indices"] = frame_indices
+    elif force_nframes:
         # qwen_vision_process_fastvid's smart_nframes() honors "nframes"
         # directly instead of deriving frame count from fps=2.0 default --
         # and fetch_video()'s max_pixels/nframes*FRAME_FACTOR division
@@ -164,6 +171,11 @@ def run_inference(args):
     force_nframes = getattr(args, "force_nframes", None)
     force_nframes = int(force_nframes) if force_nframes else None
     max_pixels = max_pixels_units * 28 * 28
+
+    # If set, load per-video precomputed frame indices from
+    # precompute_frame_dpc.py's cache instead of uniform fps=2.0 sampling.
+    frame_cache_dir = getattr(args, "frame_cache_dir", None)
+    frame_cache_dir = resolve_path(frame_cache_dir) if frame_cache_dir else None
 
     video_dir = resolve_path(args.video_dir)
     gt_file = resolve_path(args.gt_file)
@@ -203,7 +215,15 @@ def run_inference(args):
                 continue
 
             try:
-                messages = build_messages(video_path, question, candidates, max_pixels, force_nframes=force_nframes)
+                frame_indices = None
+                if frame_cache_dir is not None:
+                    cache_path = os.path.join(frame_cache_dir, os.path.basename(video_name) + ".json")
+                    if not os.path.exists(cache_path):
+                        raise FileNotFoundError(f"frame_cache_dir set but missing cache for {video_name}: {cache_path}")
+                    with open(cache_path, "r") as cf:
+                        frame_indices = json.load(cf)["frame_indices"]
+                messages = build_messages(video_path, question, candidates, max_pixels,
+                                           force_nframes=force_nframes, frame_indices=frame_indices)
                 text = processor.apply_chat_template(
                     messages, tokenize=False, add_generation_prompt=True
                 )
