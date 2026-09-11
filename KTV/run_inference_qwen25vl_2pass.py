@@ -114,6 +114,30 @@ def _find_last_self_attn(model):
     return best_name, best_module
 
 
+def _set_attn_impl(model, impl):
+    """Best-effort: toggle attention implementation between calls. eager
+    materializes the full [n_heads, seq, seq] attention matrix INSIDE every
+    layer's forward regardless of output_attentions -- at pass 2's seq_len
+    (~16700, from tokens_num=16384) that is ~15GB for ONE layer alone, which
+    is the real cause of the second OOM (not the hook). eager is only needed
+    during pass 1's short forward; pass 2's generate() should use sdpa.
+    Sets the flag wherever it might actually be read (varies by transformers
+    version for composite VL models) -- if this silently has no effect,
+    the OOM will resurface and we need a different approach (see comment
+    in forward_pass1)."""
+    candidates = [model, getattr(model, "config", None), getattr(model, "language_model", None)]
+    lm = getattr(model, "language_model", None)
+    if lm is not None:
+        candidates.append(getattr(lm, "config", None))
+    for obj in candidates:
+        if obj is None:
+            continue
+        if hasattr(obj, "config") and hasattr(obj.config, "_attn_implementation"):
+            obj.config._attn_implementation = impl
+        if hasattr(obj, "_attn_implementation"):
+            obj._attn_implementation = impl
+
+
 def _install_attention_hook(model):
     """Force output_attentions=True on ONLY the last self-attention layer via a
     pre-hook (instead of passing output_attentions=True to the whole model,
@@ -159,6 +183,7 @@ def forward_pass1(model, final_embeds, final_position_ids, final_attention_mask,
     _install_attention_hook(model)
     _ATTN_HOOK_STATE["captured"] = None
     _ATTN_HOOK_STATE["enabled"] = True
+    _set_attn_impl(model, "eager")
     try:
         with torch.inference_mode():
             out = model(
@@ -170,6 +195,7 @@ def forward_pass1(model, final_embeds, final_position_ids, final_attention_mask,
             )
     finally:
         _ATTN_HOOK_STATE["enabled"] = False
+        _set_attn_impl(model, "sdpa")
     logits_last = out.logits[0, -1, :].float()
     attn_weights = _ATTN_HOOK_STATE["captured"]
     if attn_weights is None:
@@ -307,9 +333,15 @@ def run_inference(args):
     gt_file = resolve_path(args.gt_file)
     output_dir = resolve_path(args.output_dir)
 
-    print(f"Loading {args.model_path} ... (attn_implementation=eager, required for output_attentions)")
+    # Load with the default (fast, memory-efficient) attention implementation --
+    # eager is only switched on transiently, around pass 1's short forward
+    # (see _set_attn_impl in forward_pass1). Loading with eager globally is
+    # what caused the second OOM: eager materializes the full [heads,seq,seq]
+    # attention matrix inside EVERY layer regardless of output_attentions, and
+    # at pass 2's ~16700-token sequence that alone is ~15GB for one layer.
+    print(f"Loading {args.model_path} ...")
     model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-        args.model_path, torch_dtype=dtype, device_map="auto", attn_implementation="eager",
+        args.model_path, torch_dtype=dtype, device_map="auto",
     )
     processor = AutoProcessor.from_pretrained(
         args.model_path, max_pixels=max_pixels, min_pixels=16 * 28 * 28
