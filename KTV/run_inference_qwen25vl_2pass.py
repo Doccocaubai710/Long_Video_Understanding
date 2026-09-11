@@ -90,23 +90,84 @@ def build_pruned_sequence(full_embeds, inputs, video_token_id, video_positions_i
     return final_embeds, final_position_ids, final_attention_mask, video_positions_in_pruned
 
 
+import re
+
+_ATTN_HOOK_STATE = {"module": None, "captured": None}
+
+
+def _find_last_self_attn(model):
+    """Locate the '...layers.N.self_attn' module with the highest N -- avoids
+    hardcoding an exact attribute path, which can differ between transformers
+    versions/wrappers for Qwen2.5-VL's inner language model."""
+    best_idx, best_name, best_module = -1, None, None
+    for name, module in model.named_modules():
+        m = re.search(r"\.layers\.(\d+)\.self_attn$", name)
+        if m:
+            idx = int(m.group(1))
+            if idx > best_idx:
+                best_idx, best_name, best_module = idx, name, module
+    if best_module is None:
+        raise RuntimeError(
+            "Could not find a '...layers.N.self_attn' module to hook -- "
+            "inspect model.named_modules() and adjust the regex above."
+        )
+    return best_name, best_module
+
+
+def _install_attention_hook(model):
+    """Force output_attentions=True on ONLY the last self-attention layer via a
+    pre-hook (instead of passing output_attentions=True to the whole model,
+    which makes HF materialize the attention matrix for ALL layers at once --
+    the actual cause of the CUDA OOM seen in the first run: ~28 layers x
+    [n_heads, seq, seq] simultaneously). Capture that one layer's weights via
+    a forward hook. Installed once, reused across all questions."""
+    if _ATTN_HOOK_STATE["module"] is not None:
+        return
+    name, module = _find_last_self_attn(model)
+    print(f"[2pass] hooking attention capture on module: {name}")
+
+    def _pre_hook(mod, args, kwargs):
+        kwargs = dict(kwargs)
+        kwargs["output_attentions"] = True
+        return args, kwargs
+
+    def _fwd_hook(mod, args, output):
+        # HF attention module forward typically returns
+        # (attn_output, attn_weights, past_key_value) when output_attentions=True.
+        _ATTN_HOOK_STATE["captured"] = output[1] if isinstance(output, tuple) and len(output) > 1 else None
+
+    module.register_forward_pre_hook(_pre_hook, with_kwargs=True)
+    module.register_forward_hook(_fwd_hook)
+    _ATTN_HOOK_STATE["module"] = module
+
+
 def forward_pass1(model, final_embeds, final_position_ids, final_attention_mask,
                    video_positions_in_pruned):
     """Single forward (no generation loop) -- logits at the last position ARE the
     first-token distribution generate() would produce; attention FROM that same
-    last position tells us where the model looked to produce it."""
+    last position tells us where the model looked to produce it. Global
+    output_attentions stays False (cheap); the hook forces just the last layer."""
+    _install_attention_hook(model)
+    _ATTN_HOOK_STATE["captured"] = None
     with torch.inference_mode():
         out = model(
             inputs_embeds=final_embeds,
             position_ids=final_position_ids,
             attention_mask=final_attention_mask,
-            output_attentions=True,
+            output_attentions=False,
             return_dict=True,
         )
     logits_last = out.logits[0, -1, :].float()
-    attn_last_layer = out.attentions[-1][0]  # [n_heads, seq_len, seq_len]
-    attn_to_visual = attn_last_layer[:, -1, video_positions_in_pruned].mean(dim=0).float()
-    del out
+    attn_weights = _ATTN_HOOK_STATE["captured"]
+    if attn_weights is None:
+        raise RuntimeError(
+            "Attention hook captured nothing -- the hooked module's forward "
+            "signature/return shape likely differs from what _fwd_hook expects; "
+            "needs live debugging (print(output) shape inside _fwd_hook)."
+        )
+    attn_last_layer = attn_weights[0].float()  # [n_heads, seq_len, seq_len], batch=1
+    attn_to_visual = attn_last_layer[:, -1, video_positions_in_pruned].mean(dim=0)
+    del out, attn_weights
     return logits_last, attn_to_visual
 
 
