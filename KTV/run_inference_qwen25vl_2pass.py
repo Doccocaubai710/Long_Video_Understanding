@@ -92,7 +92,7 @@ def build_pruned_sequence(full_embeds, inputs, video_token_id, video_positions_i
 
 import re
 
-_ATTN_HOOK_STATE = {"module": None, "captured": None}
+_ATTN_HOOK_STATE = {"module": None, "captured": None, "enabled": False}
 
 
 def _find_last_self_attn(model):
@@ -127,11 +127,20 @@ def _install_attention_hook(model):
     print(f"[2pass] hooking attention capture on module: {name}")
 
     def _pre_hook(mod, args, kwargs):
+        # Only force output_attentions=True while explicitly enabled (around
+        # pass 1's single forward). Left unconditionally on, this also fires
+        # during pass 2's generate() over a ~16384-token sequence -- one
+        # layer's attention matrix at that length alone is ~14GB, which is
+        # exactly the OOM seen when this was unconditional.
+        if not _ATTN_HOOK_STATE["enabled"]:
+            return args, kwargs
         kwargs = dict(kwargs)
         kwargs["output_attentions"] = True
         return args, kwargs
 
     def _fwd_hook(mod, args, output):
+        if not _ATTN_HOOK_STATE["enabled"]:
+            return
         # HF attention module forward typically returns
         # (attn_output, attn_weights, past_key_value) when output_attentions=True.
         _ATTN_HOOK_STATE["captured"] = output[1] if isinstance(output, tuple) and len(output) > 1 else None
@@ -149,14 +158,18 @@ def forward_pass1(model, final_embeds, final_position_ids, final_attention_mask,
     output_attentions stays False (cheap); the hook forces just the last layer."""
     _install_attention_hook(model)
     _ATTN_HOOK_STATE["captured"] = None
-    with torch.inference_mode():
-        out = model(
-            inputs_embeds=final_embeds,
-            position_ids=final_position_ids,
-            attention_mask=final_attention_mask,
-            output_attentions=False,
-            return_dict=True,
-        )
+    _ATTN_HOOK_STATE["enabled"] = True
+    try:
+        with torch.inference_mode():
+            out = model(
+                inputs_embeds=final_embeds,
+                position_ids=final_position_ids,
+                attention_mask=final_attention_mask,
+                output_attentions=False,
+                return_dict=True,
+            )
+    finally:
+        _ATTN_HOOK_STATE["enabled"] = False
     logits_last = out.logits[0, -1, :].float()
     attn_weights = _ATTN_HOOK_STATE["captured"]
     if attn_weights is None:
