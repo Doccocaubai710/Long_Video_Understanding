@@ -163,6 +163,23 @@ def build_messages(video_path, question, candidates, max_pixels, min_pixels=MIN_
     ]
 
 
+def build_video_index(video_dir):
+    """Map bare filename -> full path, for datasets (e.g. NExT-QA) whose
+    videos live nested under subfolders rather than flat in video_dir."""
+    index = {}
+    for root, _dirs, files in os.walk(video_dir):
+        for fname in files:
+            index.setdefault(fname, os.path.join(root, fname))
+    return index
+
+
+def resolve_video_path(video_dir, video_name, video_index):
+    direct = os.path.join(video_dir, video_name)
+    if os.path.exists(direct):
+        return direct
+    return video_index.get(os.path.basename(video_name))
+
+
 def run_inference(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
@@ -180,6 +197,14 @@ def run_inference(args):
     video_dir = resolve_path(args.video_dir)
     gt_file = resolve_path(args.gt_file)
     output_dir = resolve_path(args.output_dir)
+
+    # Datasets like NExT-QA store videos nested under subfolders (e.g.
+    # NExTVideo/1012/<id>.mp4) rather than flat -- build the id->path index
+    # once up front (os.walk over ~5440 files is a few seconds, negligible
+    # next to model load time) so per-sample lookup stays a dict get.
+    print(f"Indexing videos under {video_dir} ...")
+    video_index = build_video_index(video_dir)
+    print(f"Indexed {len(video_index)} video files")
 
     print(f"Loading {args.model_path} ... (max_pixels_units={max_pixels_units})")
     model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
@@ -209,9 +234,9 @@ def run_inference(args):
 
             question = sample["question"]
             candidates = sample["candidates"]
-            video_path = os.path.join(video_dir, video_name)
-            if not os.path.exists(video_path):
-                print(f"Missing video: {video_path}")
+            video_path = resolve_video_path(video_dir, video_name, video_index)
+            if video_path is None or not os.path.exists(video_path):
+                print(f"Missing video: {video_name} (looked in {video_dir}, flat and indexed)")
                 continue
 
             try:
