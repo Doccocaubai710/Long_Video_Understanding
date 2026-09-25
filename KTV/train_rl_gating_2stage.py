@@ -154,14 +154,27 @@ def run_one_question(model, processor, policy1, policy2, optimizer, video_path, 
     lambda_sparsity = float(getattr(args, "lambda_sparsity", 0.3))
     min_retention_frac1 = float(getattr(args, "min_retention_frac1", 0.15))
     min_retention_frac2 = float(getattr(args, "min_retention_frac2", 0.1))
-    entropy_coef = float(getattr(args, "entropy_coef", 0.01))
-    # entropy2 cong qua n_kept_units*N token (hang nghin), trong khi entropy1
-    # cong qua T unit (hang chuc) -- dung CHUNG entropy_coef cho ca 2 se lam
-    # entropy2 ap dao hoan toan (phat hien tu smoke test: loss nhay len toi
-    # -101, entropy_coef*entropy2 ~73 trong khi policy_loss chi ~1). Chia
-    # entropy_coef cho N de entropy2's dong gop/unit khop dung thang do voi
-    # entropy1's dong gop/unit -- tu suy ra tu N, khong can hyperparameter moi.
-    entropy_coef2 = entropy_coef / N
+    # entropy_coef1/entropy_coef2 TACH RIENG, khong con suy entropy_coef2 tu
+    # entropy_coef1/N nua. Ly do: exp2 (entropy_coef=0.002, giam de sua Tang 1
+    # dinh tran) khien entropy_coef2 giam theo 5 lan (0.002/N thay vi
+    # 0.01/N) -- Tang 2 von da mong manh, mat luon "phanh" con lai, sup
+    # hoan toan trong ~50 step dau va dung yen o do suot 950 step con lai
+    # (retention ~0.05-0.1 phang, entropy2 ~0.001 phang -- khac han kieu dao
+    # dong cua Tang 1). Hai tang can do manh entropy khac nhau hoan toan vi
+    # quy mo hanh dong khac nhau (T unit vs n_kept_units*N token) VA vi kinh
+    # nghiem huan luyen rieng (Tang 1 dang can entropy_coef NHO de thoat
+    # tran, Tang 2 dang can entropy_coef2 DU LON de khong sup) -- khong the
+    # dung 1 num chinh cho ca 2 duoc nua.
+    entropy_coef1 = float(getattr(args, "entropy_coef1", getattr(args, "entropy_coef", 0.002)))
+    # entropy2_mean van la TONG (khong chia N) qua n_kept_units*N token, do
+    # trung binh qua K sample -- do lon thuong hang nghin (VD 30 unit*200
+    # token*0.6 entropy ~ 3600). Muon entropy_coef2*entropy2_mean o muc vua
+    # phai (~1-10, du de can nhung khong at han policy_loss) -> entropy_coef2
+    # ~0.001 la diem khoi dau hop ly (0.001*3600~3.6). Day la UOC LUONG, can
+    # quan sat log thuc te (entropy2 co dung o muc trung gian khong, hay van
+    # sup ve 0 / bay len sat tran) roi chinh lai, khong phai gia tri da kiem
+    # chung.
+    entropy_coef2 = float(getattr(args, "entropy_coef2", 0.001))
 
     # Entropy cua Tang 1 khong doi qua K sample (probs1 co dinh trong buoc
     # nay) -- tinh 1 lan, cong .sum() dung thang do voi log_prob (da rut
@@ -241,7 +254,7 @@ def run_one_question(model, processor, policy1, policy2, optimizer, video_path, 
     entropy2_mean = torch.stack(entropy2_sums).mean()
 
     policy_loss = -(advantage * log_probs_t).mean()
-    loss = policy_loss - entropy_coef * entropy1_sum - entropy_coef2 * entropy2_mean
+    loss = policy_loss - entropy_coef1 * entropy1_sum - entropy_coef2 * entropy2_mean
 
     optimizer.zero_grad()
     loss.backward()
