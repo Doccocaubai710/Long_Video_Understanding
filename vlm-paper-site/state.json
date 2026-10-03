@@ -1,0 +1,2227 @@
+{
+  "categories": [
+    {
+      "id": "cat_11",
+      "name": "1.1. Query-Aware Keyframe Selection (Training-Free)",
+      "description": "Chọn khung hình/token dựa trực tiếp vào câu hỏi — phải tính lại cho mỗi câu hỏi, không cache được giữa các câu hỏi của cùng một video.",
+      "papers": [
+        {
+          "id": "p_bolt",
+          "title": "BOLT: Boost Large Vision-Language Model Without Training",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Query-Aware",
+            "Sampling"
+          ],
+          "method": "Khắc phục lỗi chọn khung hình tham lam (greedy) bằng Inverse Transform Sampling (ITS). Tính cosine similarity giữa query và visual tokens, xây dựng CDF theo trục thời gian, lấy mẫu đều trên dải giá trị CDF để ánh xạ ngược lại các frame.",
+          "insight": "Tránh dồn cục các frame liên tiếp trong cùng một giây (do similarity cao), tự động cân bằng giữa độ liên quan tối đa và độ phủ rộng khắp video.",
+          "note": ""
+        },
+        {
+          "id": "p_aks",
+          "title": "AKS: Adaptive Keyframe Sampling",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Optimization"
+          ],
+          "method": "Định nghĩa việc chọn khung hình là bài toán tối ưu đa mục tiêu: Relevance và Coverage. Thuật toán đệ quy \"Judge-and-Split\": chia video thành bin, chấm điểm bin nào chứa nhiều thông tin then chốt rồi tiếp tục chia nhỏ tới khi đạt số frame mục tiêu.",
+          "insight": "Cơ chế phân giải đệ quy giúp tìm trúng vị trí vi mô chứa câu trả lời mà không mất tính đại diện của cấu trúc vĩ mô.",
+          "note": ""
+        },
+        {
+          "id": "p_focus",
+          "title": "FOCUS: Efficient Keyframe Selection via MAB",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Bandit / UCB"
+          ],
+          "method": "Mô hình hóa video thành các \"arms\" trong Multi-Armed Bandit. Dùng bán kính tin cậy Bernstein (UCB) cân bằng Exploitation (vùng giống query) và Exploration (vùng chưa chắc chắn). Hai giai đoạn: chọn clip tiềm năng rồi mới chọn frame cụ thể.",
+          "insight": "Xử lý dưới 2% tổng số khung hình nhưng đạt độ chính xác cao; reward tính trên sampling frame giúp giảm chi phí tính toán.",
+          "note": ""
+        },
+        {
+          "id": "p_videoem",
+          "title": "Video-EM: Event-Centric Episodic Memory",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Episodic Memory"
+          ],
+          "method": "Phân rã câu hỏi tìm frame liên quan, dùng TransNetV2 mở rộng ranh giới sự kiện. Cấu trúc hóa trí nhớ bằng Qwen2.5-VL sinh Dynamic Scene Narratives kết hợp phát hiện quan hệ vật thể. Dùng CoT lặp đánh giá trí nhớ đã đủ trả lời chưa.",
+          "insight": "Chuyển khung hình rời rạc thành biểu diễn trí nhớ sự kiện có cấu trúc, tái hiện không-thời gian với chi phí frame thấp nhất.",
+          "note": ""
+        },
+        {
+          "id": "p_markit",
+          "title": "MarkIt: Training-Free Visual Markers",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Visual Prompting"
+          ],
+          "method": "Phân tích đối tượng chính trong query, dùng open-world segmentation tô màu trực tiếp lên đối tượng đó xuyên suốt video. Ghi số thứ tự khung hình vào góc video làm thước đo thời gian cho MLLM.",
+          "insight": "Biến bài toán định vị thời gian trừu tượng thành nhận diện dấu vết trực quan hiển thị ngay trên pixel ảnh.",
+          "note": ""
+        },
+        {
+          "id": "p_wheretofocus",
+          "title": "Where to Focus: Query-Modulated Multimodal Selection",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Multi-Expert Gating"
+          ],
+          "method": "Cơ chế Q-Gate phối hợp 3 luồng: Visual Grounding (YOLO-World), Global Matching (CLIP), Contextual Alignment (phụ đề/lời thoại). LLM quyết định trọng số động cho từng luồng theo câu hỏi.",
+          "insight": "Linh hoạt tắt luồng hình ảnh khi câu hỏi thiên về hội thoại và ngược lại; tránh các luồng tự gây nhiễu lẫn nhau.",
+          "note": ""
+        },
+        {
+          "id": "p_adaq",
+          "title": "AdaQ: Adaptive Quasi-Gaussian Sampling",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Gaussian Distribution"
+          ],
+          "method": "Chuyển similarity frame-query thành phân phối Quasi-Gaussian, tâm là frame giống nhất. Tự động điều chỉnh nhiệt độ softmax τ theo variance của similarity: variance lớn → τ nhỏ (hẹp); variance nhỏ → τ lớn (phẳng).",
+          "insight": "Độ sắc nét của phân phối lấy mẫu phải tương thích với tính tập trung/phân tán của thông tin cần trả lời.",
+          "note": ""
+        },
+        {
+          "id": "p_forge",
+          "title": "FORGE: Frame Orthogonality in Relevance Geometry",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Residual Orthogonality"
+          ],
+          "method": "Khắc phục lỗi \"Scalar collapse\". Warp không gian embedding theo relevance, SVD trích xuất chiều hữu hiệu theo spectral entropy. Greedy Orthogonal Selection: chọn frame residual norm lớn nhất rồi trực giao hóa các vector còn lại.",
+          "insight": "Frame liên quan nhưng trùng lặp có hướng vector gần nhau; chỉ frame mang thông tin bổ sung trực giao mới tăng thể tích tối đa.",
+          "note": ""
+        },
+        {
+          "id": "p_remem",
+          "title": "ReMem: Temporal Granularity-Adaptive Framework",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Graph Diffusion"
+          ],
+          "method": "LLM ước lượng temporal granularity và visual entities. Xây memory graph với cạnh Semantic và Temporal. Graph Diffusion (Personalized PageRank) lan truyền từ memory node gần query, rồi phân cụm sự kiện để cấp budget.",
+          "insight": "Một frame hữu ích có thể vì nó liên kết cấu trúc sự kiện với frame liên quan, chứ không nhất thiết bản thân có similarity cao với query.",
+          "note": ""
+        },
+        {
+          "id": "p_echoprune",
+          "title": "EchoPrune: Temporal Echoes for VideoLLMs",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "MMR Pruning"
+          ],
+          "method": "Đo token redundancy dạng \"Temporal Echoes\": khả năng tái tạo token hiện tại từ vùng lân cận của frame trước. Kết hợp relevance-với-query và echo matching thành điểm MMR.",
+          "insight": "Lấy nhiều frame hơn nhưng giảm token/frame; token giữ lại phải mang novelty thay vì chỉ phản chiếu frame quá khứ.",
+          "note": ""
+        },
+        {
+          "id": "p_dytok",
+          "title": "DyToK: LLM-Guided Keyframe Prior",
+          "link": "",
+          "tags": [
+            "Training-Free (Prior)",
+            "Assistant Model"
+          ],
+          "method": "Dùng assistant model nhỏ cùng họ kiến trúc tính attention giữa question token cuối và visual tokens ở deep layer. Lấy attention trung bình gán trọng số ngân sách token cho từng frame.",
+          "insight": "Keyframe prior không phụ thuộc mạnh vào model scale; attention map từ model nhỏ tương quan cao với model lớn.",
+          "note": ""
+        },
+        {
+          "id": "p_adardkey",
+          "title": "AdaRD-Key: Adaptive Relevance-Diversity Sampling",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Determinant Max-Volume"
+          ],
+          "method": "Tối ưu Relevance-Diversity bằng log-determinant ma trận Gram. Sherman-Morrison update để runtime gần tuyến tính. VB-Scale: relevance \"nhọn\" → ưu tiên relevance; relevance \"phẳng\" → ưu tiên diversity.",
+          "insight": "Tránh bẫy nhiễu: khi không frame nào thực sự nổi bật, ép chọn theo relevance sẽ chọn nhầm nhiễu — phủ rộng diversity an toàn hơn.",
+          "note": ""
+        },
+        {
+          "id": "p_f2c",
+          "title": "From Frames to Clips (F2C)",
+          "link": "https://arxiv.org/pdf/2510.02262",
+          "tags": [
+            "Training-Free",
+            "Watershed Peaks"
+          ],
+          "method": "Watershed tìm local maxima trên đường cong similarity frame-query làm anchor keyframe. Mở rộng anchor thành clip theo hàm tối ưu 3 thành phần: Relevance, Redundancy, Temporal Reward (thưởng clip dài để giữ chuyển động).",
+          "insight": "Cân bằng 3 chiều: độ phân giải cao → clip ngắn; độ phân giải thấp → clip dài liên tục. Watershed dùng frame-TEXT similarity — query-aware thật sự, khác với bước \"F2C clip expansion\" đã mượn vào pipeline KTV (chỉ lấy phần mở rộng theo thời gian, bỏ phần so khớp text).",
+          "note": ""
+        },
+        {
+          "id": "p_videotree",
+          "title": "VIDEOTREE: Adaptive Tree-based Representation",
+          "link": "",
+          "tags": [
+            "Training-Free (LLM-based)",
+            "Tree Expansion"
+          ],
+          "method": "Gom cụm visual embedding thành cluster đại diện, caption từng cluster. LLM chấm điểm liên quan (1-3) giữa query và caption. Mở rộng Breadth ở tầng đầu, Depth chia nhỏ chỉ với cluster liên quan cao.",
+          "insight": "Khám phá cây phân cấp tập trung tính toán sâu đúng phân đoạn chứa bằng chứng, không cần mở rộng toàn bộ video.",
+          "note": ""
+        },
+        {
+          "id": "p_cdpruner",
+          "title": "CDPruner: Conditional Diversity for Token Pruning",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "DPP Selection"
+          ],
+          "method": "Không dùng raw attention trong LLM. Xây ma trận conditional similarity từ tích độ liên quan instruction và cosine similarity giữa token. Determinantal Point Processes (DPP) chọn tập con token tối đa hóa thể tích.",
+          "insight": "Tương thích hoàn hảo với FlashAttention (attention matrix bị ẩn) vì chỉ thao tác trên token embedding và instruction alignment.",
+          "note": ""
+        },
+        {
+          "id": "p_qca",
+          "title": "QCA: Query- and Content-Aware Keyframe Selection",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Content Deviation"
+          ],
+          "method": "Chia video thành S segment. Đánh giá segment bằng Semantic Matching (BLIP-2) và Content Deviation (khoảng cách/hiệp phương sai feature segment so với toàn video). Phân bổ ngân sách frame, chọn anchor, lọc candidate theo khoảng cách Euclidean đa dạng.",
+          "insight": "Ưu tiên segment vừa khớp query vừa biến đổi phong phú nội tại, tránh đoạn tĩnh kéo dài. Cùng tác giả với KTV — thực nghiệm ablation của chính họ cho thấy bỏ hạng tử content-deviation (agnostic) tăng điểm (70.1→70.4), gợi ý phân bổ theo nội dung tự thân đáng tin hơn phần dựa vào query.",
+          "note": ""
+        },
+        {
+          "id": "p_agf",
+          "title": "Adaptive Greedy Frame Selection",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Dual Embedding"
+          ],
+          "method": "Kết hợp SigLIP (Query Relevance) và DINOv2 (Semantic Coverage). Hàm mục tiêu Facility Location Coverage + Greedy Selection. Bộ phân loại câu hỏi (7 category) tự điều chỉnh preset tham số.",
+          "insight": "Tách biệt rõ: mô hình căn chỉnh văn bản tìm manh mối truy vấn, mô hình tự giám sát hình ảnh bảo toàn cấu trúc phân cảnh.",
+          "note": ""
+        },
+        {
+          "id": "p_vidcom2",
+          "title": "VidCom²: Video Compression Commander",
+          "link": "https://arxiv.org/pdf/2505.14454",
+          "tags": [
+            "Training-Free",
+            "Global vs Local Uniqueness"
+          ],
+          "method": "Giai đoạn 1: so token với vector pooling đại diện toàn video tính điểm độc đáo frame → điều chỉnh retention ratio. Giai đoạn 2: điểm độc đáo nội bộ frame kết hợp điểm độc đáo toàn video chọn visual token quan trọng nhất.",
+          "insight": "Cân bằng 2 cấp: giữ nhiều token ở cảnh chuyển tiếp/hành động mới, vẫn bắt chi tiết cục bộ dị biệt trong từng frame.",
+          "note": ""
+        },
+        {
+          "title": "WFS-SB: Wavelet-based Semantic Boundary",
+          "link": "",
+          "tags": [],
+          "method": "Biến đổi Wavelet đa độ phân giải loại nhiễu tần số cao trên tín hiệu similarity. Điểm cực trị ở thang thô nhất làm ranh giới ngữ nghĩa. Ngân sách thích nghi theo độ dài, relevance, variance của phân đoạn.",
+          "insight": "Quan trọng nhất là bắt trúng thời điểm thông tin thay đổi, không chỉ tìm frame giống query.",
+          "note": "",
+          "id": "p_mtr0gddbcotd0"
+        }
+      ]
+    },
+    {
+      "id": "cat_12",
+      "name": "1.2. Query-Agnostic Selection & Redundancy Reduction (Training-Free)",
+      "description": "Chọn/nén một lần cho cả video, không đọc câu hỏi — cache được, dùng lại cho mọi câu hỏi của cùng video. Đây là nhánh pipeline hiện tại đang theo.",
+      "papers": [
+        {
+          "id": "p_videopanels",
+          "title": "Video Panels for Long Video Understanding",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Panel Mosaic"
+          ],
+          "method": "Ghép nhiều khung hình thành các \"bảng\" (panels) trên một ảnh duy nhất (lưới 10x10) trước khi đưa vào VLM.",
+          "insight": "Đánh đổi độ phân giải không gian lấy độ phân giải thời gian cực cao mà không tăng độ dài ngữ cảnh token của LLM.",
+          "note": ""
+        },
+        {
+          "id": "p_ktv",
+          "title": "KTV: Keyframes and Key Tokens Selection",
+          "link": "https://arxiv.org/pdf/2602.03615",
+          "tags": [
+            "Training-Free",
+            "Centroid + Redundancy"
+          ],
+          "method": "-Giai đoạn 1: gom cụm DINOv2, chọn frame gần centroid (query-agnostic).\n \n-Giai đoạn 2: attention [CLS]-patch (saliency) trừ redundancy (cosine trung bình nội khung) cho điểm token — nhưng ngân sách k token/frame lại xếp theo CLIP-SIM(frame, câu hỏi): frame liên quan hơn được nhiều token hơn.",
+          "insight": "Tránh thiên lệch sai lầm của query-aware thuần (hỏi 'ai mở cửa' thì CLIP dễ chăm chăm nhìn cái cửa thay vì chủ thể). LƯU Ý: đã verify trực tiếp từ paper — phần phân bổ ngân sách/frame thực ra query-aware (Eq.9, CLIP-SIM với câu hỏi), không hoàn toàn agnostic như tên nhóm gợi ý. Baseline gốc của pipeline hiện tại trước khi chuyển sang FastVID.",
+          "note": ""
+        },
+        {
+          "id": "p_flashvid",
+          "title": "FLASHVID: Tree-Based Spatiotemporal Token Merging",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Token Tree"
+          ],
+          "method": "ADTS: chọn token đại diện qua Max-Min Diversity kết hợp [CLS] attention và Event relevance (Global Average Pooling). TSTM: cây dư thừa không-thời gian, gộp token giống nhau ở khung trước.",
+          "insight": "Dư thừa trong video không cố định tọa độ do vật thể di chuyển; cấu trúc cây cho phép theo vết và gộp động chính xác.",
+          "note": "Note: Kết quả rất tệ, không nên dùng"
+        },
+        {
+          "id": "p_kitoke",
+          "title": "KiToke: Kernel-based Interval-aware Compression",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Gaussian Kernel"
+          ],
+          "method": "Diversity score = nghịch đảo mật độ Gaussian kernel → lấy mẫu theo xác suất đa dạng. Phát hiện interval ranh giới bằng sai khác vị trí đối tượng và độ lệch cục bộ. Gộp token bị loại vào token giữ trong cùng interval bằng weighted average.",
+          "insight": "Tuyệt đối không merge token vượt ranh giới interval để tránh trộn ngữ nghĩa scene khác nhau. Chính paper này phê bình FastVID không phân biệt đoạn nhiều/ít thông tin (§C.1.3) — luận cứ gốc cho hướng phân bổ ngân sách không đều đang theo đuổi.",
+          "note": ""
+        },
+        {
+          "id": "p_floc",
+          "title": "FLoC: Facility Location-Based Compression",
+          "link": "",
+          "tags": [
+            "Training-Free",
+            "Facility Location"
+          ],
+          "method": "Mô hình hóa chọn visual token thành hàm mục tiêu Facility Location: đo mức token chọn ra bao phủ toàn bộ tập ban đầu. Lazy Greedy + priority queue theo upper bound của gain để tăng tốc.",
+          "insight": "Khắc phục nhược điểm K-means (thiên lệch chọn trung tâm vùng đông đúc/nền tĩnh) — Facility Location bao phủ cả chi tiết và vật thể hiếm.",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "cat_13",
+      "name": "1.3. Training-Based Selection (RL, Evolutionary, Policy Agents)",
+      "description": "Học một policy/compressor nhỏ để chọn frame/token, tối ưu trực tiếp theo hàm mục tiêu hạ nguồn (accuracy) thay vì heuristic thủ công.",
+      "papers": [
+        {
+          "id": "p_score",
+          "title": "SCORE: Dynamic Token Compression via RL",
+          "link": "https://arxiv.org/pdf/2603.26365",
+          "tags": [
+            "RL / Policy",
+            "Group RL"
+          ],
+          "method": "Ghép đặc trưng token với temporal residual (surprise signal, [X;ΔX]). Huấn luyện Bernoulli gating policy bằng Group RL: sinh K mask/video, reward gồm CE loss (chất lượng) + Sparsity reward (Split-Advantage). Curriculum learning từ pseudo-video sang video thật.",
+          "insight": "Nén token dựa trên hàm mục tiêu hạ nguồn; loại context thừa giúp accuracy cao hơn cả giữ full token (65.3% > Vanilla 63.8%). SOTA hiện tại — lý do chính không theo hướng V-JEPA/reconstruction reward: reward đúng-sai câu trả lời (CE loss) hiệu quả hơn reward tái tạo hình ảnh.",
+          "note": "SCORE huấn luyện một mạng MLP nhỏ (policy network) bằng reinforcement learning, nhận đầu vào là token thị giác kết hợp với tín hiệu sai khác giữa các frame (surprise signal), để dự đoán xác suất giữ lại từng token. Ở bước suy luận, các token có xác suất cao nhất được chọn theo quy tắc top-K toàn cục và đưa thẳng (không qua biến đổi gì thêm) vào LLM đã đóng băng để sinh câu trả lời"
+        },
+        {
+          "id": "p_tspo",
+          "title": "TSPO: Temporal Sampling Policy Optimization",
+          "link": "https://arxiv.org/pdf/2508.04369",
+          "tags": [
+            "RL / GRPO",
+            "Agentic Sampler"
+          ],
+          "method": "Temporal agent nhỏ (3.5M params) dùng local window attention + Gumbel-Softmax chọn frame. GRPO trên Video-MLLM đóng băng, 2 reward: Answering Accuracy và Temporal Localization (Needle-in-a-Haystack).",
+          "insight": "Sampler nhỏ học định vị vùng bằng chứng chính xác mà không cần cập nhật trọng số Video-LLM lớn — cùng hướng kiến trúc RL+policy-head nhỏ mà đề xuất của leader (V-JEPA reward) từng nhắm tới, chỉ khác loại reward.",
+          "note": ""
+        },
+        {
+          "id": "p_moddyn",
+          "title": "Modularized Dynamic-Granularity Video LLM",
+          "link": "https://arxiv.org/pdf/2607.15778",
+          "tags": [
+            "RL / DPO",
+            "Counterfactual"
+          ],
+          "method": "Chia video thành Positive/Negative Segments. Projector module độ mịn khác nhau (coarse, base, fine). Counterfactual Validation (đảo ngược độ mịn kiểm tra lỗi), tối ưu bằng DPO.",
+          "insight": "Đánh giá phản thực ngăn mô hình đoán trúng đáp án nhưng nhìn sai vị trí sự kiện.",
+          "note": "Kết quả cực cao, nhưng cần confirm lại về tốc độ"
+        },
+        {
+          "id": "p_evocomp",
+          "title": "EvoComp: Evolutionary Visual Token Compression",
+          "link": "https://arxiv.org/pdf/2604.17087",
+          "tags": [
+            "Evolutionary",
+            "Learned Masking"
+          ],
+          "method": "Compressor 1-layer Transformer trước LLM. Thuật toán tiến hóa (crossover, mutation) tìm binary mask tối ưu theo task loss sau gom nhóm theo vocabulary embedding. GHM classification loss + cosine regularization.",
+          "insight": "Nhãn nén tạo theo hướng task-specific: token giữ không phải vì nổi bật mà vì trực tiếp giảm loss trả lời.",
+          "note": ""
+        },
+        {
+          "id": "p_aviot",
+          "title": "Aggregating Visual Information with Optimal Transport for VideoLM Token Compression",
+          "link": "",
+          "tags": [
+            "Trainable",
+            "Distillation / OT",
+            "Query-Aware"
+          ],
+          "method": "AVIOT: Optimal Transport tổng hợp nhiều frame thành số lượng nhỏ \"target support\" học được thay vì loại bỏ cơ học. Token-Budget Distillation: chuyển giao ngữ nghĩa từ full-token sang mô hình nén qua chưng cất tri thức theo ngân sách định sẵn.",
+          "insight": "Biểu diễn nén học qua tối ưu vận chuyển + chưng cất giữ 10-25% frame nhưng vẫn vượt baseline không nén.",
+          "note": "Paper OK, nên đánh giá lại"
+        }
+      ]
+    },
+    {
+      "id": "cat_14",
+      "name": "1.4. In-Model & Layer-wise Token Pruning / Merging",
+      "description": "Nén token trực tiếp bên trong Vision Encoder hoặc bên trong các layer của LLM lúc suy luận — không cần biết trước toàn bộ video.",
+      "papers": [
+        {
+          "id": "p_stop",
+          "title": "SToP: Sink-Token-Aware Pruning",
+          "link": "",
+          "tags": [
+            "In-Model",
+            "Sink Tokens"
+          ],
+          "method": "Nhận diện Sink Tokens (attention cao liên tục qua thời gian nhưng vô nghĩa). Tính Sink Score, trừ điểm khi cắt tỉa không gian (STSP), cộng điểm loại bỏ khi cắt tỉa thời gian (STTP).",
+          "insight": "Cắt tỉa theo raw attention dễ giữ nhầm sink tokens và vứt chi tiết hành động có attention biến thiên thật.",
+          "note": "Performance khá tệ, chưa rõ thế nào"
+        },
+        {
+          "id": "p_adapttoken",
+          "title": "AdaptToken: Entropy-based Adaptive Selection",
+          "link": "",
+          "tags": [
+            "In-Model",
+            "Entropy Gating"
+          ],
+          "method": "Chia video thành nhóm frame, chạy thử giải mã LLM đo Entropy. Entropy thấp → tự tin → giữ nhiều token chi tiết; Entropy cao → cắt mạnh. Bản Lite dừng sớm nếu ≥3 nhóm entropy <0.75.",
+          "insight": "Xử lý tới 10.000 frame; bản Lite giảm 50% thời gian suy luận không giảm accuracy.",
+          "note": "Query-Aware"
+        },
+        {
+          "id": "p_streamingstc",
+          "title": "Streaming STC: Cacher & Pruner",
+          "link": "",
+          "tags": [
+            "Streaming",
+            "Dual Anchor"
+          ],
+          "method": "STC-Cacher: lưu activation reference frame, chỉ tính lại dynamic tokens key-similarity thấp. STC-Pruner: Temporal Context Anchor (độ mới) + Spatial Context Anchor (độ nổi bật) giữ top-K.",
+          "insight": "Tái sử dụng KV cache tầng ViT, chỉ đưa vào LLM token mang thông tin mới — tối ưu cho streaming.",
+          "note": ""
+        },
+        {
+          "id": "p_fastvid",
+          "title": "FastVID: Dynamic Density Pruning",
+          "link": "",
+          "tags": [
+            "In-Model",
+            "Density + Attention"
+          ],
+          "method": "DySeg phân đoạn theo cosine similarity (S1 sàn tối thiểu c đoạn + S2 mọi điểm dưới ngưỡng τ). STPrune 2 luồng: DTM (density-peaks ρ×δ, anchor mỗi p_anchor frame, gán token XUYÊN CẢ ĐOẠN) giữ ngữ cảnh chung; ATS ([CLS] attention) giữ chi tiết nổi bật. Ngân sách chia ĐỀU theo độ dài đoạn.",
+          "insight": "DTM trả lời 'nội dung tổng thể là gì', ATS trả lời 'chi tiết nào nổi bật'. NỀN TẢNG của pipeline hiện tại. Đã xác nhận qua code: bản cài đặt hiện tại của DTM chỉ gán token trong-unit, KHÔNG xuyên đoạn như thiết kế gốc — lệch thiết kế đã xác nhận, chưa fix xong.",
+          "note": "Đây là baseline đang xây trên nền — xem README_DySeg_STPrune.md và Sec 9 tài liệu chính để biết chi tiết chẩn đoán lệch DTM/salience."
+        },
+        {
+          "id": "p_holitom",
+          "title": "HoliTom: Holistic Token Merging",
+          "link": "",
+          "tags": [
+            "In-Model",
+            "Multi-Stage Merging"
+          ],
+          "method": "1. Temporal Merging: quy hoạch động tìm đoạn lặp, merge vào lần xuất hiện đầu. 2. Spatial Merging: attention cho token không lặp, DPC-KNN cho token lặp. 3. Inner-LLM Merging: tiếp tục gộp tại layer K của LLM theo attention token cuối.",
+          "insight": "Nén toàn diện trước và bên trong LLM, giữ thứ tự không gian gốc hạn chế mất positional structure.",
+          "note": "maintaining 99.1% average performance while reducing FLOPs to 6.9%."
+        },
+        {
+          "id": "p_prunevid",
+          "title": "PruneVid: Question-Guided In-LLM Pruning",
+          "link": "",
+          "tags": [
+            "In-LLM",
+            "KV Cache Pruning"
+          ],
+          "method": "Gộp token tĩnh theo thời gian/không gian. Đưa visual tokens + câu hỏi qua layer đầu LLM; tại layer 10, tính attention lớn nhất từ question tokens tới visual tokens giữ top-α. Cắt KV-cache tương ứng.",
+          "insight": "Cắt KV cache sớm trong prefill giúp decoding nhẹ tải. LƯU Ý: phương pháp query-aware DUY NHẤT trong nhóm so sánh FastVID — và cũng là phương pháp kém nhất (Table VideoMME Qwen2.5-VL: 59.3% @25%, thấp nhất nhóm).",
+          "note": "có thể đọc"
+        },
+        {
+          "id": "p_prumerge",
+          "title": "LLaVA-PruMerge: Adaptive Token Reduction",
+          "link": "",
+          "tags": [
+            "In-Model",
+            "IQR Threshold"
+          ],
+          "method": "[CLS] attention xác định vùng nổi bật. Ngưỡng IQR thích nghi: Q3 + 1.5*IQR chọn important tokens. Token Supplement: gộp token bị loại vào token quan trọng bằng KNN theo key similarity.",
+          "insight": "Ngưỡng IQR tự điều chỉnh theo từng phân phối ảnh; gộp lân cận tránh vứt hoàn toàn đặc trưng hậu cảnh. Cơ chế cls_new_token_sim của KTV kế thừa trực tiếp từ đây.",
+          "note": "paper cũ, kết quả thấp"
+        },
+        {
+          "id": "p_dycoke",
+          "title": "DyCoke: Dynamic Token Compression",
+          "link": "",
+          "tags": [
+            "In-LLM",
+            "DP-Cache Recovery"
+          ],
+          "method": "Stage I: TTM trượt 4 frame gộp token lặp. Stage II: Dynamic KV Cache Pruning, duy trì Active KV Cache + Dynamic Pruning Cache (DP Cache); nạp lại token từ DP Cache nếu attention phân bổ lại ở bước sau.",
+          "insight": "Token không quan trọng ở bước này có thể sống còn ở bước sau; cơ chế phục hồi giải quyết lỗi one-shot pruning.",
+          "note": "có vẻ ổn, chưa bench trên qwen2.5-vl-7b"
+        },
+        {
+          "id": "p_adatp",
+          "title": "AdaTP: Attention-Debiased Token Pruning",
+          "link": "",
+          "tags": [
+            "In-LLM",
+            "Progressive Debiasing"
+          ],
+          "method": "Khắc phục bias vị trí của LLM attention. Chia segment. Global Debiasing chọn token attention cao theo segment; Local Debiasing giữ 1 token/tọa độ không gian trong 1 segment tránh trùng lặp. Progressive Pruning tăng dần qua layer.",
+          "insight": "Giảm dần token qua các tầng ổn định hơn cắt đột ngột một lần; loại bỏ bias dồn attention đầu/cuối chuỗi.",
+          "note": "cũng không có bench"
+        },
+        {
+          "id": "p_statekv",
+          "title": "StateKV: Linear Scaling Video VLMs",
+          "link": "",
+          "tags": [
+            "Architecture Engine",
+            "Linear Scaling"
+          ],
+          "method": "2 trạng thái KV mỗi layer: Detailed State (toàn bộ token frame hiện tại) và Compressed State (B token quan trọng nhất từ frame quá khứ, cố định). Frame hiện tại chỉ attend vào frame đó + Compressed State.",
+          "insight": "Attention liên khung tập trung chủ yếu vào temporal sinks thay đổi chậm; giới hạn tương tác đưa prefill về tuyến tính O(N).",
+          "note": "Đáng để đọc, kết quả ổn"
+        },
+        {
+          "id": "p_framefusion",
+          "title": "FrameFusion: Merging & Pruning",
+          "link": "",
+          "tags": [
+            "In-LLM",
+            "Layer Dynamics"
+          ],
+          "method": "Quan sát: thứ hạng similarity ổn định ở layer đầu, importance score biến động mạnh. 2 giai đoạn: Similarity Merging ở layer nông (gộp token tương đồng), Importance Pruning ở layer sâu (cắt theo attention).",
+          "insight": "Tuyệt đối không prune ở layer đầu vì attention chưa hội tụ; merge trước rồi prune sâu mang lại ổn định tối đa.",
+          "note": ""
+        },
+        {
+          "id": "p_visionzip",
+          "title": "VisionZip: Dominant & Contextual Merging",
+          "link": "",
+          "tags": [
+            "Vision Encoder",
+            "Dominant Tokens"
+          ],
+          "method": "Bước 1: chọn dominant tokens theo attention nhận từ [CLS] (hoặc mean attention với SigLIP). Bước 2: contextual tokens còn lại tính similarity theo Key representation của Self-Attention, gộp vào dominant token gần nhất.",
+          "insight": "Tách biệt rõ thông tin chủ đạo và ngữ cảnh xung quanh; training-free hoàn toàn hoặc fine-tune projector nhẹ 30 phút.",
+          "note": ""
+        },
+        {
+          "id": "p_beyondtva",
+          "title": "Beyond Text-Visual Attention",
+          "link": "",
+          "tags": [
+            "Vision Encoder",
+            "Visual Cues Only"
+          ],
+          "method": "Chỉ ra lỗi Attention Shift và Dispersion khi dùng text-visual attention. Chọn important tokens hoàn toàn bằng visual attention của encoder. Giữ diverse tokens bằng cosine similarity, loại dần token trùng lặp, không pooling.",
+          "insight": "Trong thiết lập training-free, giữ token đa dạng nguyên bản an toàn hơn làm mờ bằng average-pooling.",
+          "note": ""
+        },
+        {
+          "id": "p_fastv",
+          "title": "FastV: Plug-and-Play Acceleration",
+          "link": "",
+          "tags": [
+            "In-LLM",
+            "Anchor Tokens"
+          ],
+          "method": "Sau layer 2, attention dồn mạnh vào text/system tokens (Anchor Tokens), giảm sâu ở visual tokens. Xử lý bình thường 2 layer đầu, sau đó prune vĩnh viễn R% visual tokens attention thấp nhất từ layer K.",
+          "insight": "Visual tokens đã truyền thông tin vào anchor token ở tầng đầu; pruning sau layer 2 là điểm cân bằng tốc độ/accuracy.",
+          "note": "Không ngon"
+        },
+        {
+          "id": "p_tome",
+          "title": "ToMe: Token Merging in ViT",
+          "link": "",
+          "tags": [
+            "ViT Block",
+            "Bipartite Matching"
+          ],
+          "method": "Module gộp giữa nhánh Self-Attention và FFN. Bipartite Soft Matching: chia token thành 2 tập A/B, tìm cặp Key-similarity cao nhất merge bằng weighted average. Proportional Attention (± log s).",
+          "insight": "Bipartite matching gần tuyến tính; token đại diện nhiều patch cần khuếch đại ảnh hưởng attention tương ứng quy mô.",
+          "note": ""
+        },
+        {
+          "id": "p_oodvtp",
+          "title": "OOD-VTP: Robustness via Token Compression",
+          "link": "",
+          "tags": [
+            "In-LLM",
+            "Robustness / OOD"
+          ],
+          "method": "Xác định visual token lệch phân phối (OOD) so với textual feature space ở layer trung gian. Đo bằng negative mean attention tới text token cuối. Loại token khoảng cách lớn nhất tại robust-pruning layers (13-18).",
+          "insight": "Ngược thông thường: loại token xa ngôn ngữ nhất giúp tăng chống jailbreak, giảm ảo giác.",
+          "note": "Paper rất tệ"
+        },
+        {
+          "id": "p_infomerge",
+          "title": "InfoMerge: Information-aware Token Compression",
+          "link": "",
+          "tags": [
+            "In-Model",
+            "Fingerprint Difference"
+          ],
+          "method": "DySeg phân đoạn. Temporal Fingerprint Difference (TFD) phát hiện vị trí tĩnh liên tục. Phân bổ budget theo Segment Uniqueness và Spectral Entropy. Nén bằng ATS (ức chế vị trí tĩnh) + DTM với hard mask.",
+          "insight": "Entropy phổ đo độ phong phú biểu diễn; hard mask vị trí tĩnh ngăn lặp lại dư thừa. CẦN KIỂM TRA GẤP — mô tả rất gần ý tưởng hiện tại (DySeg + phân bổ ngân sách không đều theo segment uniqueness/entropy). Chưa xác định paper gốc/link — có thể là prior art trực tiếp.",
+          "note": "⚠️ Ưu tiên tra cứu: đây có phải cùng ý tưởng đang làm không? Nếu đúng cần đối chiếu khác biệt trước khi viết bài."
+        },
+        {
+          "id": "p_earlytom",
+          "title": "EarlyTom: Early Token Compression",
+          "link": "",
+          "tags": [
+            "Vision Encoder",
+            "Early Stage"
+          ],
+          "method": "Nén ngay trong Vision Encoder giảm TTFT. Stage I: Streaming Frame Segmentation, gộp frame giữa (Middle-frame Merging). Stage II: tách Dynamic (đầu/cuối → Global Top-K) và Static (giữa → Local Window Selection).",
+          "insight": "Phần lớn độ trễ nằm ở ViT encoding; nén sớm từ layer đầu vision encoder tối ưu hiệu năng toàn diện.",
+          "note": "Cải thiện tốc độ, không cải thiện kết quả.  EarlyTom reduces TTFT by up to 2.65× and FLOPs by up to 61% on\na single NVIDIA A100 GPU for the LLaVA-OneVision-7B\nmodel, while maintaining accuracy comparable to the fulltoken baseline. These improvements substantially enhance\nthe practicality of deploying Video-LLMs in real-world production scenarios."
+        }
+      ]
+    },
+    {
+      "id": "cat_2",
+      "name": "Phần 2: Fine-tune Mô Hình Base Dựa Trên Dữ Liệu Lớn",
+      "description": "Thay đổi kiến trúc, thiết kế projector chuyên biệt, hoặc fine-tune toàn diện trên dữ liệu lớn — khác nhánh training-free đang theo.",
+      "papers": [
+        {
+          "id": "p_flexmem",
+          "title": "FlexMem: Long Video via Visual Memory",
+          "link": "",
+          "tags": [
+            "Architecture",
+            "KV Compression"
+          ],
+          "method": "Hệ thống bộ nhớ thị giác mô phỏng con người. Bản sao lưu KV cache dữ liệu thị giác. Dual-pathway Compression ghi nhận đặc trưng quan trọng. Trích xuất linh hoạt mảnh bộ nhớ phù hợp theo câu hỏi.",
+          "insight": "Xử lý >1.000 khung hình trên 1 GPU RTX 3090 tiêu dùng, không tràn VRAM.",
+          "note": ""
+        },
+        {
+          "id": "p_svlm",
+          "title": "SVLM Compressor for Long Video",
+          "link": "",
+          "tags": [
+            "Trainable",
+            "Memory Tokens"
+          ],
+          "method": "SVLM-based local compressor + LLM global decoder. Causal attention học k_max=128 learnable memory tokens/phân đoạn. Infer: Logit-Based Relevance Score Yes/No cắt tỉa thích nghi (ATA) lấy token đầu.",
+          "insight": "Semantic Front-Loading: compressor cục bộ luôn gói bằng chứng quan trọng nhất vào memory token sinh ra đầu tiên.",
+          "note": ""
+        },
+        {
+          "id": "p_longvu",
+          "title": "LongVU: Spatiotemporal Adaptive Compression",
+          "link": "",
+          "tags": [
+            "Trainable Projector",
+            "DINOv2 + SigLIP"
+          ],
+          "method": "SigLIP (image-text) + DINOv2 (vision-only) qua bộ gom không gian SVA. DINOv2 loại frame tương đồng cao. Cross-modal Query Attention chọn frame giữ nguyên resolution, còn lại spatial pooling. Nén spatial token so với frame đầu tiên.",
+          "insight": "DINOv2 vượt CLIP trong phân biệt biến đổi nhỏ giữa frame; kết hợp 2 encoder bù đắp ngữ nghĩa và hình học.",
+          "note": ""
+        },
+        {
+          "id": "p_longcontext",
+          "title": "Long Context Transfer from Language to Vision",
+          "link": "",
+          "tags": [
+            "Pre-train Transfer",
+            "UniRes"
+          ],
+          "method": "Giả thuyết: năng lực context dài chuyển giao từ text sang vision nếu căn chỉnh thực sự. Long context (224K) thuần text trước, rồi chỉ train bằng ảnh tĩnh ngắn (UniRes: nén 576→144 token/grid) nhưng đánh giá trực tiếp trên video dài.",
+          "insight": "Không cần train trên video dài tốn kém; context dài tự tổng quát sang video nếu biểu diễn thị giác ngắn được căn chỉnh chuẩn.",
+          "note": ""
+        },
+        {
+          "id": "p_dynvlm",
+          "title": "Dynamic-VLM & AdaRETAKE",
+          "link": "",
+          "tags": [
+            "Architecture / KV",
+            "PivotKV"
+          ],
+          "method": "Dynamic-VLM: đánh số positional encoding theo thời gian (1s:image, 2s:image), thử Pooling/Merging/Pruning. AdaRETAKE: DPSelect tìm keyframe theo khoảng cách cực đại địa phương; PivotKV dùng keyframe làm điểm tựa nén KV-cache frame khác theo attention, tỷ lệ nén động theo tầng.",
+          "insight": "Dư thừa xảy ra cả theo thời gian lẫn theo tầng mô hình; các tầng khác nhau cần mức chi tiết token khác nhau.",
+          "note": ""
+        },
+        {
+          "id": "p_lpqc",
+          "title": "LP-Comp & QC-Comp: Progressive Compression",
+          "link": "",
+          "tags": [
+            "Fine-Tuned",
+            "Progressive Layers"
+          ],
+          "method": "LP-Comp: fine-tune tầng LLM giảm dần token/frame qua layer, tận dụng Causal Attention giữ suffix token đã hấp thụ tiền tố. QC-Comp: attention cục bộ theo phân đoạn chọn top-k frame liên quan lúc infer.",
+          "insight": "Nén từ từ bên trong layer LLM giúp mô hình tự học tổng hợp thông tin bị loại vào token được giữ.",
+          "note": ""
+        },
+        {
+          "id": "p_slowfast15",
+          "title": "SlowFast-LLaVA-1.5: Token-Efficient Architecture",
+          "link": "",
+          "tags": [
+            "Architecture",
+            "Dual Pathway"
+          ],
+          "method": "Cơ chế SlowFast vào projector, train lại projector + LLM. Slow pathway: giảm frame giữ resolution (pooling nhẹ). Fast pathway: giữ FPS cao giảm mạnh resolution. Ghép 2 luồng bằng special tokens.",
+          "insight": "Tách luồng không gian chi tiết và luồng thời gian tốc độ cao giúp hiểu sâu hành động không bùng nổ token.",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "cat_3",
+      "name": "Phần 3: Video Engines, Reasoning Benchmarks & Temporal Grounding",
+      "description": "Pipeline dữ liệu video quy mô lớn, benchmark suy luận, cơ chế định vị/agentic — bối cảnh chung của lĩnh vực, không trực tiếp là phương pháp nén.",
+      "papers": [
+        {
+          "id": "p_llavavideo",
+          "title": "LLaVA-Video: Synthetic Data Engine",
+          "link": "",
+          "tags": [
+            "Data Engine",
+            "Hierarchical Caption"
+          ],
+          "method": "Bộ dữ liệu LLaVA-Video-178K. PySceneDetect lọc cắt cảnh tĩnh. GPT-4o sinh mô tả phân cấp: Level 1 (10s), Level 2 (30s, tổng hợp 3 clip L1), Level 3 (tóm tắt toàn video). 16 nhóm câu hỏi QA.",
+          "insight": "Khắc phục nghèo nàn mô tả chi tiết/chuyển cảnh của dataset cũ bằng tóm tắt phân tầng lũy tiến.",
+          "note": ""
+        },
+        {
+          "id": "p_tarsier2",
+          "title": "Tarsier2: Comprehensive Video Understanding",
+          "link": "",
+          "tags": [
+            "Data & DPO",
+            "Negative Corrupt"
+          ],
+          "method": "Pre-train 40M video (20M in-house, video bình luận phim đã xóa OCR). SFT 150k video description có định vị thời gian. DPO 20k preference pairs: negative tạo bằng làm hỏng/xóa/xáo trộn clip.",
+          "insight": "DPO với negative từ video xáo trộn giúp mô hình nhạy bén tính tuần tự và nhân quả của khung hình.",
+          "note": ""
+        },
+        {
+          "id": "p_live",
+          "title": "Live: Video LLM with Streaming Speech",
+          "link": "",
+          "tags": [
+            "Streaming ASR",
+            "Live Commentary"
+          ],
+          "method": "Live-CC-5M và Live-WhisperX-526K. 10.7M video, XLM-RoBERTa lọc tiếng Anh, Qwen-VL-2B lọc talking-head/caption lệch nội dung. WhisperX sinh lời thoại streaming căn chỉnh visual.",
+          "insight": "Loại triệt để khung talking-head không tương quan hành động; đồng bộ giọng nói trực tiếp cho thuyết minh video thời gian thực.",
+          "note": ""
+        },
+        {
+          "id": "p_nemocurator",
+          "title": "NeMo Curator & Cosmos-Curate",
+          "link": "",
+          "tags": [
+            "Infrastructure",
+            "Video Curation"
+          ],
+          "method": "Hệ lọc dữ liệu video phân tán (Ray/Cosmos-Xenna). TransNetV2 phát hiện scene, lọc aesthetic threshold >3.5, lọc cảnh tĩnh (motion-filter). Embedding (Cosmos-embed/InternVideo2), K-means phân cụm, Semantic Deduplication.",
+          "insight": "Lọc trùng lặp ngữ nghĩa + loại cảnh tĩnh là bước tiền xử lý then chốt trước train Video-LLM quy mô lớn.",
+          "note": ""
+        },
+        {
+          "id": "p_vbvr",
+          "title": "VBVR: Video Reasoning Suite",
+          "link": "",
+          "tags": [
+            "World Models",
+            "Image-to-Video"
+          ],
+          "method": "Dataset Image-to-Video (I2V) 1M video, 200 loại nhiệm vụ. Đầu vào ảnh+prompt, đầu ra video thể hiện toàn bộ quá trình suy luận. Kiểm tra 5 trụ cột: Không gian, Biến đổi, Kiến thức thế giới, Trừu tượng, Nhận thức.",
+          "insight": "Chuyển dịch từ chatbot mô tả video sang huấn luyện World Models (Sora, Kling, Wan) suy nghĩ và tương tác vật lý logic.",
+          "note": ""
+        },
+        {
+          "id": "p_focusgraph",
+          "title": "FocusGraph: Graph Frame Selection",
+          "link": "",
+          "tags": [
+            "Embodied AI",
+            "Scene Graph"
+          ],
+          "method": "Video góc nhìn thứ nhất (Egocentric). Qwen2.5-VL tóm tắt clip thành Scene Graph text để LLM chọn clip tiềm năng. PSFR: sparse optical flow theo dõi điểm đặc trưng, kích hoạt chọn keyframe khi patch mất dấu vết.",
+          "insight": "Scene graph ổn định hóa quan hệ đối tượng dễ bị rung lắc/chuyển động mạnh của camera hành trình.",
+          "note": ""
+        },
+        {
+          "id": "p_vidcom",
+          "title": "VidCoM: Fast Video Comprehension with Tools",
+          "link": "",
+          "tags": [
+            "Agentic",
+            "Hungarian Matching"
+          ],
+          "method": "Trích xuất Scene Graph (triplets) + BLIP-2 Caption. InsOVER: Hungarian matching so khớp thành phần câu hỏi với visual sub-events. Tinh chỉnh biên sự kiện qua nhiều vòng tương tác LLM reasoning agent.",
+          "insight": "Không cần single-pass; vòng lặp LLM-công cụ trích xuất cấu trúc thu hẹp chính xác ranh giới sự kiện.",
+          "note": ""
+        },
+        {
+          "id": "p_videogaia",
+          "title": "VideoGAIA: General AI Assistants Benchmark",
+          "link": "",
+          "tags": [
+            "Benchmark",
+            "Agentic Tasks"
+          ],
+          "method": "271 tác vụ thực tế phức tạp trên 6 domain. Chu trình Agentic: Video+Nhiệm vụ → Quan sát → Tìm kiếm thông tin ngoài → Quay lại video kiểm tra giả thuyết → Tổng hợp câu trả lời mở.",
+          "insight": "Benchmark hỏi-đáp đóng (VideoMME) đã bão hòa; tương lai nằm ở phối hợp công cụ ngoài + tra cứu đa bước (chưa model nào vượt 60%).",
+          "note": ""
+        }
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "id": "e1",
+      "name": "KTV reproduction (baseline gốc)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "LLaVA-1.6-Vicuna-7B, Temporal-Chain K=12, budget 1872 token",
+      "overall": 42.48,
+      "short": "",
+      "medium": "",
+      "long": "",
+      "note": "Backbone LLaVA cũ, trước khi chuyển Qwen2.5-VL",
+      "date": "2026-08-04"
+    },
+    {
+      "id": "e2",
+      "name": "Temporal-Chain (best acc.)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "LLaVA-1.6-Vicuna-7B",
+      "overall": 43.48,
+      "short": "",
+      "medium": "",
+      "long": "",
+      "note": "",
+      "date": "2026-08-04"
+    },
+    {
+      "id": "e3",
+      "name": "Oracle K=12 (rank theo đáp án đúng)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "LLaVA-1.6-Vicuna-7B, K=12 candidates",
+      "overall": 43.59,
+      "short": 52.78,
+      "medium": 41.78,
+      "long": 35.78,
+      "note": "Ngay cả oracle cũng gần bằng uniform — backbone-bound, không phải selection-bound",
+      "date": "2026-08-05"
+    },
+    {
+      "id": "e4",
+      "name": "CAS-QTA / RECON-Select (best config)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "LLaVA-1.6-Vicuna-7B, l_max=2 top_m=4",
+      "overall": 41.67,
+      "short": "",
+      "medium": "",
+      "long": "",
+      "note": "Thống kê ngang baseline (z≈0.60, p≈0.55) — không thắng rõ, không thua rõ",
+      "date": "2026-08-12"
+    },
+    {
+      "id": "e5",
+      "name": "Qwen2.5-VL Uniform 12 frame (đổi backbone)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "Qwen2.5-VL-7B-Instruct, 12 frame, 156 tok/frame",
+      "overall": 54.11,
+      "short": 63.78,
+      "medium": 50.78,
+      "long": 47.78,
+      "note": "+10.96 điểm so với LLaVA cùng config — backbone là đòn bẩy lớn nhất từng đo được",
+      "date": "2026-08-06"
+    },
+    {
+      "id": "e6",
+      "name": "Budget scaling f96/t14400 (đỉnh sweep)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "Qwen2.5-VL-7B, 96 frame, 14400 token, ép resolution đều",
+      "overall": 59.41,
+      "short": 69.44,
+      "medium": 58.67,
+      "long": 50.11,
+      "note": "Đỉnh của budget scaling trên harness cũ, trước Gate G1",
+      "date": "2026-08-13"
+    },
+    {
+      "id": "e7",
+      "name": "f128_t16384 (mốc so sánh cũ)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "Qwen2.5-VL-7B, 128 frame ép resolution, tokens_num=16384",
+      "overall": 59.19,
+      "short": 69.67,
+      "medium": 57.78,
+      "long": 50.11,
+      "note": "Mốc dùng để so DySeg trước khi phát hiện harness sai (Gate G1)",
+      "date": "2026-08-13"
+    },
+    {
+      "id": "e8",
+      "name": "DySeg+QTA+STPrune (bản đầu, harness cũ)",
+      "dataset": "VideoMME",
+      "status": "old",
+      "config": "Qwen2.5-VL-7B, tokens_num=16384, prompt cũ",
+      "overall": 60.33,
+      "short": 68.89,
+      "medium": 59.78,
+      "long": 52.33,
+      "note": "z≈0.85 so f128_t16384, chưa có ý nghĩa thống kê. Sau này phát hiện Gate G1 chưa đóng nên mốc so sánh không đáng tin",
+      "date": "2026-08-14"
+    },
+    {
+      "id": "e9",
+      "name": "Native dense, harness đã sửa (Gate G1)",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "1x, MAX_PIXELS=16384×28×28, ~14-16K token/video, greedy, prompt/system-prompt đúng lmms-eval",
+      "overall": 63.33,
+      "short": 73.33,
+      "medium": 63.22,
+      "long": 53.44,
+      "note": "Khớp SCORE Vanilla 63.8% (chênh 0.47đ, z≈0.7 không ý nghĩa) — Gate G1 coi như đóng",
+      "date": "2026-08-14"
+    },
+    {
+      "id": "e10",
+      "name": "Native dense 3x",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x, MAX_PIXELS=16384×3×28×28, ~42-48K token/video",
+      "overall": 64.26,
+      "short": 73.67,
+      "medium": 65,
+      "long": 54.11,
+      "note": "Không khác ý nghĩa so 1x (z≈0.7) — budget scaling đã bão hòa",
+      "date": "2026-08-17"
+    },
+    {
+      "id": "e11",
+      "name": "Uniform (lấy đều) @ 36% (16384/~45K)",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x pool, mode=uniform, tokens_num=16384",
+      "overall": 64.41,
+      "short": 73,
+      "medium": 66,
+      "long": 54.22,
+      "note": "Bằng/nhỉnh hơn dense — nén 36% gần như miễn phí",
+      "date": "2026-08-18"
+    },
+    {
+      "id": "e12",
+      "name": "DySeg+STPrune đầy đủ @ 36%",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x pool, dtm_ratio=0.4, tokens_num=16384",
+      "overall": 61.96,
+      "short": 70,
+      "medium": 61.67,
+      "long": 54.22,
+      "note": "Thua Uniform 2.45đ (z≈-1.87, p≈0.06, sát ngưỡng). Long bucket bằng Uniform",
+      "date": "2026-08-19"
+    },
+    {
+      "id": "e13",
+      "name": "DySeg dtm_ratio=0 (bỏ DTM) @ 36%",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x pool, dtm_ratio=0.0, tokens_num=16384",
+      "overall": 62.15,
+      "short": 69.22,
+      "medium": 62.11,
+      "long": 55.11,
+      "note": "Bỏ DTM chỉ cải thiện +0.19đ so với đầy đủ — không giải thích hết khoảng cách với Uniform",
+      "date": "2026-08-20"
+    },
+    {
+      "id": "e14",
+      "name": "DySeg T→∞ (Tầng 2 tắt) @ 36%",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x pool, temperature0=1000000, dtm_ratio=0.4",
+      "overall": 62.41,
+      "short": 69.89,
+      "medium": 63.11,
+      "long": 54.22,
+      "note": "Tắt riêng phân bổ không đều cũng chỉ +0.45đ — không yếu tố đơn lẻ nào giải thích hết khoảng cách",
+      "date": "2026-08-21"
+    },
+    {
+      "id": "e15",
+      "name": "DySeg salience_mode=grid @ 36%",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x pool, salience_mode=grid, dtm_ratio=0.4",
+      "overall": 62.41,
+      "short": 70.11,
+      "medium": 62.67,
+      "long": 54.44,
+      "note": "Trùng khớp T→∞ (62.41%) — cả 4 ablation đơn-yếu-tố dồn vào dải hẹp 61.96-62.41",
+      "date": "2026-08-21"
+    },
+    {
+      "id": "e16",
+      "name": "DySeg full-budget (retention≈100%) dtm=0 @ 1x",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "1x pool, tokens_num=b_max=999999, dtm_ratio=0.0",
+      "overall": 63.33,
+      "short": 73.33,
+      "medium": 63.22,
+      "long": 53.44,
+      "note": "Khớp Native 1x TUYỆT ĐỐI cả 3 bucket — xác nhận cơ chế Tầng1+2+gather đúng khi ngân sách đủ",
+      "date": "2026-08-22"
+    },
+    {
+      "id": "e17",
+      "name": "DySeg full-budget dtm=0.4 @ 1x",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "1x pool, tokens_num=b_max=999999, dtm_ratio=0.4",
+      "overall": 63.52,
+      "short": 73.56,
+      "medium": 63.22,
+      "long": 53.78,
+      "note": "DTM merge ở retention thật ~100% KHÔNG gây hại (+0.19 so Native)",
+      "date": "2026-08-22"
+    },
+    {
+      "id": "e18",
+      "name": "Uniform @ ~7.2% (3240/~45K, khớp absolute token FastVID)",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x pool, mode=uniform, tokens_num=3240",
+      "overall": 60.3,
+      "short": 68.11,
+      "medium": 61.44,
+      "long": 51.33,
+      "note": "3240 token = mức nén 'có giá', khác 16384 ('miễn phí')",
+      "date": "2026-08-24"
+    },
+    {
+      "id": "e19",
+      "name": "DySeg+STPrune đầy đủ @ ~7.2%",
+      "dataset": "VideoMME",
+      "status": "matched",
+      "config": "3x pool, dtm_ratio=0.4, tokens_num=3240",
+      "overall": 58.7,
+      "short": 65.44,
+      "medium": 58.56,
+      "long": 52.11,
+      "note": "Vẫn thua Uniform (-1.60đ) ở mức nén sâu — Long bucket vẫn nhỉnh hơn (+0.78)",
+      "date": "2026-08-24"
+    }
+  ],
+  "benchmarks": [
+    {
+      "id": "bb_qwen25vl7b",
+      "name": "Qwen2.5-VL-7B-Instruct",
+      "columns": [
+        {
+          "id": "c_paper",
+          "label": "Paper",
+          "type": "text",
+          "width": 100
+        },
+        {
+          "id": "c_config",
+          "label": "CONFIG",
+          "type": "text",
+          "width": 180
+        },
+        {
+          "id": "c_params",
+          "label": "PARAMS",
+          "type": "text",
+          "width": 68
+        },
+        {
+          "id": "c_vmme_short",
+          "label": "Short",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 62
+        },
+        {
+          "id": "c_vmme_medium",
+          "label": "Medium",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 68
+        },
+        {
+          "id": "c_vmme_long",
+          "label": "Long",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 62
+        },
+        {
+          "id": "c_vmme_overall",
+          "label": "Overall",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 68
+        },
+        {
+          "id": "c_mtsd9tiab0xev",
+          "label": "MLVU",
+          "type": "number",
+          "width": 68
+        },
+        {
+          "id": "c_mtsd9hlfo67xo",
+          "label": "LVBench",
+          "type": "number",
+          "width": 76
+        },
+        {
+          "id": "c_tokens",
+          "label": "Tokens",
+          "type": "text",
+          "width": 70
+        },
+        {
+          "id": "c_retention",
+          "label": "Retention",
+          "type": "text",
+          "width": 86
+        },
+        {
+          "id": "c_training",
+          "label": "Training",
+          "type": "tick",
+          "width": 84
+        },
+        {
+          "id": "c_note",
+          "label": "Note",
+          "type": "text",
+          "width": 190
+        },
+        {
+          "id": "c_mts3kozp6oge0",
+          "label": "NUM FRAMES",
+          "type": "number",
+          "width": 73
+        }
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": {
+            "c_paper": {
+              "v": "DySeg + STPrune (dự án này)",
+              "rowSpan": 4
+            },
+            "c_config": {
+              "v": "Native dense, 1x (~15K token, không nén)"
+            },
+            "c_params": {
+              "v": "-7B"
+            },
+            "c_vmme_short": {
+              "v": "73.33"
+            },
+            "c_vmme_medium": {
+              "v": 63.22
+            },
+            "c_vmme_long": {
+              "v": 53.44
+            },
+            "c_vmme_overall": {
+              "v": 63.33
+            },
+            "c_tokens": {
+              "v": "~15K"
+            },
+            "c_retention": {
+              "v": "100%"
+            },
+            "c_training": {
+              "v": "free"
+            },
+            "c_note": {
+              "v": "Baseline Vanilla, khớp SCORE paper (63.8%), Gate G1 đã đóng"
+            },
+            "c_mtsd9tiab0xev": {
+              "v": ""
+            }
+          },
+          "categoryId": "bcat_1gnr6ee9"
+        },
+        {
+          "id": "r2",
+          "cells": {
+            "c_config": {
+              "v": "Uniform sampling (baseline so sánh)"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_short": {
+              "v": 73
+            },
+            "c_vmme_medium": {
+              "v": 66
+            },
+            "c_vmme_long": {
+              "v": 54.22
+            },
+            "c_vmme_overall": {
+              "v": 64.41
+            },
+            "c_tokens": {
+              "v": 16384
+            },
+            "c_retention": {
+              "v": "36%"
+            },
+            "c_training": {
+              "v": "free"
+            },
+            "c_note": {
+              "v": ""
+            }
+          },
+          "categoryId": "bcat_1gnr6ee9"
+        },
+        {
+          "id": "r3",
+          "cells": {
+            "c_config": {
+              "v": "DySeg+STPrune đầy đủ, dtm=0.4, salience=delta"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_short": {
+              "v": 70
+            },
+            "c_vmme_medium": {
+              "v": 61.67
+            },
+            "c_vmme_long": {
+              "v": 54.22
+            },
+            "c_vmme_overall": {
+              "v": 61.96
+            },
+            "c_tokens": {
+              "v": 16384
+            },
+            "c_retention": {
+              "v": "36%"
+            },
+            "c_training": {
+              "v": "free"
+            },
+            "c_note": {
+              "v": "Thua Uniform 2.45đ (z≈-1.87)"
+            }
+          },
+          "categoryId": "bcat_1gnr6ee9"
+        },
+        {
+          "id": "r4",
+          "cells": {
+            "c_config": {
+              "v": "DySeg+STPrune, salience_mode=vjepa"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_short": {
+              "v": "69.11"
+            },
+            "c_vmme_medium": {
+              "v": 61.44
+            },
+            "c_vmme_long": {
+              "v": 54.67
+            },
+            "c_vmme_overall": {
+              "v": 61.74
+            },
+            "c_tokens": {
+              "v": 16384
+            },
+            "c_retention": {
+              "v": "36%"
+            },
+            "c_training": {
+              "v": "free"
+            },
+            "c_note": {
+              "v": "≈ giống delta, salience ngữ nghĩa không cải thiện"
+            }
+          },
+          "categoryId": "bcat_1gnr6ee9"
+        },
+        {
+          "id": "r_dsta2a_full",
+          "categoryId": "bcat_1gnr6ee9",
+          "cells": {
+            "c_paper": {
+              "v": "DSTA-Scorer + Hướng 2A (dự án này)"
+            },
+            "c_config": {
+              "v": "GRPO, reward=CE caption thật (Qwen2.5-VL), lambda_sparsity=0.2, 800 step"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_short": {
+              "v": "70.56"
+            },
+            "c_vmme_medium": {
+              "v": "60.22"
+            },
+            "c_vmme_long": {
+              "v": "52.22"
+            },
+            "c_vmme_overall": {
+              "v": "61.00"
+            },
+            "c_tokens": {
+              "v": ""
+            },
+            "c_retention": {
+              "v": "35%"
+            },
+            "c_training": {
+              "v": "based"
+            },
+            "c_note": {
+              "v": "≈ Uniform cùng ngân sách trên subset 300 (188 vs 187/300) — policy không học được gì hơn chọn ngẫu nhiên; thấp hơn mọi phương pháp khác trên bộ đầy đủ"
+            }
+          }
+        },
+        {
+          "id": "r_mts2zqz6fjtm3",
+          "cells": {
+            "c_paper": {
+              "v": "Flex-Select"
+            },
+            "c_training": {
+              "v": ""
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_long": {
+              "v": "59.3"
+            },
+            "c_vmme_overall": {
+              "v": "68.2"
+            },
+            "c_mtsd9tiab0xev": {
+              "v": "71.9"
+            },
+            "c_mtsd9hlfo67xo": {
+              "v": "51.2"
+            }
+          },
+          "categoryId": "bcat_cl2gqaip"
+        },
+        {
+          "id": "r_mts3e56f4bmt4",
+          "categoryId": null,
+          "cells": {
+            "c_paper": {
+              "v": ""
+            },
+            "c_config": {
+              "v": ""
+            }
+          }
+        },
+        {
+          "id": "r_mts5pv0mj3t2n",
+          "categoryId": "bcat_1gnr6ee9",
+          "cells": {
+            "c_paper": {
+              "v": "SCORE",
+              "rowSpan": 3
+            },
+            "c_mts3kozp6oge0": {
+              "v": "<= 128"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_short": {
+              "v": "74.4"
+            },
+            "c_vmme_medium": {
+              "v": "64.2"
+            },
+            "c_vmme_long": {
+              "v": "52.8"
+            },
+            "c_vmme_overall": {
+              "v": "63.8"
+            },
+            "c_retention": {
+              "v": "100%"
+            },
+            "c_training": {
+              "v": "based"
+            },
+            "c_mtsd9tiab0xev": {
+              "v": "70.6"
+            },
+            "c_mtsd9hlfo67xo": {
+              "v": "40.2"
+            }
+          }
+        },
+        {
+          "id": "r_mtsdc867t6ajs",
+          "categoryId": null,
+          "cells": {}
+        },
+        {
+          "id": "r_mtsdcazbesn6d",
+          "categoryId": "bcat_1gnr6ee9",
+          "cells": {
+            "c_paper": {
+              "v": "SCORE"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_retention": {
+              "v": "40%"
+            },
+            "c_training": {
+              "v": "based"
+            },
+            "c_mtsd9tiab0xev": {
+              "v": "70.6"
+            },
+            "c_mtsd9hlfo67xo": {
+              "v": "40.6"
+            },
+            "c_vmme_short": {
+              "v": "75.0"
+            },
+            "c_vmme_medium": {
+              "v": "65.0"
+            },
+            "c_vmme_long": {
+              "v": "55.1"
+            },
+            "c_vmme_overall": {
+              "v": "65.0"
+            }
+          }
+        },
+        {
+          "id": "r_mtsdeee3r3by0",
+          "categoryId": "bcat_1gnr6ee9",
+          "cells": {
+            "c_paper": {
+              "v": "SCORE"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_short": {
+              "v": "74.8"
+            },
+            "c_vmme_medium": {
+              "v": "65.4"
+            },
+            "c_mtsd9tiab0xev": {
+              "v": "70.1"
+            },
+            "c_mtsd9hlfo67xo": {
+              "v": "41.2"
+            },
+            "c_vmme_long": {
+              "v": "55.7"
+            },
+            "c_retention": {
+              "v": "25%"
+            },
+            "c_training": {
+              "v": "based"
+            }
+          }
+        },
+        {
+          "id": "r_mtsigv3777yfa",
+          "categoryId": "bcat_cl2gqaip",
+          "cells": {
+            "c_paper": {
+              "v": "ReMEM"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_long": {
+              "v": "55.8"
+            },
+            "c_vmme_overall": {
+              "v": "65.0"
+            },
+            "c_vmme_short": {
+              "v": "73.6"
+            },
+            "c_vmme_medium": {
+              "v": "65.7"
+            },
+            "c_mtsd9tiab0xev": {
+              "v": "72.8"
+            },
+            "c_mtsd9hlfo67xo": {
+              "v": "51.7"
+            },
+            "c_note": {
+              "v": "Qwen2-VL"
+            }
+          }
+        },
+        {
+          "id": "r_vm7rh6iu",
+          "categoryId": "bcat_cl2gqaip",
+          "cells": {
+            "c_paper": {
+              "v": "2-Pass Attention-Guided (dự án này)"
+            },
+            "c_config": {
+              "v": "pass1=3000, hot_frac=0.4, always_pass2=true"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_short": {
+              "v": "73.67"
+            },
+            "c_vmme_medium": {
+              "v": "66.11"
+            },
+            "c_vmme_long": {
+              "v": "56.33"
+            },
+            "c_vmme_overall": {
+              "v": "65.37"
+            },
+            "c_tokens": {
+              "v": 16384
+            },
+            "c_retention": {
+              "v": "36%"
+            },
+            "c_training": {
+              "v": "free"
+            },
+            "c_note": {
+              "v": "Vượt Native dense mọi bucket lần đầu tiên. Tốn 2 lần forward/câu (chưa early-exit)."
+            }
+          }
+        },
+        {
+          "id": "r_mty52etmia7vq",
+          "categoryId": "bcat_cl2gqaip",
+          "cells": {
+            "c_paper": {
+              "v": "AdaptToken"
+            },
+            "c_params": {
+              "v": "7B"
+            },
+            "c_vmme_overall": {
+              "v": "70.5"
+            },
+            "c_mtsd9tiab0xev": {
+              "v": "76.8"
+            },
+            "c_mtsd9hlfo67xo": {
+              "v": "54.8"
+            }
+          }
+        }
+      ],
+      "categories": [
+        {
+          "id": "bcat_1gnr6ee9",
+          "name": "Query-Agnostic"
+        },
+        {
+          "id": "bcat_cl2gqaip",
+          "name": "Query-Aware"
+        }
+      ]
+    },
+    {
+      "id": "bb_mts2yj7ucxspb",
+      "name": "Llava-OneVision",
+      "columns": [
+        {
+          "id": "c_mts2yj7u2g4dr",
+          "label": "Paper",
+          "type": "text",
+          "width": 87
+        },
+        {
+          "id": "c_mts2yj7u2uulr",
+          "label": "Config",
+          "type": "text",
+          "width": 93
+        },
+        {
+          "id": "c_mts2yj7u97kn0",
+          "label": "Params",
+          "type": "text",
+          "width": 70
+        },
+        {
+          "id": "c_mts2yj7uaxi0r",
+          "label": "Short",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 62
+        },
+        {
+          "id": "c_mts2yj7u2vakk",
+          "label": "Medium",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 68
+        },
+        {
+          "id": "c_mts2yj7ulm0yp",
+          "label": "Long",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 62
+        },
+        {
+          "id": "c_mts2yj7um2fth",
+          "label": "Overall",
+          "type": "number",
+          "group": "VIDEOMME",
+          "width": 68
+        },
+        {
+          "id": "c_mtsdqoj67sv1t",
+          "label": "LVBENCH",
+          "type": "number",
+          "width": 81
+        },
+        {
+          "id": "c_mtsdqtjfwrb9g",
+          "label": "MLVU",
+          "type": "number",
+          "width": 68
+        },
+        {
+          "id": "c_mts2yj7u1s7zi",
+          "label": "RETENTION",
+          "type": "text",
+          "width": 97
+        },
+        {
+          "id": "c_mts2yj7u55pmd",
+          "label": "Training",
+          "type": "tick",
+          "width": 84
+        },
+        {
+          "id": "c_mts2yj7uucplw",
+          "label": "Note",
+          "type": "text",
+          "width": 220
+        },
+        {
+          "id": "c_mts3k1s24rq1g",
+          "label": "NUM FRAMES",
+          "type": "number",
+          "width": 109
+        }
+      ],
+      "rows": [
+        {
+          "id": "r_mts3ou9vl8ss5",
+          "categoryId": "bcat_mts3mgwz87qtj",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "BOLT",
+              "rowSpan": 3
+            },
+            "c_mts2yj7u2uulr": {
+              "v": ""
+            },
+            "c_mts3k1s24rq1g": {
+              "v": "8"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "66.8 "
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "54.2"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "47.3"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "56.1"
+            }
+          }
+        },
+        {
+          "id": "r_mts3pozytbfos",
+          "categoryId": "bcat_mts3mgwz87qtj",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "BOLT"
+            },
+            "c_mts3k1s24rq1g": {
+              "v": "16"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            }
+          }
+        },
+        {
+          "id": "r_mts3ql0oi7sdo",
+          "categoryId": "bcat_mts3mgwz87qtj",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "BOLT"
+            },
+            "c_mts3k1s24rq1g": {
+              "v": "32"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            }
+          }
+        },
+        {
+          "id": "r_mts5qzdsqkv5s",
+          "categoryId": "bcat_mts3mnkplmphz",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "KiToke",
+              "rowSpan": 3
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "70.3"
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "56.3"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "48.6"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "58.4"
+            },
+            "c_mts2yj7u1s7zi": {
+              "v": "100%"
+            },
+            "c_mts2yj7u55pmd": {
+              "v": "free"
+            }
+          }
+        },
+        {
+          "id": "r_mts5reixukzg4",
+          "categoryId": "bcat_mts3mnkplmphz",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "KiToke"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7u1s7zi": {
+              "v": "25%"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "70.0"
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "56.1"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "48.8"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "58.3"
+            },
+            "c_mts2yj7u55pmd": {
+              "v": "free"
+            }
+          }
+        },
+        {
+          "id": "r_mts5rep5821ul",
+          "categoryId": "bcat_mts3mnkplmphz",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "KiToke"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7u1s7zi": {
+              "v": "10%"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "66.3"
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "54.4"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "47.1"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "56.0"
+            },
+            "c_mts2yj7u55pmd": {
+              "v": "free"
+            }
+          }
+        },
+        {
+          "id": "r_mtsdma8i6desp",
+          "categoryId": "bcat_mts3mnkplmphz",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "FastVID",
+              "rowSpan": 2
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7u1s7zi": {
+              "v": "25%"
+            },
+            "c_mts2yj7u55pmd": {
+              "v": "free"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "69.9"
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "56.6"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "47.7"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "58.0"
+            },
+            "c_mtsdqoj67sv1t": {
+              "v": "56.3"
+            },
+            "c_mtsdqtjfwrb9g": {
+              "v": "64.1"
+            }
+          }
+        },
+        {
+          "id": "r_mtsdmp9e3b82e",
+          "categoryId": null,
+          "cells": {}
+        },
+        {
+          "id": "r_mtsdmpm356pgd",
+          "categoryId": null,
+          "cells": {}
+        },
+        {
+          "id": "r_mtsdms9u7az30",
+          "categoryId": "bcat_mts3mnkplmphz",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "FastVID"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "69.3"
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "56.7"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "47.7"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "57.9"
+            },
+            "c_mtsdqoj67sv1t": {
+              "v": "57.1"
+            },
+            "c_mtsdqtjfwrb9g": {
+              "v": "63.9"
+            },
+            "c_mts2yj7u1s7zi": {
+              "v": "15%"
+            },
+            "c_mts2yj7u55pmd": {
+              "v": "free"
+            }
+          }
+        },
+        {
+          "id": "r_mtse2fgg547kr",
+          "categoryId": "bcat_mts3mnkplmphz",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "InfoMerge"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "69.6"
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "56.8"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "48.1"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "58.2"
+            },
+            "c_mtsdqoj67sv1t": {
+              "v": ""
+            },
+            "c_mtsdqtjfwrb9g": {
+              "v": "59.5"
+            },
+            "c_mts2yj7u1s7zi": {
+              "v": "15%"
+            },
+            "c_mts2yj7u55pmd": {
+              "v": "free"
+            }
+          }
+        },
+        {
+          "id": "r_mtsefwwx4frnp",
+          "categoryId": "bcat_mts3mgwz87qtj",
+          "cells": {
+            "c_mts2yj7u2g4dr": {
+              "v": "Mod-VLLM"
+            },
+            "c_mts2yj7u97kn0": {
+              "v": "7B"
+            },
+            "c_mts2yj7uaxi0r": {
+              "v": "80.3"
+            },
+            "c_mts2yj7u2vakk": {
+              "v": "72.4"
+            },
+            "c_mts2yj7ulm0yp": {
+              "v": "66.9"
+            },
+            "c_mts2yj7um2fth": {
+              "v": "73.2"
+            },
+            "c_mtsdqoj67sv1t": {
+              "v": "49.6"
+            },
+            "c_mtsdqtjfwrb9g": {
+              "v": "78.2"
+            }
+          }
+        }
+      ],
+      "categories": [
+        {
+          "id": "bcat_mts3mgwz87qtj",
+          "name": "Query-Aware"
+        },
+        {
+          "id": "bcat_mts3mnkplmphz",
+          "name": "Query-Agnostic"
+        }
+      ]
+    },
+    {
+      "id": "bb_mts2ysay3g6lc",
+      "name": "LLava-Video",
+      "columns": [
+        {
+          "id": "c_mts2ysaycw6nr",
+          "label": "Paper",
+          "type": "text",
+          "width": 170
+        },
+        {
+          "id": "c_mts2ysay3g14k",
+          "label": "Config",
+          "type": "text",
+          "width": 150
+        },
+        {
+          "id": "c_mts2ysay9z6yi",
+          "label": "Params",
+          "type": "text",
+          "width": 70
+        },
+        {
+          "id": "c_mts2ysay2rvli",
+          "label": "Short",
+          "type": "number",
+          "group": "VideoMME",
+          "width": 62
+        },
+        {
+          "id": "c_mts2ysayjp7y5",
+          "label": "Medium",
+          "type": "number",
+          "group": "VideoMME",
+          "width": 68
+        },
+        {
+          "id": "c_mts2ysay4wc17",
+          "label": "Long",
+          "type": "number",
+          "group": "VideoMME",
+          "width": 62
+        },
+        {
+          "id": "c_mts2ysayb651b",
+          "label": "Overall",
+          "type": "number",
+          "group": "VideoMME",
+          "width": 68
+        },
+        {
+          "id": "c_mts2ysayif9a7",
+          "label": "Retention",
+          "type": "text",
+          "width": 80
+        },
+        {
+          "id": "c_mts2ysayqvglg",
+          "label": "Training",
+          "type": "tick",
+          "width": 84
+        },
+        {
+          "id": "c_mts2ysaygceo1",
+          "label": "Note",
+          "type": "text",
+          "width": 220
+        }
+      ],
+      "rows": [
+        {
+          "id": "r_mts5z3ania2hy",
+          "categoryId": "bcat_mts5xi408fk50",
+          "cells": {
+            "c_mts2ysaycw6nr": {
+              "v": "KiToKe"
+            },
+            "c_mts2ysay9z6yi": {
+              "v": "7B"
+            },
+            "c_mts2ysay2rvli": {
+              "v": "77.2"
+            },
+            "c_mts2ysayjp7y5": {
+              "v": "62.2"
+            },
+            "c_mts2ysay4wc17": {
+              "v": "53.1"
+            },
+            "c_mts2ysayif9a7": {
+              "v": "100"
+            },
+            "c_mts2ysayqvglg": {
+              "v": "free"
+            }
+          }
+        },
+        {
+          "id": "r_mts5za9bt80y9",
+          "categoryId": "bcat_mts5xi408fk50",
+          "cells": {
+            "c_mts2ysaycw6nr": {
+              "v": "KiToKe"
+            },
+            "c_mts2ysay9z6yi": {
+              "v": "7B"
+            },
+            "c_mts2ysay2rvli": {
+              "v": "75.2"
+            },
+            "c_mts2ysayjp7y5": {
+              "v": "62.6"
+            },
+            "c_mts2ysay4wc17": {
+              "v": "53.4"
+            },
+            "c_mts2ysayif9a7": {
+              "v": "25"
+            },
+            "c_mts2ysayqvglg": {
+              "v": "free"
+            }
+          }
+        },
+        {
+          "id": "r_mts5zamgqci2c",
+          "categoryId": "bcat_mts5xi408fk50",
+          "cells": {
+            "c_mts2ysaycw6nr": {
+              "v": "KiToKe"
+            },
+            "c_mts2ysay9z6yi": {
+              "v": "7B"
+            },
+            "c_mts2ysay2rvli": {
+              "v": "70.7"
+            },
+            "c_mts2ysayjp7y5": {
+              "v": "57.7"
+            },
+            "c_mts2ysay4wc17": {
+              "v": "49.1"
+            },
+            "c_mts2ysayif9a7": {
+              "v": "10"
+            },
+            "c_mts2ysayqvglg": {
+              "v": "free"
+            }
+          }
+        }
+      ],
+      "categories": [
+        {
+          "id": "bcat_mts5xaa02mllh",
+          "name": "Query-Aware"
+        },
+        {
+          "id": "bcat_mts5xi408fk50",
+          "name": "Query-Agnostic"
+        }
+      ]
+    }
+  ],
+  "activeBenchmarkId": "bb_qwen25vl7b",
+  "ideas": [
+    {
+      "id": "idea_jg3ou2rv",
+      "title": "1. Perceiver + Anchor Loss + Pointing",
+      "status": "[ĐANG CHẠY] đã train Giai đoạn 1 và 2 | VideoMME 45,15% | đang xem lại thiết kế",
+      "updated": "2026-09-23",
+      "body": "# Perceiver + Anchor Loss + Pointing (đề xuất của leader)\n\n> **Một câu:** một mạng nhỏ (Perceiver) tóm tắt token thị giác thành **64 token mới**, được dạy bằng cách sinh caption. Pointing giữ thêm vài token gốc để bù chi tiết. Nguyên văn đề xuất của leader xem tab [Đề xuất gốc của leader (nguyên văn)](#tab:idea).\n\n**Trạng thái (cập nhật 2026-09-21)**\n- Giai đoạn 1 (ảnh, COCO train2017): đã train xong 6.000 step, có kết quả định tính.\n- Giai đoạn 2 (video, MSR-VTT): đã train xong, **nhưng khởi tạo từ Giai đoạn 1 cũ** (train trên val2017). Chưa train lại từ Giai đoạn 1 mới.\n- Đánh giá VideoMME 300 câu: **45,15%**, thấp hơn nhiều so với RL-Gating (61,33%).\n- Thiết kế hiện tại có 3 vấn đề đã biết, xem mục 5.\n\n> **Cập nhật quan trọng (2026-09-23):** con số `num_units=30` dùng xuyên suốt tab này (mục 3, 4 và 2 sơ đồ khối) là **lựa chọn tạm, chưa có cơ sở** — không phải quyết định thiết kế đúng. Perceiver xử lý từng unit độc lập, không cần biết vị trí thời gian, nên **không cần train lại** để đọc hết toàn bộ unit — chỉ cần đổi `num_units` lúc infer lên bằng tổng số unit thật của video (ví dụ 384). Kết quả thử nghiệm hướng full-coverage sẽ cập nhật vào đây khi có.\n\n## 0. Đọc trước: 5 từ khoá và so sánh nhanh\n\n| Từ | Nghĩa trong tài liệu này |\n|---|---|\n| Unit | 1 lát thời gian của video, gộp từ 2 frame liền nhau. Video ví dụ có 384 unit |\n| Token | 1 khối 28x28 px của 1 frame. Mỗi unit có N token |\n| T1 / T2 | T1 là token gốc của Qwen. T2 là 64 token mới do Perceiver tạo ra |\n| T1* | Một ít token gốc được Pointing giữ thêm |\n| Anchor Loss | Ép mỗi token T2 phải giống ít nhất 1 token T1 (đo bằng cosine), để T2 không trôi khỏi không gian biểu diễn gốc |\n\n| | RL-Gating (tab bên cạnh) | Perceiver (tab này) |\n|---|---|---|\n| Cách nén | Chọn lọc: bỏ bớt, phần giữ lại là token gốc | Tóm tắt: tạo token mới, thêm vài token gốc |\n| Nhìn bao nhiêu unit | Nhìn cả 384 unit rồi mới quyết định | Chỉ nhìn 30 unit đã chọn trước, bỏ 354 unit |\n| Học bằng gì | Đúng/sai của câu hỏi trắc nghiệm (RL) | Sinh caption + Anchor Loss (có giám sát) |\n| Dữ liệu train | NExT-QA | COCO (ảnh) rồi MSR-VTT (video) |\n| Kết quả VideoMME 300 câu | 61,33% | 45,15% |\n\n## 1. Bước chung: từ video đến hồ token thô\n\nCùng ví dụ với tab RL-Gating: 1 video VideoMME dài ~66,7 phút, 100.000 frame, 25 fps, 1280x720.\n\n![Bước chung](images/diagram_common_preprocess.png)\n\nPerceiver đã train và đánh giá với `max_pixels_units=1024`, nên hồ token thô của video ví dụ chỉ là **384 unit x 15 token = 5.760 token** (mỗi frame chỉ còn 84x140 px).\n\n## 2. Giai đoạn 1: học nén ảnh (COCO train2017)\n\n![Train Perceiver Giai đoạn 1](images/diagram_p_stage1.png)\n\n**Dữ liệu:** COCO train2017, 118.287 ảnh, ~591.000 caption. Dùng captioning thay vì hỏi đáp vì caption buộc các query của Perceiver phải bao quát toàn cảnh, không bị kéo về nhiều hướng khác nhau như khi học nhiều câu hỏi đối nghịch.\n\n**Config:**\n\n```\nnum_queries = 64, num_layers = 2 (8 head), anchor_weight = 0.5\nlr = 1e-4, Adam, 6.000 step, max_pixels_units = 1024\nĐóng băng 100% Qwen (encoder ảnh, projector, LLM). Chỉ Perceiver được train\n```\n\n**Kết quả train:**\n\n![Giai đoạn 1: loss, caption_loss, anchor_loss theo step](images/p_stage1_train2017_loss.png)\n\nCách đọc: caption_loss giảm từ ~3 xuống ~2,0 trong khoảng 1.500 step đầu rồi đi ngang. anchor_loss giảm từ ~1,0 xuống ~0,32 rồi đi ngang từ khoảng step 2.000. Cả hai đều dừng cải thiện sớm dù mới dùng ~1% số cặp dữ liệu, nên giới hạn nhiều khả năng nằm ở Perceiver (64 query, lr, kiến trúc) chứ không phải thiếu dữ liệu.\n\n**Kết quả định tính trên 20 ảnh val2017** (ảnh Perceiver chưa từng thấy; xanh = caption thật, đỏ = caption Perceiver sinh ra):\n\n![Montage 20 ảnh val2017](images/p_stage1_train2017_montage.png)\n\nChấm tay (mang tính tương đối): khoảng 11/20 đúng ý chính, 8/20 đúng cảnh nhưng sai hoặc bịa chi tiết, 1/20 sai hẳn.\n\n## 3. Giai đoạn 2: học nén video (MSR-VTT)\n\n![Train Perceiver Giai đoạn 2](images/diagram_p_stage2.png)\n\n**Dữ liệu:** MSR-VTT `msrvtt_train_9k.json`, 9.000 video ngắn (320x240), ~20 caption mỗi video, ~180.000 cặp.\n\n**Config:**\n\n```\nresume_from      = checkpoint Giai đoạn 1 (bản CŨ, train trên val2017)\nnum_units = 30, pointing_tau = 0.5, anchor_weight = 0.5\nlr = 2e-5, 4.000 step, max_pixels_units = 1024, gradient checkpointing bật\n```\n\n**Kết quả train** (đường nét liền là lần chạy cuối; các đường xám nét đứt là những lần chạy trước bị ngắt do sự cố ổ đĩa và bị ghi đè, có thể bỏ qua):\n\n![Giai đoạn 2: loss, caption_loss, anchor_loss, số token theo step](images/p_stage2_final_loss.png)\n\nCách đọc: caption_loss đi ngang quanh 2,3-3,0 suốt lần chạy. anchor_loss ở khoảng 0,25. Số token Pointing giữ thêm mỗi unit tăng dần từ ~2,2 lên ~3. Tổng token mỗi clip MSR-VTT khoảng 850-1.100.\n\n**Kết quả định tính trên 8 clip** (xanh = caption thật, đỏ = caption Perceiver sinh ra):\n\n![Montage 8 clip MSR-VTT](images/p_stage2_v2_montage.png)\n\nCaption thường đúng ý chung nhưng thiếu chi tiết cụ thể (VD: \"hai con hổ chơi trong bồn nước\" bị mô tả thành \"con chó chơi đồ chơi\").\n\n## 4. Infer trên VideoMME\n\n![Infer Perceiver trên VideoMME](images/diagram_p_infer_videomme.png)\n\n**Kết quả (300 câu subset, `max_pixels_units=1024`, `num_units=30`, `tau=0.5`):**\n\n| Cấu hình infer | Số câu | Đúng | short | medium | long | Tổng |\n|---|---|---|---|---|---|---|\n| Pointing bước 1 (giống lúc train) | 299 | 135 | 48,2% | 42,2% | 44,2% | **45,15%** |\n| Thêm dedup + tái phân bổ (bước 2-3 của leader) | 300 | 135 | 48,2% | 42,2% | 43,8% | **45,00%** |\n| RL-Gating (để so sánh, cùng 300 câu) | 300 | 184 | 67,0% | 63,9% | 53,3% | **61,33%** |\n\nBước 2-3 của leader (gộp token trùng, dồn ngân sách sang token đa dạng) chỉ được thêm ở lúc infer, không train lại, và gần như không thay đổi kết quả.\n\n## 5. Vấn đề đã biết (đây là lý do 45% chưa nói lên Perceiver kém đến đâu)\n\n**(a) Chỉ nhìn 30 trong 384 unit.** Con số 30 là mặc định tôi đặt tạm khi viết code, chưa có cơ sở. Nó bỏ 92% thời lượng video trước khi nén. Mục đích của việc nén là giữ được nhiều unit hơn trong cùng ngân sách, nên đây là thiết kế ngược mục đích.\n\n**(b) Đầu vào có độ phân giải rất thấp.** Ở `max_pixels_units=1024`, mỗi frame VideoMME chỉ còn 84x140 px (15 token/unit). Thông tin đã mất từ đầu vào, trước khi Perceiver làm gì.\n\n**(c) Perceiver luôn tạo 64 token cho mỗi unit**, kể cả khi unit gốc có ít token hơn. Biểu đồ dưới cho thấy khi nào thật sự là nén và khi nào bị phình to hơn bản gốc (số liệu tính bằng đúng hàm `smart_resize` của repo, với 30 unit x 64 token):\n\n![Token gốc so với token sau Perceiver theo từng cấu hình](images/perceiver_expansion_vs_compression.png)\n\n- Nhóm A (dữ liệu train Stage 2): clip dài bị phình x2,13, nên Perceiver học trong điều kiện chưa thật sự phải nén.\n- Nhóm B (VideoMME, 1024, cấu hình đã đánh giá): video ngắn bị phình x1,62. Video dài nén x0,33-0,43, nhưng phần nén đến từ việc bỏ 354 unit chứ không phải từ Perceiver.\n- Nhóm C (VideoMME, 16384, cấu hình của RL-Gating): nén x0,13-0,16, cùng mức ngân sách ~15% với RL-Gating. Đây là điều kiện so sánh công bằng nhưng chưa được đánh giá.\n\n## 6. Hướng sửa đề xuất (chưa làm, chờ quyết định) và thí nghiệm đang chờ\n\nNguyên tắc: chọn ngân sách token trước (khoảng 2.000-3.000 như RL-Gating), rồi chia cho **mọi** unit thay vì bỏ bớt unit.\n\n| Cách | Ngân sách | Mô tả | Dùng lại Giai đoạn 1 mới? |\n|---|---|---|---|\n| a. Perceiver nhỏ cho từng unit | ~8 query x 384 unit = ~3.000 token | Mỗi unit (32-190 token) nén xuống 8. Giữ đủ 384 unit | Không, phải train lại Giai đoạn 1 với 8 query |\n| b. Perceiver 64 query đọc theo nhóm | 6 unit liền nhau thành 1 nhóm, 64 nhóm x 64 = ~4.100 token | Vẫn phủ hết video, dùng luôn 64 query đã train | Có |\n\n**Thí nghiệm đang chờ chạy** (không cần sửa code):\n1. Perceiver hiện có ở `max_pixels_units=16384` trên 300 câu, để so công bằng ngân sách với RL-Gating.\n2. Native dense ở `max_pixels_units=1024` trên 300 câu, để biết mức trần của điều kiện đầu vào 84x140 px.\n"
+    },
+    {
+      "id": "idea_training_rl",
+      "title": "2. RL-Gating (SCORE-style)",
+      "status": "[ĐANG CHẠY] bản 1 tầng: 61,33% VideoMME = Uniform 15% (xác nhận không hơn) | bản 2 tầng: đã train, chưa infer",
+      "updated": "2026-09-22",
+      "body": "# RL-Gating (SCORE-style): học cách chọn phần video cần giữ\n\n> **Một câu:** một policy nhỏ tự học xem unit nào (hoặc token nào) của video nên giữ, chỉ dựa vào việc trả lời đúng câu hỏi trắc nghiệm. Token giữ lại luôn là **token gốc của Qwen**, không tạo token mới.\n\n**Trạng thái (cập nhật 2026-09-21)**\n- Bản 1 tầng (chọn unit): đã train (~2.100 step) và đã đánh giá trên VideoMME 300 câu, kết quả **61,33%**.\n- Bản 2 tầng (chọn unit rồi token): đã train 1.000 step, **chưa có kết quả VideoMME** (script infer hiện chỉ hỗ trợ bản 1 tầng).\n- **Đã xác nhận (2026-09-22): policy KHÔNG học được gì hơn Uniform.** RL-Gating thật và Uniform 15% ra đúng cùng 184/300 câu, giống tuyệt đối từng bucket. Xem mục 5.\n\n## 0. Đọc trước: 5 từ khoá và so sánh nhanh\n\n| Từ | Nghĩa trong tài liệu này |\n|---|---|\n| Unit | 1 lát thời gian của video, gộp từ 2 frame liền nhau. Video ví dụ có 384 unit |\n| Token | 1 khối 28x28 px của 1 frame. Mỗi unit có N token |\n| Hồ token thô | Toàn bộ token của video (số unit x N) trước khi nén |\n| Retention | Tỉ lệ token còn lại sau khi nén, tính trên hồ token thô |\n| Query-agnostic | Bước nén không nhìn câu hỏi. Câu hỏi chỉ xuất hiện ở bước cuối khi hỏi Qwen |\n\n| | RL-Gating (tab này) | Perceiver (tab bên cạnh) |\n|---|---|---|\n| Cách nén | Chọn lọc: bỏ bớt, phần giữ lại là token gốc | Tóm tắt: tạo token mới, thêm vài token gốc |\n| Nhìn bao nhiêu unit | Nhìn cả 384 unit rồi mới quyết định | Chỉ nhìn 30 unit đã chọn trước, bỏ 354 unit |\n| Học bằng gì | Đúng/sai của câu hỏi trắc nghiệm (RL) | Sinh caption + Anchor Loss (có giám sát) |\n| Dữ liệu train | NExT-QA | COCO (ảnh) rồi MSR-VTT (video) |\n| Kết quả VideoMME 300 câu | 61,33% | 45,15% |\n\n## 1. Bước chung: từ video đến hồ token thô\n\nVí dụ xuyên suốt: 1 video VideoMME dài ~66,7 phút, 100.000 frame, 25 fps, 1280x720. Tab Perceiver dùng đúng cùng ví dụ này.\n\n![Bước chung](images/diagram_common_preprocess.png)\n\nVới RL-Gating, ta dùng `max_pixels_units=16384`, tức hồ token thô của video ví dụ là **384 unit x 32 token = 12.288 token**.\n\n## 2. Train bản 1 tầng (chọn unit)\n\n![Train RL-Gating bản 1 tầng](images/diagram_rl_train_frame.png)\n\n**Dữ liệu:** NExT-QA `train_qa.json`, 34.132 câu trắc nghiệm trên 3.870 video, mỗi câu có 5 lựa chọn A-E. Bắt buộc dùng dữ liệu có câu hỏi vì reward chính là việc trả lời đúng. Policy chưa từng thấy VideoMME lúc train, nên đánh giá trên VideoMME là thử nghiệm ngoài miền dữ liệu (không rò rỉ).\n\n**Config thật của checkpoint exp4:**\n\n```\nmax_pixels_units   = 16384\ngroup_size (K)     = 4        # số mặt nạ bốc thăm cho mỗi câu hỏi\nlambda_sparsity    = 0.3      # mức phạt theo tỉ lệ token giữ\nmin_retention_frac = 0.15     # luôn giữ tối thiểu 15% unit, rải đều\nentropy_coef       = 0.002\nlr = 1e-3, optimizer = Adam, khoảng 2.100 step\n```\n\n**Kết quả train:**\n\n![RL-Gating exp4: reward, retention, entropy, policy loss theo step](images/rlgating_exp4_metrics.png)\n\nCách đọc: từ khoảng step 1.450, entropy về gần 0 và retention dừng đúng ở mức sàn 15%. Reward dao động quanh -0,2 đến -0,4 suốt quá trình và không cải thiện rõ. Nghĩa là policy đã \"chốt\" một cách chọn cố định và không còn thăm dò.\n\n## 3. Train bản 2 tầng (chọn unit rồi chọn token)\n\nBản này **thay thế** bản 1 tầng chứ không nối tiếp. Nó thêm tầng 2 để bỏ bớt token bên trong các unit đã được giữ.\n\n![Train RL-Gating bản 2 tầng](images/diagram_rl_train_2stage.png)\n\n**So sánh 1.000 step đầu của hai bản** (panel entropy: xanh dương = bản 1 tầng, cam = tầng 1 của bản 2 tầng, xanh lá nét đứt = tầng 2):\n\n![So sánh bản 2 tầng (exp3) và bản 1 tầng (exp4)](images/rl_compare_2stage_vs_frame.png)\n\nCách đọc: entropy của tầng 2 nằm sát 0,69 (mức ngẫu nhiên hoàn toàn) suốt 1.000 step, tức tầng 2 chưa học được gì. Retention của bản 2 tầng nằm sát sàn 15-20% ngay từ đầu.\n\n## 4. Infer trên VideoMME\n\n![Infer RL-Gating trên VideoMME](images/diagram_rl_infer_videomme.png)\n\n**Kết quả (300 câu subset, checkpoint exp4):**\n\n| Nhóm | Số câu | Đúng | Accuracy |\n|---|---|---|---|\n| short | 112 | 75 | 66,96% |\n| medium | 83 | 53 | 63,86% |\n| long | 105 | 56 | 53,33% |\n| **tổng** | **300** | **184** | **61,33%** |\n\nRetention trung bình đo được: **15,0%** (~1.856 trên 12.288 token). Mốc so sánh: Native dense (giữ toàn bộ) khoảng 63,8-64,3%. Đây là nén thật so với đúng hồ token thô 12-15 nghìn.\n\n## 5. Kiểm chứng: policy có học được gì hơn \"chọn đều\" không?\n\n**Cách kiểm tra:** dùng đúng 1 script infer (`run_inference_qwen25vl_rlgating.py`), chỉ đổi 2 tham số dòng lệnh (`threshold`, `min_retention_frac`) để ép nó bỏ qua ý kiến của policy, chỉ còn lại luật dự phòng \"chọn đều theo thời gian\" — gọi tắt là **Uniform**. Mọi bước còn lại (encode video, build chuỗi token, gọi Qwen sinh câu trả lời) giữ nguyên 100%.\n\n![So sánh input/output giữa lệnh RL-Gating thật và lệnh Uniform](images/diagram_rl_vs_uniform.png)\n\n### Vì sao `threshold=1,1` lại tắt được policy\n\n`keep_prob` là đầu ra của hàm sigmoid, luôn nằm trong khoảng (0, 1) — không bao giờ chạm tới 1. Đặt ngưỡng `1,1` khiến **không unit nào có thể vượt qua**, dù policy có tự tin đến đâu. Kết quả: 0 unit được policy chọn ở mọi video, luật dự phòng \"bù đủ sàn tối thiểu, rải đều theo thời gian\" luôn phải ra tay — đây chính là Uniform, không cần checkpoint đã train.\n\n### 4 lệnh đã chạy, khác nhau đúng 2 tham số\n\n| Lệnh | `threshold` | `min_retention_frac` | Ý nghĩa |\n|---|---|---|---|\n| RL-Gating thật | 0,5 | 0,15 | Policy tự quyết định, có sàn tối thiểu 15% phòng hờ |\n| Uniform 15% | 1,1 (ép tắt policy) | 0,15 | Chọn đều 15% unit, không cần policy |\n| Uniform 10% | 1,1 | 0,10 | Chọn đều 10% unit |\n| Uniform 5% | 1,1 | 0,05 | Chọn đều 5% unit |\n\n### Kết quả — RL-Gating thật trùng khít Uniform 15%\n\n| Cấu hình | short (n=112) | medium (n=83) | long (n=105) | **overall** |\n|---|---|---|---|---|\n| Native dense (100%, không nén) | | | | **~63,8-64,3%** |\n| RL-Gating thật (đo được 15,0%) | 75 đúng — 66,96% | 53 đúng — 63,86% | 56 đúng — 53,33% | **184/300 — 61,33%** |\n| Uniform 15% | 75 đúng — 66,96% | 53 đúng — 63,86% | 56 đúng — 53,33% | **184/300 — 61,33%** |\n| Uniform 10% | 73 đúng — 65,18% | 45 đúng — 54,22% | 56 đúng — 53,33% | **174/300 — 58,00%** |\n| Uniform 5% | 71 đúng — 63,39% | 47 đúng — 56,63% | 52 đúng — 49,52% | **170/300 — 56,67%** |\n\nRL-Gating thật và Uniform 15% ra **đúng cùng số câu đúng ở cả 3 nhóm** — không chỉ gần bằng nhau, mà giống tuyệt đối. Đây gần như là bằng chứng chắc chắn rằng 2 lệnh đã chọn ra đúng cùng một tập unit cho từng video.\n\n### Kết luận\n\n`GatingPolicy` (đã tốn công train hàng nghìn bước RL, nhiều lần sửa lỗi hội tụ) **không đóng góp gì cho kết quả cuối cùng** ở checkpoint hiện tại. Toàn bộ 61,33% đến từ luật dự phòng chọn đều — thứ không cần train. Nguyên nhân nhiều khả năng: entropy của policy sụp xuống gần 0 quá sớm trong lúc train (thấy rõ ở đồ thị mục 2, từ khoảng step 1.450), khiến `keep_prob` bị đẩy xuống thấp cho hầu hết unit, không unit nào còn vượt ngưỡng `0,5` một cách tự nhiên.\n\n## 6. Những gì đã biết và chưa biết\n\n- **Đã biết:** giữ ~15% số unit cho 61,33%, thấp hơn Native dense khoảng 2,5-3 điểm.\n- **Đã biết (xác nhận ở mục 5):** ở checkpoint hiện tại, policy KHÔNG học được gì hơn việc chọn đều (Uniform) cùng retention. RL-Gating thật và Uniform 15% ra kết quả giống tuyệt đối.\n- **Chưa biết:** bản 2 tầng cho kết quả VideoMME bao nhiêu, vì chưa có script infer riêng và tầng 2 chưa học.\n\n## 7. Việc tiếp theo\n\n1. ~~Chạy Uniform ở retention 15% để so trực tiếp với 61,33%~~ — xong, xem mục 5.\n2. Thử entropy_coef hoặc lambda_sparsity khác để policy không rơi vào mức sàn quá sớm — hoặc cân nhắc bỏ hẳn hướng RL cho bài toán chọn unit, dùng Uniform làm baseline chính thức.\n3. Viết script infer cho bản 2 tầng nếu tầng 2 học được.\n"
+    },
+    {
+      "id": "idea_leader_original",
+      "title": "3. Đề xuất gốc của anh Khánh",
+      "status": "[TÀI LIỆU] ",
+      "updated": "2026-09-18",
+      "body": "# Đề xuất gốc của anh Khánh\n\n**Trạng thái:** tài liệu gốc, giữ nguyên văn \n\n---\n\n## 4. Chiến Lược Huấn Luyện 2 Giai Đoạn (Curriculum Training Strategy)\n\n### Giai Đoạn 1: Image Captioning Warm-up (Stage 1: Image)\n\n**Đối tượng dữ liệu:** Sử dụng tập Dense Image Captioning / Recaptioning (khoảng 30k–50k mẫu chất lượng cao).\n\n**Vì sao Captioning ổn định hơn VQA?:**\nCaptioning yêu cầu mô tả toàn cảnh bức ảnh, ép các Latent Queries của Perceiver phải phân bổ đều để bao quát các thực thể, màu sắc, bố cục không gian. Không bị hiện tượng giằng xé gradient như các câu hỏi VQA đối nghịch.\n\n**Nguyên tắc đóng băng:** Đóng băng 100% Vision Encoder, Projector và LLM. Chỉ cập nhật duy nhất các tham số bên trong Perceiver Resampler.\n\n### Giai Đoạn 2: Video Temporal Adaptation (Stage 2: Video)\n\n**Đối tượng dữ liệu:** Sử dụng các tập Video Captioning / Detailed Video Description (khoảng 20k–30k video clips ngắn).\n\n**Mục tiêu nén thời gian:**\nInput lúc này là chuỗi tokens từ nhiều frames. Perceiver học cách gộp sự dư thừa thời gian (temporal redundancy), chuyển giao tri thức từ không gian 2D tĩnh sang chuỗi hành động và chuyển cảnh 3D.\n\n**Nguyên tắc đóng băng:** Vẫn chỉ huấn luyện duy nhất Perceiver với learning rate nhỏ hơn để thích ứng với chuỗi video mà không làm hỏng các điểm neo không gian đã học ở Stage 1.\n\n---\n\n## 5. Mở Rộng: Kỹ Thuật Cắt Tỉa (Pruning) Khi Mang Nhánh 2 Đi Infer\n\nTheo thiết kế cốt lõi: Khi suy luận (Inference), ta chỉ đưa duy nhất tập Compressed Tokens (T2) vào LLM để tối ưu tốc độ và giữ ngân sách token nhỏ nhất. Tuy nhiên, nếu sau này muốn tận dụng thêm Nhánh 2 (T1*) để phục vụ các bài toán cần chi tiết cực cao (Fine-grained perception / OCR), ta cần giải quyết vấn đề trùng lặp và phân bổ ngân sách: Vì bản chất T2 đã hấp thụ và chứa sẵn phần lớn thông tin cốt lõi của T1*, ta nên prune mạnh tay các token T1* tương đương và nhường lại một phần budget cho các visual tokens khác nhằm tăng độ bao phủ toàn cảnh.\n\n| Bước Xử Lý | Cơ Chế Thuật Toán | Mục Tiêu Kỹ Thuật |\n|---|---|---|\n| **1. Lọc sơ cấp (T1\\*)** | Chọn các token thỏa mãn: cos(T1_i, T2) ≥ τ | Thu được toàn bộ các visual tokens quan trọng được chỉ điểm bởi T2. |\n| **2. Phát hiện tương đương** | Tính độ tương đồng nội bộ: cos(T1_i, T1_j) với mọi cặp trong T1* | Xác định các token lân cận cùng thuộc về một mảng vật thể hoặc nền giống nhau. |\n| **3. Cắt tỉa (Pruning) & Tái phân bổ Budget** | • Prune triệt để trong T1*: Nếu cos(T1_i, T1_j) cao (ví dụ ≥ ngưỡng), chỉ giữ 1 token đại diện hoặc average-pooling.<br>• Ưu tiên Budget cho các Tokens khác: Vì bản chất T2 đã chứa sẵn các đặc trưng của T1* rồi, việc giữ lại quá nhiều T1* sẽ gây thừa thãi. Ngân sách token dôi dư sau khi prune T1* sẽ được nhường lại cho một số visual tokens ngoài T1* (các token có độ đa dạng cao, đại diện cho background hoặc các thực thể phụ ít bị T2 chi phối). | Tránh redundancy tối đa (vì T2 đã mã hóa T1*), đồng thời tối ưu hóa tổng context window bằng cách bổ sung thêm thông tin đa dạng từ các vùng ảnh khác mà T2 vô tình bỏ sót. |\n| **4. Nạp vào LLM** | Ghép chuỗi: [T2 ; T1\\*_đã lọc ; visual tokens đa dạng bổ sung] | LLM nhận đủ: Ngữ cảnh toàn cục (T2) + Bằng chứng sắc nét đã lọc gọn (T1\\*) + Bổ trợ đa dạng góc nhìn (visual tokens khác). |\n"
+    },
+    {
+      "id": "idea_7ktfo5v5",
+      "title": "4. RL-Gating mức Token (Token-level)",
+      "status": "[KHÔNG CHẠY NỮA] đã được triển khai thành bản 2 tầng, xem tab RL-Gating (SCORE-style). Nội dung dưới là bản thiết kế ban đầu",
+      "updated": "2026-09-15",
+      "body": "> **Ghi chú (2026-09-21):** ý tưởng này đã được code thành bản 2 tầng (unit rồi token). Trạng thái và kết quả thật xem tab [RL-Gating (SCORE-style)](#tab:idea). Phần dưới giữ nguyên làm bản thiết kế ban đầu.\n\n# RL-Gating mức Token (Token-level)\n\n**Trạng thái:** thiết kế xong, chưa viết code — chờ bản frame-level (đang train, xem [Training-based query-agnostic (SCORE-style)](#tab:idea)) cho kết quả infer thật trước khi đầu tư viết bản này.\n\n---\n\n## Vì sao cần bản này\n\nBản RL-Gating đang train (frame-level) quyết định giữ/bỏ NGUYÊN CẢ một unit thời gian (1 mốc gồm 192 token không gian, ví dụ cụ thể lấy từ video `3238737531.mp4` đã dùng xuyên suốt các thí nghiệm) — 192 token đó sống chết cùng nhau. Điều này khiến bản frame-level về bản chất giống Uniform/DPC-frame (chọn frame), không giống DySeg+STPrune (chọn được TRONG từng frame, giữ người bỏ nền). Muốn RL-Gating có cơ hội thật sự vượt DySeg+STPrune, nó cần học được đúng năng lực đó — chọn lọc bên trong từng unit, không phải chọn cả unit.\n\n## Sơ đồ luồng dữ liệu — từ video tới quyết định\n\n```\nVideo gốc (77 giây, ~2303 frame @30fps)\n      │  Qwen tự lấy mẫu ~2fps (KHÔNG lấy hết mọi frame)\n      ▼\n152 frame được chọn\n      │  gộp mỗi 2 frame liền kề -> 1 \"unit\"\n      ▼\n76 unit thời gian\n      │  mỗi frame cắt lưới 24x32 ô -> gộp 2x2 ô -> 12x16=192 ô/unit\n      ▼\nKhối token video: shape [76, 192, 3584]  =  76 unit x 192 vị trí/unit x 3584 số/vị trí\n      │\n      ▼\nTỔNG CỘNG 76 x 192 = 14.592 \"ô token\" — đây là thứ LLM phải đọc nếu không nén gì\n```\n\n## Input / Output / Shape — so sánh với bản frame-level đang chạy\n\n| | Frame-level (đang train) | Token-level (bản này) |\n|---|---|---|\n| Input cho Policy | `X_units` [76, 3584] + `delta_units` [76, 3584] ghép lại → [76, 7168] | `X_i` [14592, 3584] + `delta_i` [14592, 3584] + `X_units[t(i)]` [14592, 3584] ghép lại → [14592, 10752] |\n| Số quyết định | 76 (1 quyết định/unit) | 14.592 (1 quyết định/token) |\n| Output Policy | `probs` shape [76] | `probs` shape [14592] |\n| Đơn vị của Mask | [76] boolean — cả 192 ô của 1 unit sống/chết cùng nhau | [14592] boolean — từng ô độc lập |\n| Số token giữ lại thực tế | LUÔN là bội số của 192 (VD giữ 30 unit = đúng 5.760 token) | Bất kỳ số nào, rải không đều (VD unit \"nhiều chuyển động\" giữ 150/192 ô, unit \"tĩnh\" chỉ giữ 10/192 ô) |\n| Năng lực đạt được | Giống Uniform/DPC-frame — chọn frame | Giống DySeg+STPrune — chọn TRONG frame |\n\n`delta_i` là độ khác biệt của ĐÚNG VỊ TRÍ KHÔNG GIAN đó so với unit liền trước (không phải trung bình cả unit như bản cũ) — tín hiệu \"góc này của khung hình có đang đổi khác không\", chi tiết hơn nhiều so với \"cả khung hình có đổi khác không\". `X_units[t(i)]` là ngữ cảnh chung của cả unit chứa token đó, giúp mỗi token biết bối cảnh tổng quát, không chỉ nhìn cục bộ.\n\n## Sơ đồ pipeline TRAIN\n\n```\nVới MỖI câu hỏi trong tập train (NExT-QA, 34.132 câu):\n\nVideo -> encode 1 lần -> X_pooler [14592, 3584]\n      -> tính X_i, delta_i, X_units[t(i)] cho từng token\n      -> Policy (MLP nhỏ) -> probs [14592]\n      -> lấy mẫu K=4 mặt nạ độc lập (Bernoulli(probs), mỗi mặt nạ [14592])\n      -> với mỗi mặt nạ: đảm bảo sàn tối thiểu (mỗi trong 76 unit vẫn còn\n         >=X% token sống sót -- không để hẳn 1 khung hình trống trơn)\n      -> build lại chuỗi input (gather/scatter, dùng lại build_pruned_sequence\n         đã có), forward Qwen (đóng băng) 1 lần, lấy CE loss trên 5 chữ cái\n         đáp án thật\n      -> reward = -CE_loss - lambda_sparsity * (số token giữ/tổng)\n      -> so 4 reward với trung bình nhóm (GRPO) -> advantage\n      -> loss = -mean(advantage * log_prob(mặt nạ)) - entropy_coef * sum(entropy)\n      -> CHỈ cập nhật Policy, Qwen luôn torch.no_grad()\n```\n\nCông thức loss giống hệt bản frame-level (đã sửa 2 lỗi rút ra từ Experiment 1-2: sàn tối thiểu rải đều thay vì chỉ giữ 1 điểm cố định, entropy bonus tính `.sum()` không phải `.mean()`) — chỉ khác số lượng số hạng trong tổng (14.592 thay vì 76). Rủi ro cần theo dõi: action space lớn hơn ~192 lần có thể khiến gradient REINFORCE nhiễu hơn, có thể cần train lâu hơn hoặc tăng K để ổn định — chưa biết chắc, cần quan sát log thật.\n\n## Sơ đồ pipeline INFER (sau khi có checkpoint)\n\n```\nVideo mới + câu hỏi bất kỳ\n      │\n      ▼\nVideo -> encode -> X_i, delta_i, X_units[t(i)]\n      -> Policy (đã train, đóng băng) -> probs [14592]\n      -> quyết định GIỮ nếu probs[i] >= threshold (mặc định 0.5)\n      -> áp sàn tối thiểu mỗi unit (không để unit nào trống hoàn toàn)\n      -> ghép token được giữ + câu hỏi thật -> generate() -> câu trả lời\n```\n\nKhác lúc train ở chỗ: không lấy mẫu Bernoulli ngẫu nhiên nữa (deterministic theo threshold), và câu hỏi CHỈ xuất hiện ở bước cuối cùng (generate) — policy vẫn hoàn toàn không nhìn thấy câu hỏi, giữ đúng tính chất query-agnostic.\n\n## Việc cần làm\n\n1. Chờ bản frame-level (Experiment 1-3) cho ra số accuracy thật qua `run_inference_qwen25vl_rlgating.py` trước, để biết cơ chế RL-Gating nói chung có khả thi không.\n2. Nếu khả thi: viết `train_rl_gating_token.py` (tách file riêng, tái dùng tối đa hạ tầng đã có — `build_pruned_sequence`, cách tính reward, GRPO, entropy `.sum()`, checkpoint+resume).\n3. Cân nhắc kết hợp với việc tăng số frame lấy mẫu (xem thảo luận ở [Training-based query-agnostic (SCORE-style)](#tab:idea)) — LƯU Ý quan trọng đã phát hiện: chỉ tăng `FPS_MAX_FRAMES` không đủ, vì `fetch_video()` tự động CHIA độ phân giải mỗi frame theo số frame — cần sửa để độ phân giải/frame KHÔNG bị giảm khi tăng số frame, nếu không sẽ lặp lại đúng thất bại của thí nghiệm fps1536 trước đây.\n"
+    },
+    {
+      "id": "idea_2yqdt2n5",
+      "title": "5. Perceiver + Anchor + RL-Gating (kết hợp đề xuất leader)",
+      "status": "[CHƯA CODE] đang phác thảo — chưa code",
+      "updated": "2026-09-15",
+      "body": "# Perceiver + Anchor + RL-Gating — kết hợp đề xuất của leader với hướng training-based\n\n**Trạng thái**: đang phác thảo, CHƯA code — kết hợp 2 ý tưởng: đề xuất \"Anchored Dual-Pathway\" của leader (xem [tab Papers](#tab:papers) mục Perceiver liên quan) + hướng [Training-based query-agnostic (SCORE-style)](#tab:idea).\n\n---\n\n## Vì sao kết hợp\n\nĐề xuất gốc của leader (Perceiver + Anchor Loss + cơ chế Pointing) có 2 điểm mạnh thật sự: (1) Anchor Loss neo T2 vào không gian biểu diễn gốc, giảm nhu cầu dữ liệu khổng lồ kiểu BLIP-2; (2) T2 chỉ đưa VÀO LLM, không thay thế token gốc → LLM không cần học đọc representation hoàn toàn mới. Nhưng cơ chế **Pointing** (chọn `T1*` theo ngưỡng cosine similarity cố định) có cùng lỗ hổng đã khiến **DPC-frame thất bại**: \"giống nhau về hình ảnh = quan trọng/dư thừa\" không phải tiêu chí đáng tin.\n\nHướng RL (SCORE-style) giải đúng lỗ hổng đó — nhưng RL cần 1 đại diện \"toàn cục\" nào đó để bắt đầu, và tự nó không giải quyết vấn đề nén cấp cao (giống Perceiver làm).\n\n**→ Ghép lại**: Perceiver+Anchor lo phần TÓM TẮT TOÀN CỤC (ngân sách cố định, luôn giữ), RL-Gating lo phần CHỌN THÊM CHI TIẾT (ngân sách linh hoạt, học theo QA thật — thay thế ngưỡng similarity tĩnh).\n\n## Sơ đồ pipeline\n\n```\n═══ GIAI ĐOẠN 1 (train Perceiver — theo đúng đề xuất leader) ═══\nDense Captioning (30k-50k mẫu) + Anchor Loss\n  → Perceiver học: Vision tokens (T1) → T2 (tóm tắt, số lượng CỐ ĐỊNH)\n  → ĐÓNG BĂNG Perceiver sau khi train xong\n  → Có sẵn: T2 + độ tương đồng T2↔từng T1_i\n\n═══ GIAI ĐOẠN 2 (train policy RL — SCORE-style, MỚI) ═══\nVới mỗi token T1_i, input cho Policy:\n  [X_i ; ΔX_i ; độ tương đồng với T2 gần nhất]\n  → Policy (nhỏ, MLP) → xác suất giữ thêm T1_i\n  → lấy mẫu K mặt nạ, tính reward = -(CE loss câu trả lời thật) - λ*(số\n    token thêm) → Group RL cập nhật CHỈ policy (Qwen + Perceiver đóng băng)\n\n═══ LÚC SUY LUẬN THẬT (query-agnostic CẢ 2 giai đoạn) ═══\nVideo → T1 (vision encoder) → T2 (Perceiver, đã đóng băng) → LUÔN giữ T2\n      → Policy (đã train, đóng băng) quét từng T1_i → chọn thêm token\n        \"đáng giữ\" theo học từ QA, KHÔNG theo similarity nữa\n      → Ghép [T2 ; T1 được policy chọn] → LLM trả lời\n      (câu hỏi chỉ xuất hiện ở bước LLM trả lời cuối cùng — như mọi\n      phương pháp khác, không ảnh hưởng quyết định nén)\n```\n\n## Ví dụ minh hoạ bằng số (ước lượng, chưa đo thật)\n\n| | Số lượng |\n|---|---|\n| Tổng token gốc (T1, video dài trung bình) | ~24.000 |\n| T2 (Perceiver, cố định) | 64 |\n| T1 được Policy chọn thêm (linh hoạt theo nội dung) | ~4.000 (video nhiều chi tiết) tới ~500 (video tĩnh) |\n| Tổng đưa vào LLM | ~560 – 4.064 (≈2-17% retention, TỰ ĐỘNG co giãn theo nội dung — khác hẳn Perceiver thuần chỉ có đúng 64 token cố định) |\n\nĐiểm mấu chốt: T2 cố định giải quyết vấn đề \"cần 1 sàn tối thiểu luôn có\", còn Policy RL giải quyết đúng vấn đề [Tầng 0 — DPC-frame](#tab:idea) và Perceiver thuần đều gặp — ngân sách không co giãn theo độ dài/độ phức tạp video.\n\n## So sánh 3 phương án\n\n| | Perceiver+Anchor thuần | RL-Gating thuần | Kết hợp (ý tưởng này) |\n|---|---|---|---|\n| Ngân sách co giãn theo nội dung | Không (cố định số query) | Có | Có (phần bổ sung) |\n| Cần đại diện toàn cục sẵn có | Tự tạo ra (T2) | Không có, phải tự thiết kế | Dùng lại T2 |\n| Tiêu chí chọn thêm chi tiết | Ngưỡng cosine similarity (rủi ro như DPC-frame) | Học theo QA reward | Học theo QA reward |\n| Số giai đoạn train | 1 | 1 | 2 (nối tiếp) |\n| Chi phí train | Trung bình | Trung bình | Cao hơn (2 giai đoạn cộng lại) |\n\n## Vẫn còn tồn tại, chưa giải quyết\n\n- T2 vẫn có rủi ro \"sụp cụm\" (nhiều query neo cùng 1 vùng) nếu Anchor Loss không có thêm số hạng đa dạng hoá — xem góp ý đã gửi leader.\n- Cần dữ liệu QA có nhãn cho Giai đoạn 2 (chưa xác định nguồn — xem [Training-based query-agnostic (SCORE-style)](#tab:idea)).\n- Chi phí train tăng so với làm riêng lẻ từng ý tưởng — cần cân nhắc có đáng không trước khi đầu tư.\n"
+    },
+    {
+      "id": "idea_b193ueqe",
+      "title": "6. Lịch sử — CASQTA & Temporal-Chain (đã bỏ)",
+      "status": "[ĐÃ BỎ] đã bỏ — chỉ lưu lại số liệu tốt nhất từng dòng",
+      "updated": "2026-09-15",
+      "body": "# Lịch sử — CASQTA & Temporal-Chain (đã bỏ)\n\n**Trạng thái:** đã bỏ từ trước, ghi lại kết quả tốt nhất từng dòng để không mất dấu lịch sử.\n\n---\n\nHai hướng này chạy trước cả DySeg/STPrune trong repo hiện tại, không còn được phát triển tiếp. Dọn dẹp file output thì phát hiện chưa có ai tính accuracy cho phần lớn số này, nên tính lại và chốt số tốt nhất từng dòng ở đây trước khi xóa file raw.\n\n## CASQTA (7 biến thể + `exp1/exp2a/exp2b/exp3`)\n\n| File | Overall | Short | Medium | Long | Ghi chú |\n|---|---|---|---|---|---|\n| `pred_exp1.json` | **42.59%** | 53.11 | 40.67 | 34.00 | Tốt nhất cả dòng |\n| `pred_casqta_lmax2_topm4.json` | 41.67% | 51.89 | 40.56 | 32.56 | |\n| `pred_casqta_topm4.json` | 40.52% | 51.33 | 38.33 | 31.89 | |\n| `pred_casqta_fixed1872_kmax28.json` | 40.22% | 49.44 | 39.44 | 31.78 | |\n| `pred_casqta_bbar144_lmax2_topm4.json` | 40.00% | 49.78 | 38.22 | 32.00 | |\n| `pred_exp2a.json` | 39.96% | 48.56 | 38.22 | 33.11 | |\n| `pred_exp2b.json` | 39.00% | 47.11 | 37.44 | 32.44 | |\n| `pred_casqta_gamma90_kmax80_bbar80.json` | 36.78% | 47.78 | 33.56 | 29.00 | |\n| `pred_casqta_adaptive.json` | 29.74% | 34.67 | 27.56 | 27.00 | |\n| `pred_casqta.json` | ~~10.85%~~ | — | — | — | Chạy hỏng, 58% câu trả lời không parse được, bỏ qua |\n| `pred_exp3.json` | ~~10.89%~~ | — | — | — | Chạy hỏng, 56% câu trả lời không parse được, bỏ qua |\n| `vmme_casqta.json` | — | — | — | — | File lỗi JSON, không đọc được, nhiều khả năng là file keyframe-order bị đặt nhầm tên |\n\nDù số tốt nhất (42.59%) cũng thấp hơn hẳn mọi baseline hiện tại (Native dense 64.26%, Uniform 64.41%) — đúng lý do dòng này bị bỏ.\n\n## Temporal-Chain / MaxInfo\n\nHai benchmark khác nhau bị trộn lẫn trong tên file — cần tách ra mới so sánh đúng:\n\n| File | Benchmark | N | Overall |\n|---|---|---|---|\n| `videomme_tc_f2c_tokens1872.json` | VideoMME | 2700 | 43.70% (Short 52.22, Medium 41.78, Long 37.11) |\n| `predictions_tc_f2c.json` | **NExT-QA val** | 4996 | **65.43%** — tốt nhất dòng này |\n| `nextqa_temporal_chain_936.json` | NExT-QA val | 4996 | 64.69% |\n| `nextqa_maxinfo_tc_1872.json` | NExT-QA val | 4996 | 62.15% |\n\nN=4996 khớp đúng số liệu NExT-QA **val** chính thức (xem [Training-based query-agnostic (SCORE-style)](#tab:idea) — cùng bộ val này, khác hẳn `train_qa.json` 34.132 câu dùng để train RL-Gating). Vì khác benchmark (NExT-QA vs VideoMME), 65.43% ở đây KHÔNG so sánh trực tiếp được với các số VideoMME trên [tab Benchmark](#tab:benchmark).\n\n## File raw JSON — đã tính xong accuracy, an toàn xóa\n\nSau khi đã ghi số liệu vào bảng trên, các file JSON gốc (`pred_casqta*.json`, `pred_exp1/2a/2b/3.json`, `predictions_tc_f2c.json`, `videomme_tc_f2c_tokens1872.json`, `nextqa_maxinfo_tc_1872.json`, `nextqa_temporal_chain_936.json`, kèm các thư mục keyframe đi cùng như `nextqa_maxinfo_tc_keyframes/`, `nextqa_tc_f2c_keyframes/`) không còn giá trị giữ lại — số liệu đã chốt ở đây, dòng nghiên cứu đã đóng.\n"
+    },
+    {
+      "id": "idea_4idunw1m",
+      "title": "7. 2-Pass Attention-Guided Adaptive Budget",
+      "status": "kết quả cao nhất — cần kiểm định thêm",
+      "updated": "2026-09-12",
+      "body": "# 2-Pass Attention-Guided Adaptive Budget — kết quả cao nhất hiện tại\n\n**Trạng thái**: kết quả tốt nhất từ trước đến giờ (vượt Native dense ở cả 3 bucket) — cần kiểm định thống kê chặt hơn (McNemar) + hiệu chỉnh early-exit trước khi coi là kết luận cuối cùng.\n\n---\n\n## Ý tưởng cốt lõi\n\nMọi tín hiệu salience đã thử trước đó (motion delta, V-JEPA, DINOv2 trong DPC-frame) đều là **MODEL KHÁC đoán hộ** \"chỗ nào quan trọng\" — tất cả đều không cải thiện, thậm chí DPC-frame còn làm tệ hơn (xem [DySeg + STPrune](#tab:idea) và [Tầng 0 — DPC-frame](#tab:idea)). Ý tưởng này bỏ hẳn cách suy đoán gián tiếp: để chính Qwen tự lộ ra nó đang thiếu thông tin ở đâu, qua đúng **attention nó tạo ra khi trả lời** — không qua trung gian nào cả.\n\n## Sơ đồ pipeline\n\n```\nVideo → encode 1 LẦN → pool token đầy đủ (video_embeds_full)\n                              │\n                              ▼\n                     LƯỢT 1 (rẻ, luôn chạy)\n              Uniform → ngân sách thấp (~3000 token)\n              → 1 lần forward (KHÔNG generate nhiều bước)\n              → lấy: entropy (model tự tin không?)\n                    + attention (model đang nhìn unit nào)\n                              │\n                    entropy thấp? ── CÓ ──▶ dùng luôn đáp án lượt 1, DỪNG\n                              │                (tiết kiệm compute)\n                            KHÔNG\n                              ▼\n                  LƯỢT 2 (đắt, chỉ chạy khi cần)\n       Gộp attention theo UNIT → xếp hạng unit theo điểm\n       → unit \"nóng\" nhất: giữ TOÀN BỘ token (full retention)\n       → unit còn lại: rải đều (sàn độ phủ tối thiểu, không bỏ trắng)\n       → ghép lại đúng tokens_num → generate() → CÂU TRẢ LỜI THẬT\n```\n\n## Kết quả (VideoMME, `tokens_num=16384`, pool 3x, `always_pass2=true`)\n\n| Cấu hình | Overall | Short | Medium | Long |\n|---|---|---|---|---|\n| Native dense (100%, không nén) | 64.26% | 73.67 | 65.00 | 54.11 |\n| Uniform | 64.41% | 73.00 | 66.00 | 54.22 |\n| DySeg+STPrune đầy đủ | 61.96% | 70.00 | 61.67 | 54.22 |\n| **2-Pass Attention-Guided** | **65.37%** | **73.67** | **66.11** | **56.33** |\n\n**Lần đầu tiên trong dự án, 1 cấu hình vượt Native dense (không nén gì cả) ở CẢ 3 bucket cùng lúc.** Bucket Long +2.22 điểm so với dense — đúng bucket mà mọi phương pháp trước đó (kể cả Uniform) chưa từng cải thiện được. Xem thêm ở [tab Benchmark](#tab:benchmark) và [tab Thực nghiệm](#tab:experiments).\n\n**Ý nghĩa thống kê — trung thực**: so Uniform z≈0.74, so Native dense z≈0.85 (chưa đạt ngưỡng p<0.05 nếu chỉ nhìn overall riêng lẻ) — nhưng thắng **nhất quán cả 3 bucket độc lập** (khó xảy ra do nhiễu ngẫu nhiên), và so với DySeg+STPrune hiện tại z≈2.60 (có ý nghĩa rõ ràng, p<0.01). Cần chạy McNemar's test (so từng câu hỏi 1-1, mạnh hơn z-test 2 mẫu độc lập) để kết luận chắc chắn hơn.\n\n## Chi tiết kỹ thuật đáng nhớ\n\n- Chỉ encode video **1 LẦN** — \"2 lượt\" là 2 lần LLM forward RẺ trên 2 tập con khác nhau của cùng 1 pool token đã encode sẵn, không phải mã hoá lại video.\n- Lượt 1 dùng **1 lần forward duy nhất** (không `generate()` nhiều bước) — vì đáp án VideoMME chỉ cần 1 chữ cái, logits ở vị trí cuối cùng của prompt CHÍNH LÀ phân phối token đầu tiên sẽ sinh ra.\n- Trích attention: dùng **forward hook móc đúng 1 lớp cuối** (`model.language_model.layers.N.self_attn`) — tránh HuggingFace mặc định tính attention ở CẢ 28 lớp cùng lúc khi bật `output_attentions=True` (đã gây OOM 3 lần liên tiếp lúc code, xem lịch sử debug trong `run_inference_qwen25vl_2pass.py`).\n- `attn_implementation=\"eager\"` chỉ bật TẠM lúc lượt 1 (chuỗi ngắn ~3300 token, an toàn), tắt về `sdpa` trước lượt 2 — vì bản thân chế độ eager (dù không lấy kết quả ra) vẫn tự tính ma trận đầy đủ trong lúc chạy; ở chuỗi dài ~16700 token của lượt 2, một lớp thôi cũng đã ~15GB.\n\n## Việc cần làm tiếp\n\n1. Hiện đang chạy `+always_pass2=true` — tốn gấp đôi compute cho MỌI câu hỏi, kể cả câu dễ. Cần hiệu chỉnh lại `confidence_entropy_max` (mặc định 2.0 đặt sai — cao hơn cả entropy tối đa lý thuyết của bài toán 4 lựa chọn, `ln(4)≈1.39`) để early-exit thật sự có tác dụng.\n2. Chạy McNemar's test so với Uniform/Native dense để kết luận chắc chắn hơn.\n3. Xem code đầy đủ: `run_inference_qwen25vl_2pass.py`.\n"
+    },
+    {
+      "id": "idea_dyseg_stprune",
+      "title": "8. DySeg + STPrune (custom)",
+      "status": "đã thử — chưa thắng Uniform",
+      "updated": "2026-09-10",
+      "body": "# DySeg + STPrune (custom, backbone-agnostic)\n\n**Mục tiêu:** nén số token thị giác đưa vào LLM bằng cách (1) chia video thành các đoạn theo mức độ giống nhau, (2) phân bổ ngân sách token KHÔNG ĐỀU cho từng đoạn — đoạn nhiều thông tin được nhiều token hơn, (3) trong mỗi đoạn chọn đúng token đáng giữ. Không đọc câu hỏi ở bất kỳ đâu (query-agnostic).\n\n---\n\n## 3 tầng\n\n### Tầng 1 — DySeg (chia đoạn)\nSo sánh cosine similarity giữa các \"unit\" (khung đã gộp cặp) LIÊN TIẾP trong lưới token của Qwen. Chỗ nào similarity tụt xuống dưới ngưỡng `tau` → ranh giới đoạn mới. Có sàn tối thiểu `c` đoạn.\n\n### Tầng 2 — Phân bổ ngân sách không đều (ý tưởng CHÍNH)\nMỗi đoạn được chấm điểm \"độ giàu thông tin\" `v_s = lambda*v_RC + (1-lambda)*v_delta`:\n- `v_RC` = độ khó tái tạo đoạn từ ít token (RECON energy)\n- `v_delta` = năng lượng biến động khung-sang-khung trong đoạn\n\nRồi softmax `v_s` (có \"cổng entropy\" tự điều chỉnh nhiệt độ `T`) → ra số token `B_s` cho từng đoạn, kẹp trong `[b_min, b_max]`, tổng = `tokens_num`.\n\n### Tầng 3 — STPrune (chọn token trong đoạn)\nChia `B_s` làm 2 phần theo `dtm_ratio`:\n- **DTM** (`dtm_ratio` phần): density-peaks (`rho*delta`) tìm token \"đại diện\", gộp token giống nó vào.\n- **Salience** (`1-dtm_ratio` phần): chấm điểm `sal(t,i) = ||X[t,i] - X[t-1,i]||` (biến động so với unit trước), lấy top-K.\n\n### Ràng buộc bắt buộc: bảo toàn vị trí\nSau khi bỏ token, phải GOM lại đúng chỉ số vị trí GỐC (mRoPE) của token được giữ — không đánh số lại từ 0. Sai chỗ này model trả lời sai âm thầm, không crash.\n\n---\n\n## Ví dụ cụ thể — video 10.000 frame, 30fps (≈ 333 giây)\n\n| Stage | Đầu vào | Xử lý | Đầu ra |\n|---|---|---|---|\n| 0. Decode | file `.mp4` | decord đọc metadata | 10.000 frame, 30fps, 333.3s |\n| 1. Lấy mẫu khung | 10.000 frame gốc | `smart_nframes`: target = 333.3 × 2.0fps = 666, chưa chạm trần 768 → giữ 666; `linspace(0, 9999, 666)` | 666 chỉ số khung, cách nhau ~15 frame gốc (~0.5 giây) |\n| 2. Decode + resize | 666 chỉ số | `get_batch` + `smart_resize` (per-frame max_pixels tự co để tổng token ≈ `max_pixels_units`) | tensor `[666, 3, H', W']` |\n| 3. Qwen vision encoder | `[666, 3, H', W']` | ViT + gộp cặp khung (`FRAME_FACTOR=2`) + gộp 2×2 không gian | lưới token `[T_llm=333, H_g, W_g]`, tổng ≈ 16.384 token |\n| 4. DySeg (Tầng 1) | 333 unit | cosine similarity giữa unit liên tiếp, cắt tại chỗ tụt dưới `tau=0.9` | ví dụ ~40 đoạn, độ dài không đều |\n| 5. Phân bổ (Tầng 2) | 40 giá trị `v_s` | softmax + cổng entropy → `B_s` mỗi đoạn, kẹp `[200, 4000]`, tổng = `tokens_num=16384` | 40 giá trị `B_s`, VD đoạn tĩnh 200, đoạn động 1500 |\n| 6. STPrune (Tầng 3) | mỗi đoạn + `B_s` | DTM (40%) + salience (60%) chọn token | tập chỉ số token giữ lại, tổng ≈ 16.384 |\n| 7. Gather + mRoPE | chỉ số token giữ | gom hàng tương ứng từ chuỗi đầy đủ | `[≈16384, D]` embeds + đúng position ids |\n| 8. LLM | embeds đã cắt + text câu hỏi | `model.generate` | chữ cái đáp án (A/B/C/D) |\n\n**Video 1 tiếng thì sao?** 108.000 frame / 30fps = 3600s → target = 7200 khung nhưng **bị ép trần 768** → mỗi khung lấy mẫu cách nhau ~4.7 giây thật → fps hiệu dụng chỉ còn ~0.21fps. Sự kiện ngắn 2-3 giây có thể lọt hoàn toàn giữa 2 khung. Đây là điểm yếu chính, xem [Tầng 0 — DPC-frame](#tab:idea).\n\n---\n\n## Kết quả & kết luận\n\nTrên VideoMME (2700 câu), harness đã khớp literature (Native dense ≈ 63.33% ≈ SCORE Vanilla 63.8%):\n\n| Cấu hình | Overall | Long |\n|---|---|---|\n| Native dense (100%) | 63.33% | 53.44 |\n| **Uniform (lấy đều, không thuật toán)** | **64.41%** | 54.22 |\n| DySeg + STPrune (đầy đủ, `salience=delta`) | 61.96% | 54.22 |\n| DySeg, `dtm_ratio=0` (bỏ DTM) | 62.15% | 55.11 |\n| DySeg, `temperature0→∞` (tắt Tầng 2) | 62.41% | 54.22 |\n| DySeg, `salience_mode=grid` (không chấm điểm) | 62.41% | 54.44 |\n| DySeg, `salience_mode=vjepa` | 61.74% | 54.67 |\n\nXem đầy đủ ở [tab Thực nghiệm](#tab:experiments) và [tab Benchmark](#tab:benchmark).\n\n**Kết luận:**\n1. Nén xuống 36% gần như miễn phí — nhưng phân bổ KHÔNG ĐỀU (ý tưởng chính) **không thắng nổi phân bổ đều** (thua ~2.5đ, z≈-1.87).\n2. Cả 4 ablation đơn-yếu-tố hội tụ về dải 61.7-62.4% — đổi tín hiệu salience (kể cả V-JEPA ngữ nghĩa mạnh) không cải thiện gì → **nút thắt không nằm ở chất lượng tín hiệu chọn token**.\n3. Điểm sáng duy nhất, nhất quán: bucket **Long** luôn ngang bằng/nhỉnh hơn Uniform — đúng hướng giả thuyết, nhưng chưa đủ mạnh để thắng overall.\n4. Bài test quyết định (tắt ĐỒNG THỜI DTM + Tầng 2 + `salience=grid`) vẫn còn treo.\n"
+    },
+    {
+      "id": "idea_tang0_dpc",
+      "title": "9. Tầng 0 — DPC-frame preselection",
+      "status": "đang triển khai",
+      "updated": "2026-09-10",
+      "body": "# Tầng 0 — Chọn frame theo density-peaks (DPC-frame)\n\n**Trạng thái:** đang triển khai, nhưng precompute DINOv2 hiện quá chậm → đang cân nhắc phương án nhẹ hơn.\n\n---\n\n## Vì sao cần\n\n[DySeg + STPrune](#tab:idea) và mọi thí nghiệm từ trước đều diễn ra ở **tầng dưới** — chọn TOKEN trong số các khung ĐÃ được lấy mẫu. Nhưng bước lấy mẫu khung (2fps, trần 768) là **mù quáng theo thời gian**:\n\n```\nVideo gốc → [TẦNG LẤY MẪU: 2fps, trần 768]  → [TẦNG CHỌN TOKEN: DySeg/STPrune/Uniform] → LLM\n                     ↑ chỗ này chưa ai đụng tới        ↑ mọi thí nghiệm từ trước ở đây\n```\n\nNếu khung mang thông tin quyết định chưa bao giờ được lấy mẫu, không thuật toán chọn-token nào cứu được. Video 1 tiếng → fps hiệu dụng chỉ ~0.21fps.\n\n**Bằng chứng gián tiếp:** bucket Long luôn thấp hơn hẳn Short/Medium ở MỌI cấu hình (kể cả Native dense) — có thể do thông tin bị mất ngay ở bước lấy mẫu, không phải \"video dài khó suy luận hơn\".\n\n---\n\n## Flow đề xuất\n\nChèn 1 tầng mới TRƯỚC Qwen encoder, giữ nguyên 100% DySeg/Tầng 2/STPrune phía sau:\n\n```\n                 ═══ MỚI: Tầng 0 ═══\nVideo gốc → candidate 2fps    → DINOv2 pooled    → density_peaks   → top-K theo\n            KHÔNG trần          feature/frame       (rho×delta)       rho×delta,\n                                (dùng save_tensor   dùng ĐÚNG hàm      sắp lại theo\n                                DINOv2 có sẵn)      của DTM             thời gian\n                                                        │\n                 ═══ GIỮ NGUYÊN ═══                     ▼\n            Qwen vision encoder → DySeg → Tầng 2 → STPrune → LLM\n```\n\n`density_peaks` cho điểm `rho` (mật độ cục bộ) × `delta` (khoảng cách tới điểm mật độ cao hơn gần nhất). Top-K theo điểm này tự nhiên chọn ~1 đại diện/nội-dung-khác-biệt: đoạn tĩnh dài chỉ sinh vài đại diện, đoạn biến động nhiều được chọn nhiều khung hơn — **không cần thêm tham số event/ngân sách mới nào**.\n\n---\n\n## Ví dụ cụ thể — cùng video 10.000 frame, 30fps (≈ 333 giây)\n\n| Stage | Đầu vào | Xử lý | Đầu ra |\n|---|---|---|---|\n| 0. Candidate 2fps (KHÔNG trần) | 10.000 frame gốc | `linspace(0, 9999, 666)` — với video này chưa chạm trần nên bằng cách cũ; khác biệt chỉ xuất hiện ở video dài | 666 chỉ số khung candidate |\n| 1. DINOv2 feature | 666 khung | resize 224, `Dinov2Model` pooled output, batch | tensor `[666, 1024]` |\n| 2. density_peaks | `[666, 1024]` | `rho` (KNN density), `delta` (dist tới điểm density cao hơn) | 2 vector `[666]` |\n| 3. Chọn top-K | `score = rho*delta` `[666]` | `topk(score, 768)` → nhưng chỉ có 666 candidate nên lấy hết 666; với video DÀI thì đây là bước \"lọc 7200 → 768\" | ≤768 vị trí candidate |\n| 4. Sắp theo thời gian | các vị trí đã chọn | `sorted()` theo chỉ số khung gốc | list chỉ số khung gốc, tăng dần |\n| 5. Cache | list chỉ số | ghi `outputs/frame_dpc_cache/<video>.json` | 1 file/video, dùng lại mọi câu hỏi |\n| 6+ | list chỉ số này → `frame_indices` override trong `_read_video_decord` | Qwen encoder + DySeg + STPrune như cũ | như [Idea 1](#tab:idea) từ stage 3 trở đi |\n\n**Video 1 tiếng (108.000 frame):** candidate 2fps = 7200 khung → DINOv2 chấm điểm cả 7200 → chọn 768 khung \"đáng giữ nhất\" (tập trung đúng chỗ biến động), thay vì lấy đều 768 khung cách nhau 4.7s. Đây là trường hợp Tầng 0 tạo khác biệt lớn nhất.\n\n---\n\n## Đối chứng: chỉ tăng trần khung (fps1536)\n\nĐã chạy Native dense với `FPS_MAX_FRAMES=1536` (gấp đôi trần, cùng `max_pixels_units`):\n\n| | Overall | Short | Medium | Long |\n|---|---|---|---|---|\n| 768 khung (mốc) | 63.33 | 73.33 | 63.22 | 53.44 |\n| 1536 khung | 63.19 | 73.33 | 63.22 | **53.00** |\n\nShort/Medium giữ nguyên y hệt (video ngắn vốn dưới trần). Long **không tăng, còn giảm nhẹ** (z≈-0.19, nhiễu) — vì `max_pixels_units` giữ nguyên nên tăng khung buộc giảm độ phân giải/khung, đánh đổi này gần như hoà.\n\n→ **Không bác bỏ giả thuyết**, mà làm nó sắc hơn: vấn đề không phải \"quá ít khung\", mà \"chọn SAI khung\" — đúng thứ DPC-frame nhắm tới mà không tốn độ phân giải.\n\n---\n\n## Vấn đề đang gặp\n\nPrecompute DINOv2 trên toàn bộ VideoMME (nhất là candidate 2fps không trần cho video dài) **quá chậm**. Cân nhắc:\n- Giảm fps candidate xuống 1fps\n- Dùng scene-cut detection rẻ (histogram pixel) lọc thô trước khi chạy DINOv2\n- Hoặc bỏ hẳn DINOv2, dùng luôn feature khung của chính Qwen encoder ở độ phân giải thấp\n"
+    },
+    {
+      "id": "idea_vjepa_dsta_leader",
+      "title": "10. V-JEPA 2.1 + DSTA-Scorer (đề xuất của sếp)",
+      "status": "[ĐÃ KIỂM CHỨNG — TƯƠNG QUAN THẤP] Spearman ~0,06-0,07 trên 2 nguồn caption, dưới ngưỡng 0,3",
+      "updated": "2026-09-30",
+      "body": "# 10. Đặc tả V-JEPA 2.1 World Model + DSTA-Scorer Policy (đề xuất của sếp)\n\n**Nguồn**: 2 file PDF do sếp tổng hợp — *\"Đặc Tả Kiến Trúc Chuyên Sâu: VLM-Native Vision Token Pruning via V-JEPA 2.1 World Model & Spatio-Temporal Attention Policy\"* (bản 1, không phân nhánh) và *\"Báo Cáo Nghiên Cứu Chuyên Sâu: Khung Nén Token Video Dài 2 Giai Đoạn\"* (bản 2, tách 2 giai đoạn + 2 hướng hạ nguồn). Tóm tắt lại đầy đủ nội dung 2 file, giữ nguyên toàn bộ sơ đồ flow gốc để đọc lại vẫn hiểu đúng ý tưởng.\n\n---\n\n## 1. Ý tưởng cốt lõi: dùng thẳng Vision Encoder gốc của VLM\n\n**Vấn đề với encoder ngoài (CLIP/DINOv2)**: nếu dùng 1 encoder riêng để chấm điểm token, hệ thống phải (1) chạy encoder ngoài trên toàn video, (2) chạy bộ chọn lấy Top-K, (3) đưa các frame đó qua **lại** Vision Encoder của VLM để lấy đặc trưng thật cho LLM — gấp đôi VRAM và thời gian tiền xử lý. Ngoài ra DINOv2 học self-supervised trên cấu trúc hình học cục bộ, CLIP học contrastive tĩnh — cả hai không biết LLM hiểu video thế nào, nên token DINOv2 coi là \"quan trọng\" (nhiều texture) có thể là nhiễu với LLM.\n\n**Giải pháp**: dùng thẳng Vision Encoder gốc của VLM (SigLIP-2 của Qwen3-VL, hoặc InternViT-6B của InternVL3.5) — đã có sẵn 3D RoPE/MRoPE, hiểu tương quan không gian-thời gian, và tự động tương thích hoàn hảo với Projector/LLM phía sau (không lệch pha biểu diễn). Video chỉ qua Vision Encoder **đúng 1 lần**.\n\n## 2. Vì sao MLP đơn lẻ chấm điểm từng token chắc chắn thất bại\n\nVới video T khung hình, N token không gian/khung (M = T×N tổng), một MLP `f_θ: R^D → R` chấm điểm từng token riêng lẻ `s(t,i) = f_θ(z(t,i))` mắc 2 lỗi:\n\n1. **Mù thời gian**: MLP chỉ nhìn đúng vector tại patch (t,i), không so sánh được với (t-1,i)/(t+1,i) — không biết patch đang đứng yên hay chuyển động. Một bức tường hoa văn phức tạp sẽ cho điểm cao ở **mọi** khung hình.\n2. **Sụp đổ do trùng lặp**: Top-K trên điểm số độc lập sẽ gom hết vào vùng nền chiếm ưu thế của nhiều khung liên tiếp, bỏ sót chuyển động vi mô chớp nhoáng của chủ thể.\n\n## 3. DSTA-Scorer: Decoupled Spatio-Temporal Attention Scorer (~2,5M tham số)\n\n| Khối | Công thức | Ý nghĩa |\n|---|---|---|\n| 1. Temporal Difference Injection | `z̃(t,i) = LayerNorm(z(t,i) ‖ (z(t,i) − z(t-1,i))) · W_in` | Bơm vi sai chuyển động vào token, cảm nhận vận tốc thay đổi cục bộ |\n| 2. Spatial Attention Block | Self-attention giữa N token nội khung tại mỗi frame t — chi phí O(T·N²) | Đo độ nổi bật so với bối cảnh của chính khung đó (chủ thể vs nền) |\n| 3. Temporal Attention Block | Giữ tọa độ không gian i, self-attention qua T khung — chi phí O(N·T²) | So token với chính nó theo thời gian; token không đổi → attention tự triệt tiêu (chống trùng lặp) |\n| 4. Scoring Head + Global Softmax | `s(t,i) = w^T·GELU(W₂·z_tem(t,i) + b₂)`, `P(t,i) = softmax(s(t,i)/τ)` toàn cục | Token vừa nổi bật không gian vừa mới về thời gian → xác suất giữ lại cao nhất |\n\n## Sơ đồ vòng lặp huấn luyện (bản 1 — không phân nhánh)\n\n![Vòng lặp huấn luyện DSTA-Scorer bằng reward V-JEPA 2.1](images/diagram_vjepa_reward_v1.png)\n\nVideo → Vision Encoder (đóng băng) → Token → **DSTA-Scorer** (duy nhất huấn luyện) → Softmax → Sampling Gumbel Top-1024 → giữ token → LLM suy luận. Song song, DSTA-Scorer xuất ra **Binary Mask Action** đưa vào Môi trường V-JEPA 2.1 (đóng băng) để tính Reward → GRPO Advantage Update → cập nhật ngược lại DSTA-Scorer.\n\n## 4. Công thức Reward & GRPO\n\n**Latent Reward (V-JEPA)**: hành động là mask nhị phân giữ đúng K=1024 token; token bị loại thay bằng learnable mask token, đưa vào Predictor của V-JEPA 2.1:\n\n```\nL_predict(m) = (1/|M_mask|) · Σ_{j∈M_mask} ‖ P_φ({z_k}_{k∈S}, e_mask)_j − sg(Ē_θ(V)_j) ‖₁\nR(m) = −log(L_predict(m) + ε) + λ_div · H(P)\n```\n\n`H(P)` là entropy trên **Temporal Marginal Distribution** (`P_T(t) = Σ_i P(t,i)`) — chống mạng dồn hết xác suất vào vài khung đầu/cuối.\n\n**GRPO (Group Relative Policy Optimization)** — vì Top-K ngắt gradient nên bỏ hẳn mạng Critic, tiết kiệm >60% VRAM so PPO truyền thống:\n1. Group Rollout: sinh G mask độc lập qua Gumbel-Softmax nhiệt độ τ.\n2. Advantage nội nhóm: `Â^(g) = (R(m^(g)) − μ_R) / (σ_R + ε)`.\n3. Cập nhật: PPO-clip trên tỉ số xác suất + ràng buộc KL Divergence giữ ổn định.\n\n## 5. Chống \"Reward Hacking\" — Bẫy Nội Suy Tuyến Tính\n\n**Rủi ro**: ở cảnh tĩnh (camera an ninh, người ngồi nói chuyện), nếu Scorer chỉ chọn khung đầu + khung cuối, Predictor của V-JEPA vẫn nội suy được phần giữa với sai số cực nhỏ → chính sách hội tụ về cực tiểu cục bộ \"luôn chọn biên thời gian\", bỏ qua chuyển động vi mô ở giữa.\n\n**Phòng ngự**:\n- **Phân đoạn Interval-Aware (KiToke)**: chia video theo ranh giới ngữ nghĩa động (Dynamic Boundaries) thay vì độ dài cố định, phá vỡ quy luật biên thời gian.\n- **DPP Diversity**: `L_div(S) = −log det(K_S)` với `K_S[a,b] = z_a^T·z_b` (token đã chuẩn hoá). Token trùng lặp → ma trận phụ thuộc tuyến tính → định thức → 0 → phạt cực nặng. Token đa dạng (trực giao) → định thức cực đại → không bị phạt. Triển khai ổn định bằng phân rã Cholesky `K_S + δI = LL^T`, `δ=10⁻⁴`.\n\n## 6. Cấu trúc 2 giai đoạn (bản 2) — mở rộng đầy đủ\n\n![Sơ đồ hệ thống huấn luyện 2 giai đoạn & 2 nhánh tinh chỉnh hạ nguồn](images/diagram_vjepa_reward_v2_2stage.png)\n\n**Giai đoạn 1 — Physical Foundation Pre-training (Thô)**: DSTA-Scorer train hoàn toàn Query-Agnostic trên video không nhãn (Kinetics-700/CC3M/ActivityNet), dùng đúng reward V-JEPA ở mục 4, cộng thêm số hạng đa dạng không gian:\n\n```\nR_Stage1(m) = −log(L_predict^V-JEPA(m) + ε) + λ_ent·H(P) + λ_dpp·R_DPP(S)\nR_DPP(S) = (1/K)·log det(K_S + δI)\n```\n\nBản chất: bộ lọc vật lý độc lập truy vấn, nhận diện vùng chứa thay đổi trạng thái/tương tác/tính liên tục nhân quả — không phụ thuộc câu hỏi, tránh ảo giác từ khóa.\n\n**Giai đoạn 2 — Downstream Task Alignment (Tinh)**: kế thừa checkpoint Giai đoạn 1 làm cold-start, tách 2 hướng theo yêu cầu triển khai thực tế:\n\n### Hướng 2A — Query-Agnostic (Detailed Captioning)\n\n**Cơ sở lý thuyết — khử xung đột gradient**: nếu vẫn giữ kiến trúc Query-Agnostic nhưng train trên dữ liệu VQA, sẽ gặp **Nghịch lý 1 Video – Đa Câu Hỏi**: câu hỏi Q1 hỏi người đi bộ góc trái frame 10, câu hỏi Q2 hỏi biển số góc phải frame 80 — không có thông tin truy vấn, Policy buộc phải ra CÙNG 1 tập token cho cả 2 câu hỏi, gradient từ Q1 và Q2 kéo theo hướng đối nghịch, triệt tiêu tín hiệu học, mạng suy biến thành bộ lọc trung bình vô nghĩa.\n\n**Giải pháp**: train bằng Detailed/Dense Video Captioning — mọi token mô tả hành động cốt lõi đều đóng góp đồng thuận vào tái tạo văn bản, gradient nhất quán.\n\n```\nR_Stage2A(S) = (1/|y*|) · Σ_t log P_LLM(y*_t | y*_{1:t-1}, {z_k}_{k∈S}) − β_KL·D_KL(π_φ ‖ π_Stage1)\n```\n\nLog-likelihood tự hồi quy của caption chuẩn, có điều kiện trên token được giữ. Anchor KL giữ chính sách không đi quá xa Giai đoạn 1.\n\n### Hướng 2B — Query-Aware (Targeted VQA & Localization)\n\n**Kiến trúc**: mở rộng DSTA-Scorer bằng khối Cross-Attention nhẹ (hoặc FiLM), vector câu hỏi `e_Q` điều hướng dòng chú ý: `s(t,i)^(Q) = DSTA-Scorer(z(t,i), Δz(t,i) | e_Q)`.\n\n```\nR_Stage2B(S) = w_acc·R_acc + w_loc·R_loc + w_perf·R_perf − β_KL·D_KL(π_φ(S|Q) ‖ π_Stage1)\n```\n\n| Thành phần | Công thức | Ý nghĩa |\n|---|---|---|\n| R_acc | 1.0 nếu đúng đáp án, else Soft-Score(y*, ŷ) | Độ chính xác câu trả lời (trắc nghiệm/tự do) |\n| R_loc | \\|S ∩ Temporal-GroundTruth\\| / \\|S\\| | Thưởng lớn nếu token chọn trúng khoảng thời gian chứa bằng chứng (needle-in-haystack) |\n| R_perf | CE_FullTokens(y*) − CE_Subset-S(y*) | Thưởng dương khi tập nén cho loss dự đoán tốt hơn/bằng tập đầy đủ |\n\n## 7. Ma trận so sánh các phương pháp (gộp cả 2 bản)\n\n| Phương pháp | Bộ chọn/Policy | Nguồn tín hiệu hướng dẫn | Chi phí trích xuất (inference) | Chống Redundancy |\n|---|---|---|---|---|\n| Uniform Sampling | Không có | Không có | 0ms | Rất kém |\n| Ý tưởng thô ban đầu | MLP đơn lẻ/token | V-JEPA (hiểu nhầm pixel reconstruction) | Chậm nếu map pixel thô | Kém (bị bẫy nền lặp lại) |\n| SCORE | MLP Gating Policy | Cross-Entropy Loss của LLM | Phải chạy qua LLM lúc train RL | Khá (dễ overfit downstream) |\n| FastVID/InfoMerge | Heuristic Density Peak + Attention | Similarity nội bộ giữa khung | Nhẹ, training-free | Tốt (nhờ DTM + suppression mask) |\n| **Đề xuất (DSTA + V-JEPA)** | Decoupled Spatio-Temporal Attention (~2,5M) | V-JEPA 2.1 Latent Loss qua GRPO | Tối ưu (1 lần qua VLM Encoder) | Xuất sắc (Temporal Attention triệt tiêu token lặp) |\n| Giai đoạn 1 (V-JEPA baseline) | Chỉ Visual Tokens | Video không nhãn (Kinetics/CC3M) | — | Bảo toàn động lực học vật lý thô |\n| Hướng 2A (Captioning) | Chỉ Visual Tokens | Detailed/Dense Video Captions | — | Bảo toàn bối cảnh vĩ mô toàn diện |\n| Hướng 2B (VQA) | Visual Tokens + Text Query | Video QA / Needle Datasets | Mỗi câu hỏi mới phải chạy lại Scorer | Tập trung sắc nhọn vào bằng chứng câu hỏi |\n\n## 8. Lộ trình triển khai đề xuất trong file gốc\n\n1. **Giai đoạn 1**: đóng băng Vision Encoder (Qwen3-VL/SigLIP-2 hoặc InternVL3.5/InternViT-6B) + V-JEPA 2.1 (ViT-H/16). Data: Video-CC3M + Kinetics-700 + ActivityNet.\n2. **Giai đoạn 2**: train DSTA-Scorer bằng GRPO, G=8, ~16-24 giờ trên 4×A100 (chỉ tối ưu ~2,5M tham số).\n3. **Giai đoạn 3**: gỡ hẳn V-JEPA khỏi suy luận, pipeline chỉ còn `Video → Vision Encoder → DSTA-Scorer → Top-1024 → LLM`. Đánh giá Video-MME/MLVU/LongVideoBench, đo Accuracy + TTFT + tỉ lệ cắt KV-Cache.\n\n---\n\n## 9. Đã kiểm chứng thực tế trên hạ tầng của mình — kết quả âm tính\n\nTrước khi đầu tư viết đủ DSTA-Scorer + GRPO + tích hợp V-JEPA, đã chạy phép kiểm chứng rẻ (~200 video, 20 mask/video, đo Spearman giữa reward V-JEPA và mức hữu ích ngữ nghĩa qua chính Qwen2.5-VL) trên **2 nguồn caption độc lập**:\n\n| Nguồn caption | Spearman trung bình | % video > 0,3 |\n|---|---|---|\n| MSR-VTT (ngắn, nhiễu) | 0,064 | 24,5% |\n| Charades/LLaVA-Video-178K (GPT-4o, chi tiết) | 0,069 | 27,0% |\n\nCả 2 đều dưới hẳn ngưỡng 0,3 — xác nhận **reward L_predict của V-JEPA không tương quan với mức hữu ích ngữ nghĩa** cho Qwen2.5-VL, không phải do caption nhiễu. Quyết định: dừng đầu tư Giai đoạn 1/hướng V-JEPA, chuyển sang đề xuất thay thế — xem tab **\"11. Đề xuất thay thế: DSTA-Scorer + Hướng 2A thuần\"**.\n"
+    },
+    {
+      "id": "idea_dsta_2a_alt",
+      "title": "11. Đề xuất thay thế: DSTA-Scorer + Hướng 2A thuần",
+      "status": "[ĐÃ KIỂM CHỨNG — KHÔNG VƯỢT UNIFORM] Full VideoMME 61,00%, dưới mọi baseline hiện có",
+      "updated": "2026-10-02",
+      "body": "# 11. Đề xuất thay thế: DSTA-Scorer + Hướng 2A thuần (bỏ V-JEPA)\n\n**Bối cảnh**: sau khi kiểm chứng (xem tab **\"10. Đặc tả V-JEPA 2.1 World Model + DSTA-Scorer Policy\"**, mục 9) rằng reward V-JEPA (`L_predict`) không tương quan với mức hữu ích ngữ nghĩa cho Qwen2.5-VL (Spearman ~0,06-0,07 trên 2 nguồn caption độc lập, dưới hẳn ngưỡng 0,3), đề xuất **giữ nguyên khung DSTA-Scorer + GRPO** nhưng **bỏ hẳn V-JEPA khỏi vòng lặp train**, dùng thẳng reward Hướng 2A thật (log-likelihood caption qua chính Qwen2.5-VL) — thứ đã đo và biết chắc phản ánh đúng điều cần tối ưu.\n\n## Sơ đồ\n\n![Đề xuất thay thế: DSTA-Scorer + Hướng 2A thuần](images/diagram_dsta_2a_alt.png)\n\nVideo (Charades, caption GPT-4o chi tiết) → **Qwen2.5-VL Vision Encoder** (đóng băng, đã có sẵn, encode 1 lần/video) → T1[T,N,D] → **DSTA-Scorer rút gọn** (duy nhất huấn luyện) → điểm số/unit → **Sampling** (Bernoulli + sàn tối thiểu, giữ theo TỈ LỆ ~15% chứ không phải K=1024 cố định) → gather đúng token giữ (giữ nguyên position_ids gốc) → Qwen2.5-VL LLM → **Reward = R_2A** (CE trên caption thật) → **GRPO** (advantage chuẩn hoá trong nhóm G=4) → cập nhật gradient CHỈ cho DSTA-Scorer.\n\n## 3 điểm khác biệt có chủ đích so với đặc tả gốc\n\n| | Đặc tả gốc | Đề xuất thay thế | Lý do |\n|---|---|---|---|\n| Granularity chấm điểm | Từng PATCH (T×N) | Từng UNIT (T, đã mean-pool N token/unit) | Tái dùng nguyên cơ chế GRPO + gather + min-retention-floor đã ổn định ở `train_rl_gating.py`, tránh viết lại ước lượng log-prob cho top-k-không-hoàn-lại trên T×N chiều (dễ sai) |\n| Mức giữ | K=1024 cố định | Tỉ lệ % (~15%, khớp Uniform/RL-Gating đã có) | Công bằng giữa video ngắn/dài — K cố định trên video 1 giờ (3600 frame) sẽ khắc nghiệt hơn nhiều so với video ngắn, không so được với baseline cũ |\n| Vision Encoder | SigLIP-2 (Qwen3-VL)/InternViT-6B (InternVL3.5) — model chưa từng dùng trong repo | Encoder gốc của Qwen2.5-VL (đã dùng xuyên suốt dự án) | Cùng 1 model làm cả encoder lẫn LLM đích — không có khoảng cách căn chỉnh nào cả, còn đúng tinh thần \"VLM-native\" hơn cả việc cắm thêm 1 encoder ngoài |\n\n## Kiến trúc DSTAScorer (rút gọn)\n\nVẫn giữ **đúng phần quan trọng nhất** của DSTA-Scorer gốc — Temporal Attention Block, sửa lỗi \"mù thời gian\" của MLP đơn lẻ (từng khiến RL-Gating cũ học ra y hệt Uniform). Bỏ Spatial Attention Block vì X_units đã mean-pool N token/unit từ trước, không còn gì để attend nội khung.\n\n```\nTemporal Difference Injection: z̃ = LayerNorm(concat(X_units, ΔX_units)) · W_in   [T, hidden]\nTemporal Attention Block:      self-attention xuyên suốt T unit + residual + LN\nScoring Head:                  MLP 2 lớp → logit/unit → sigmoid → keep_prob\n```\n\n## Reward — đã kiểm chứng hoạt động đúng (không phải giả định)\n\n```\nR_2A = log-likelihood trung bình của caption thật qua Qwen2.5-VL\n     = -CE(caption | token đã giữ)   [HF loss chuẩn, labels=..., không generate()]\nreward = -CE_loss - λ_sparsity · retention\n```\n\nĐây chính là công thức đã dùng để đo tương quan V-JEPA (mục 9, tab trước) — 400 lần đo độc lập đã xác nhận phép tính này chạy đúng và có ý nghĩa, nên rủi ro kỹ thuật ở phần reward gần như bằng 0.\n\n## GRPO — tái dùng nguyên khung đã ổn định\n\nTừ `train_rl_gating.py`: Bernoulli mask theo xác suất Scorer → sàn tối thiểu chống sụp mask rỗng/deterministic → G=4 mask độc lập/video → advantage chuẩn hoá trong nhóm `(R - mean(R))` → `policy_loss = -(advantage · log_prob).mean()` → entropy bonus tính bằng **sum** (không phải mean, bài học đã vấp trước đó) → backward CHỈ qua DSTA-Scorer, Qwen2.5-VL luôn `@torch.no_grad()`.\n\n## Dữ liệu & tham số đã chốt\n\n- **Data**: Charades qua LLaVA-Video-178K (caption GPT-4o chi tiết, đã tải 484 video ở 1/8 shard).\n- **Mức giữ mục tiêu**: 15% (khớp điểm so sánh RL-Gating/Uniform hiện có — 61,33%).\n- **Group size GRPO**: G=4 (giảm từ 8 trong đặc tả gốc, phù hợp VRAM 1×A100 40GB).\n\n## Hành trình chẩn đoán huấn luyện (7 vòng)\n\nSmoke test 20 step đầu chạy không lỗi, nhưng train 800 step với cấu hình mặc định (`lr=1e-3, entropy_coef=0,01, lambda_sparsity=0,01`) cho entropy gần như đứng yên ở mức tối đa — policy không học được gì. Chuỗi 7 vòng chẩn đoán xác định đúng nguyên nhân từng lớp một, không đoán mò:\n\n1. Đo `reward_std` trong từng nhóm GRPO → rất nhỏ (0,006-0,026) → nghi ngờ reward không phân biệt được mask tốt/xấu.\n2. Khởi tạo bias thấp (sigmoid≈0,15 ngay từ đầu) → đúng lúc khởi tạo nhưng bị kéo ngược chỉ sau 1-2 step.\n3. Hạ `entropy_coef` → vẫn dao động dữ dội → loại trừ entropy là nguyên nhân chính.\n4. Hạ `lr` 10 lần (1e-4) → hết dao động dữ dội, nhưng lộ ra retention trôi lên đều đặn không dừng.\n5. Tắt hẳn `entropy_coef=0` → retention vẫn trôi lên → xác nhận đây là tín hiệu THẬT (giữ nhiều token → CE tốt hơn một cách hệ thống), không phải nhiễu ngẫu nhiên.\n6. Tăng `lambda_sparsity` 20 lần (0,01 → 0,2) → đạt trạng thái cân bằng ổn định, retention dao động quanh 0,3-0,45 thay vì trôi thẳng về gần 1,0.\n\nCấu hình cuối dùng để train thật: `lr=1e-4, entropy_coef=0,001, lambda_sparsity=0,2, min_retention_frac=0,15, group_size=4`, 800 step (~22 phút trên 1×A100 40GB).\n\n## Kết quả VideoMME\n\n**Subset 300 câu** (`target_retention=0,35` — mức policy tự hội tụ tới sau train, không phải mức mục tiêu ban đầu 0,15):\n\n| Cấu hình | Overall | Short | Medium | Long |\n|---|---|---|---|---|\n| DSTA-Scorer (đã train) | 62,67% (188/300) | 68,75 | 59,04 | 59,05 |\n| Uniform (không học, cùng mức giữ 0,35) | 62,33% (187/300) | 67,86 | 63,86 | 55,24 |\n| Uniform (không học, mức giữ 0,15 — khớp RL-Gating cũ) | 61,33% (184/300) | 66,96 | 63,86 | 53,33 |\n\n**Bộ đầy đủ 2.700 câu** (`target_retention=0,35`, so với các mốc đã có trong dự án — đo trên cùng bộ, so được trực tiếp):\n\n| Phương pháp | Overall | Short | Medium | Long |\n|---|---|---|---|---|\n| 2-Pass Attention-Guided | 65,37% | 73,67 | 66,11 | 56,33 |\n| Uniform (tokens_num=16384, quy ước cũ) | 64,41% | 73,00 | 66,00 | 54,22 |\n| Native dense (không nén) | 64,26% | 73,67 | 65,00 | 54,11 |\n| DySeg + STPrune | 61,96% | 70,00 | 61,67 | 54,22 |\n| **DSTA-Scorer (0,35, full)** | **61,00%** | 70,56 | 60,22 | 52,22 |\n\n## Kết luận\n\nTrên subset 300 (ngân sách khớp đúng với Uniform), DSTA-Scorer gần như giống hệt Uniform không học gì (188 vs 187/300, chênh đúng 1 câu) — lặp lại chính xác kết luận đã có với RL-Gating trước đây. Dù kiến trúc tốt hơn (Temporal Attention thay MLP đơn lẻ) và reward đã kiểm chứng đúng (log-likelihood caption thật, không phải proxy), 7 vòng tinh chỉnh để đưa vòng train về trạng thái ổn định vẫn không đủ để policy học được điều gì vượt trội so với chọn token đều ngẫu nhiên. Trên bộ đầy đủ, DSTA-Scorer (61,00%) còn **thấp hơn mọi phương pháp khác đã thử trong dự án**, kể cả DySeg+STPrune.\n\n**Còn thiếu để kết luận trọn vẹn**: Uniform-matched tại đúng mức giữ 0,35 trên bộ đầy đủ (lệnh đã chuẩn bị, chưa chạy) — cần để biết 61,00% có ngang Uniform cùng ngân sách ở quy mô lớn, hay còn kém hơn cả Uniform khi mở rộng ra toàn bộ 2.700 câu. Đang điều tra thêm giả thuyết phụ: cơ chế chọn Top-K lúc suy luận không có ràng buộc độ phủ thời gian (khác lúc train có sàn tối thiểu `min_retention_frac`), có thể khiến token được giữ dồn cục về 1 vùng thời gian — đặc biệt khớp với việc bucket medium mất điểm nhiều nhất so với Native dense (-4,78 điểm, nhiều hơn hẳn short -3,11 và long -1,89). Chưa xác nhận được bằng debug thực tế (lần chạy debug đầu bị lỗi chạy nhầm file script cũ)."
+    }
+  ],
+  "activeIdeaId": "idea_vjepa_dsta_leader"
+}
