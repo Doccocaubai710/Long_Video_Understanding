@@ -9,7 +9,10 @@ OPTION_LETTERS = string.ascii_uppercase
 
 
 def load_jsonl(path):
-    """Load one JSON object per line from an inference output file."""
+    """Load one JSON object per line from an inference output file. Mot dong
+    hong o CUOI file (thuong do tien trinh bi ngat giua chung khi dang ghi,
+    VD mat SSH luc chay dai tren GPU thue) chi bi bo qua kem canh bao, thay
+    vi lam crash toan bo phep tinh accuracy tren cac dong con lai van dung."""
     records = []
     with open(path, "r", encoding="utf-8") as f:
         for line_number, line in enumerate(f, start=1):
@@ -18,8 +21,8 @@ def load_jsonl(path):
                 continue
             try:
                 records.append(json.loads(line))
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"Invalid JSON on line {line_number}: {path}") from exc
+            except json.JSONDecodeError:
+                print(f"[canh bao] Bo qua dong JSON hong (dong {line_number}) trong {path}")
     return records
 
 

@@ -1,6 +1,5 @@
 Datasets/
 liuhaotian/
-outputs/
 .venv/
 
 __pycache__/
@@ -11,3 +10,39 @@ ktv/save_tensor/
 **.ipynb_checkpoints/
 ktv.egg-info/
 datasets_raw/
+
+# model weights tai tu HuggingFace (xem KTV/SETUP_SERVER_MOI.txt)
+Qwen/
+facebook/
+lmms-lab/
+# repo rieng (co .git), chi dung cho baseline KiToke
+kitoke/
+*.part
+
+# outputs/: chi giu script hang doi, cong cu bao cao va file du doan cua cac moc (can cho ngat som / bao cao)
+!outputs/
+outputs/*
+!outputs/coco_train2017_recaptioned.jsonl
+!outputs/rap/
+outputs/rap/*
+!outputs/rap/compare.py
+!outputs/rap/pred_videomme_f128_rap_runE_r025.json
+!outputs/rap/pred_videomme_f128_rap_R10E_r010.json
+!outputs/kitoke_baseline/
+outputs/kitoke_baseline/*
+!outputs/kitoke_baseline/pred_videomme_f128_*.json
+!outputs/rap_vjepa/
+outputs/rap_vjepa/*
+!outputs/rap_vjepa/pred_videomme_f128_rap_V10E_r010.json
+!outputs/rap_vjepa25/
+outputs/rap_vjepa25/*
+!outputs/rap_vjepa25/pred_videomme_f128_rap_V25E_r025.json
+!outputs/rap_elastic/
+outputs/rap_elastic/*
+!outputs/rap_elastic/*.sh
+!outputs/rap_elastic/tools.py
+!outputs/rap_elastic/STATUS.txt
+!outputs/rap_elastic/KET_QUA.txt
+!outputs/rap_elastic/pred_videomme_f128_*.json
+!outputs/rap_elastic/*.train.log
+!outputs/rap_elastic/*.pt.metrics.jsonl

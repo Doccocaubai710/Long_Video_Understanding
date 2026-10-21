@@ -115,3 +115,19 @@ untitled1.txt
 *.tmp
 *.bak
 tmp/
+
+# ============================================================
+# REPO BASELINE RIENG (co .git) -- clone lai tu upstream neu can
+# ============================================================
+DyCoke/
+FastVID/
+HoliTom/
+VidCom2/
+
+# bao cao noi bo -- khong up
+bao_cao_T7-T10/
+
+# vlm-paper-site: up ca anh (ghi de luat *.png o tren), bo cac ban sao luu
+!vlm-paper-site/images/*.png
+vlm-paper-site/*.bak*
+vlm-paper-site/*.before_*

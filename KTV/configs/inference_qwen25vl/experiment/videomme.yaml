@@ -1,0 +1,12 @@
+# @package _global_
+# Paths match configs/inference/experiment/videomme_6keyframe.yaml (already
+# confirmed working on your server across every Phase-0 run this session).
+video_dir: Datasets/Video-MME/data/data
+gt_file: playground/gt_qa_files/VideoMME/val_qa.json
+output_dir: outputs
+output_name: videomme_qwen25vl_uniform12
+model_path: Qwen/Qwen2.5-VL-7B-Instruct
+
+key_frame_path: null
+num_frames: 12
+tokens_num: 1872

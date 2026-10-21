@@ -1,0 +1,62 @@
+# Config for run_inference_qwen25vl_dyseg.py -- flat (no experiment
+# sub-group), paths match configs/inference_qwen25vl/experiment/videomme.yaml
+# (already confirmed working this session).
+
+video_dir: Datasets/Video-MME/data/data
+gt_file: playground/gt_qa_files/VideoMME/val_qa.json
+output_dir: outputs
+output_name: pred_videomme_qwen25vl_dyseg
+model_path: Qwen/Qwen2.5-VL-7B-Instruct
+
+num_frames: 128   # unused (native dynamic sampling) -- kept for reference
+
+# Dense pool size, in 28x28-patch units (MAX_PIXELS = max_pixels_units*28*28).
+# Default 3x Vanilla's -- see script docstring "COMPRESSION MARGIN". Set to
+# 16384 (1x) to reproduce the near-100%-retention regime for the retention
+# unit test in README_DySeg_STPrune.md.
+max_pixels_units: 49152
+
+# Set true for the MANDATORY first sanity check: no pruning at all, output
+# should match run_inference_qwen25vl_native.py on the same questions.
+verify_mode: false
+
+# "dyseg" (default) = full Tang1-3 pipeline. "uniform" = evenly-spaced
+# flat-index sampling of tokens_num tokens from the same dense pool, no
+# segmentation/allocation/DTM -- the fair same-budget baseline for isolating
+# whether non-uniform allocation specifically helps.
+mode: dyseg
+
+# --- Tang 2: budget (idea.md Phan 3.3, 7) ---
+tokens_num: 16384      # B_total, matches f128_t16384 for direct comparison
+b_min: 200             # floor tokens/segment (coverage floor -- idea.md 3.3)
+b_max: 4000            # ceiling tokens/segment
+lam: 0.5               # lambda: v_RC vs v_delta mix (idea.md 3.2.4)
+recon_gamma: 0.9        # RECON energy-stop threshold (idea.md 3.2.1)
+temperature0: 1.0        # T0, base allocation temperature
+kappa: 1.0                # entropy-gate sharpness (idea.md 3.4)
+h0: 0.5                     # entropy-gate reference point
+
+# --- Tang 1: DySeg (idea.md Phan 2.2) ---
+dyseg_c: 8
+dyseg_tau: 0.9
+
+# --- Tang 3: STPrune (idea.md Phan 4) ---
+dtm_ratio: 0.4     # d: DTM (representative) vs salience split
+p_anchor: 4        # anchor unit stride for DTM
+dtm_alpha: 0.6     # anchor vs cluster-mean mix in merged token (FastVID Eq.5)
+# "delta" (default, ||X[t]-X[t-1]||, motion) | "norm" (||X[t]||, crude
+# content-magnitude proxy) | "grid" (no scoring, evenly-spaced pick) |
+# "vjepa" (masked-prediction error, see precompute_vjepa_salience.py --
+# must run that first, and vjepa_cache_dir below must match its cache_dir).
+salience_mode: delta
+vjepa_cache_dir: outputs/vjepa_salience_cache
+
+max_new_tokens: 32
+temperature: 0.2
+
+num_chunks: 1
+chunk_idx: 0
+
+hydra:
+  job:
+    chdir: false

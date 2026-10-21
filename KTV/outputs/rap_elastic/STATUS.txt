@@ -1,0 +1,65 @@
+2026-10-16 10:58:23 QUEUE START (pid 4479)
+2026-10-16 10:58:23 START evalsub AS10U r=0.10 (lan 1, da co 0/300)
+2026-10-16 12:59:28 DONE evalsub AS10U (300/300): overall       300      180         0  0.6000
+2026-10-16 12:59:29 START evalsub AS10R r=0.10 (lan 1, da co 0/300)
+2026-10-16 13:43:00 DONE evalsub AS10R (300/300): overall       300      186         0  0.6200
+2026-10-16 13:43:01 Q1 sub300: AS10U - Uniform10 = 0.667 ; AS10R - R10E = 0.667 (nguong cham du: 0.7)
+2026-10-16 13:43:01 START train ELA (lan 1)
+2026-10-16 22:07:15 OK   train ELA
+2026-10-16 22:07:22 START evalfull ELA r=0.25 (lan 1, da co 0/2700)
+2026-10-17 00:29:21 DONE evalfull ELA (2700/2700): overall      2700     1733         0  0.6419
+2026-10-17 00:29:22 START evalfull ELA r=0.10 (lan 1, da co 0/2700)
+2026-10-17 02:41:04 DONE evalfull ELA (2700/2700): overall      2700     1651         0  0.6115
+2026-10-17 02:41:06 START train R02W3 (lan 1)
+2026-10-17 07:51:45 OK   train R02W3
+2026-10-17 07:51:52 START evalfull R02W3 r=0.02 (lan 1, da co 0/2700)
+2026-10-17 09:59:03 DONE evalfull R02W3 (2700/2700): overall      2700     1525         0  0.5648
+2026-10-17 09:59:06 START evalsub DENSE256 r=1.0 (lan 1, da co 0/300)
+2026-10-17 11:21:18 DONE evalsub DENSE256 (300/300): overall       300      200         0  0.6667
+2026-10-17 11:21:21 Q5b sub300: DENSE256 - Dense128 = -1.000 (nguong train T256: 1.0)
+2026-10-17 11:21:21 Q4: R02W3 - R02E = 0.370 (nguong chay R05W3: 0.5)
+2026-10-17 11:21:21 Q1 full: AS10U - Uniform10 = nan ; AS10R - R10E = nan (nguong train R10S: 0.5)
+2026-10-17 11:21:21 START train ELA_s1 (lan 1)
+2026-10-17 19:45:39 OK   train ELA_s1
+2026-10-17 19:45:47 START evalfull ELA_s1 r=0.25 (lan 1, da co 0/2700)
+2026-10-17 22:10:53 DONE evalfull ELA_s1 (2700/2700): overall      2700     1734         0  0.6422
+2026-10-17 22:10:55 START evalfull ELA_s1 r=0.10 (lan 1, da co 0/2700)
+2026-10-18 00:26:23 DONE evalfull ELA_s1 (2700/2700): overall      2700     1648         0  0.6104
+2026-10-18 00:26:26 QUEUE DONE
+2026-10-20 01:48:02 QUEUE2 START (pid 1020) -- cham du 2700 cau cac run chi co sub300
+2026-10-20 01:48:02 START evalfull DENSE256 r=1.0 (lan 1, da co 0/2700)
+2026-10-20 01:49:18 QUEUE2 STOP (nguoi dung yeu cau dung)
+2026-10-20 04:14:25 QUEUE3 START (pid 3894) -- cham du 2700 cau AS10R, AS10U
+2026-10-20 04:14:25 START evalfull AS10R r=0.10 (lan 1, da co 0/2700)
+2026-10-20 04:26:19 START evalfull AS10R r=0.10 (lan 2, da co 97/2700)
+2026-10-20 05:33:39 DONE evalfull AS10R (2700/2700): overall      2700     1645         0  0.6093
+2026-10-20 05:33:42 START evalfull AS10U r=0.10 (lan 1, da co 0/2700)
+2026-10-20 06:53:43 DONE evalfull AS10U (2700/2700): overall      2700     1618         0  0.5993
+2026-10-20 06:53:46 QUEUE3 DONE
+2026-10-20 07:57:42 QUEUE4 START (pid 335690) -- HTP-LVU: SU10, RSS10
+2026-10-20 07:57:42 START evalfull SU10 r=0.10 (lan 1, da co 0/2700)
+2026-10-20 08:05:37 QUEUE4 STOP (nguoi dung yeu cau dung SU10; chua train RSS10)
+2026-10-20 08:47:45 QUEUE5 START (pid 343140) -- C0 25%
+2026-10-20 08:47:45 START evalfull C0 r=0.25 (lan 1, da co 0/2700)
+2026-10-20 10:38:16 START evalfull C0 r=0.25 (lan 2, da co 2699/2700)
+2026-10-20 10:52:35 DONE evalfull C0 (2700/2700): overall      2700     1691         0  0.6263
+2026-10-20 10:52:39 QUEUE5 DONE
+2026-10-20 10:55:48 QUEUE6 START (pid 506751) -- M3D-B, SU25, M3D-BD, V10E_s1, R10E7k, roi RSS25/RSW25, M3DF, seeds
+2026-10-20 10:55:48 START train M3D-B (lan 1)
+2026-10-20 18:41:08 OK   train M3D-B
+2026-10-20 18:41:20 START evalfull M3D-B r=0.25 (lan 1, da co 0/2700)
+2026-10-20 20:26:59 DONE evalfull M3D-B (2700/2700): overall      2700     1724         0  0.6385
+2026-10-20 20:27:03 START evalfull SU25 r=0.25 (lan 1, da co 0/2700)
+2026-10-20 23:18:05 DONE evalfull SU25 (2700/2700): overall      2700     1717         0  0.6359
+2026-10-20 23:18:08 START train M3D-BD (lan 1)
+2026-10-21 08:29:01 SWITCH M3D-BD sang doc video tu o local: dung pid 1033898
+1033899
+1235010 (dung o buoc 2154 >20 phut vi Lustre), queue tu --resume tu checkpoint buoc 2000
+2026-10-21 08:30:06 START train M3D-BD (lan 2)
+2026-10-21 09:00:57 DUNG TAT CA theo yeu cau nguoi dung (queue6, train M3D-BD lan 2, chep local)
+2026-10-21 10:14:10 CHAY LAI queue6 theo yeu cau nguoi dung (Lustre van cham; M3D-BD tiep tu buoc 2000, video train doc tu o local)
+2026-10-21 10:14:13 QUEUE6 START (pid 1244612) -- M3D-B, SU25, M3D-BD, V10E_s1, R10E7k, roi RSS25/RSW25, M3DF, seeds
+2026-10-21 10:14:13 OK   train M3D-B
+2026-10-21 10:16:08 DONE evalfull M3D-B (2700/2700): overall      2700     1724         0  0.6385
+2026-10-21 10:16:18 DONE evalfull SU25 (2700/2700): overall      2700     1717         0  0.6359
+2026-10-21 10:16:20 START train M3D-BD (lan 1)

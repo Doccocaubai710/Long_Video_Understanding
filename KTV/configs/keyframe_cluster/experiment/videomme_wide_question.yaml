@@ -1,0 +1,18 @@
+# @package _global_
+# Deployable counterpart to videomme_oracle_wide.yaml: same widened
+# candidate pool (num_candidates=30, KMeans/DINO diversity), but ranked by
+# the QUESTION (oracle: false, the default) instead of the ground-truth
+# answer. This is the real, usable selection strategy -- unlike the K=12
+# narrow oracle/question files, num_candidates(30) > num_keyframes(12) here
+# so CLIP ranking actually filters which frames survive, not just reorders
+# them. Needed to cleanly separate "does smart selection beat uniform" from
+# "does a perfect oracle signal beat smart selection" on Qwen2.5-VL.
+json_path: playground/gt_qa_files/VideoMME/val_qa.json
+video_path: Datasets/Video-MME/data/data
+video_frame_tensor_path: ktv/save_tensor/Video-MME
+save_cluster_path: outputs/videomme_wide_question_keyframes
+combined_output_path: outputs/videomme_wide_question_keyframe6_order.json
+dataset: Video-MME
+device: auto
+oracle: false
+num_candidates: 30

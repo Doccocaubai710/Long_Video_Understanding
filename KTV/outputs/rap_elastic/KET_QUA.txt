@@ -1,0 +1,91 @@
+KET QUA HANG DOI rap_elastic -- cap nhat 2026-10-21 10:16 UTC
+Tien do chi tiet: outputs/rap_elastic/STATUS.txt. Ke hoach: outputs/rap_elastic/queue.sh (dau file).
+So 'sub300' chi tren 300 cau (de quyet dinh noi bo, nhieu nhieu). So 'full' tren du 2.700 cau.
+z: McNemar so cap tung cau, |z| > 1,96 la co y nghia.
+
+[Q1a sub300] Uniform 10% + chia lai neo theo canh (khong train)  (300 cau)
+    short=67.86  medium=57.83  long=53.33  overall=60.00
+    so voi Uniform10 : +0.67 diem (z=+0.38, 300 cau chung)
+
+[Q1b sub300] RAP R10E + chia lai neo theo canh (khong train lai)  (300 cau)
+    short=72.32  medium=62.65  long=50.48  overall=62.00
+    so voi R10E      : +0.67 diem (z=+0.32, 300 cau chung)
+    so voi Uniform10 : +2.67 diem (z=+1.13, 300 cau chung)
+
+[Q1a full] Uniform 10% + chia lai neo theo canh  (2700 cau)
+    short=70.00  medium=57.22  long=52.56  overall=59.93
+    so voi Uniform10 : +0.33 diem (z=+0.50, 2700 cau chung)
+
+[Q1b full] RAP R10E + chia lai neo theo canh  (2700 cau)
+    short=71.78  medium=59.89  long=51.11  overall=60.93
+    so voi R10E      : -0.67 diem (z=-1.01, 2700 cau chung)
+    so voi Uniform10 : +1.33 diem (z=+1.74, 2700 cau chung)
+    so voi HoliTom10 : -0.41 diem (z=-0.51, 2700 cau chung)
+
+[Q3 ELA@25] RAP-Elastic (1 checkpoint), cham o 25%  (2700 cau)
+    short=73.78  medium=65.11  long=53.67  overall=64.19
+    so voi RunE25    : +0.00 diem (z=+0.00, 2700 cau chung)
+    so voi Uniform25 : +1.11 diem (z=+2.00, 2700 cau chung)
+    so voi HoliTom25 : +0.33 diem (z=+0.51, 2700 cau chung)
+
+[Q3 ELA@10] RAP-Elastic (1 checkpoint), cham o 10%  (2700 cau)
+    short=71.44  medium=59.00  long=53.00  overall=61.15
+    so voi R10E      : -0.44 diem (z=-1.13, 2700 cau chung)
+    so voi Uniform10 : +1.56 diem (z=+2.48, 2700 cau chung)
+    so voi HoliTom10 : -0.19 diem (z=-0.25, 2700 cau chung)
+
+[Q4 R02W3] RAP 2%, cua so +-3 unit  (2700 cau)
+    short=65.89  medium=54.44  long=49.11  overall=56.48
+    so voi R02E      : +0.37 diem (z=+0.88, 2700 cau chung)
+    so voi Uniform02 : +3.07 diem (z=+4.14, 2700 cau chung)
+    so voi HoliTom02 : +1.11 diem (z=+1.30, 2700 cau chung)
+
+[Q5b sub300] Dense 256 frame (thay manh hon?)  (300 cau)
+    short=76.79  medium=65.06  long=57.14  overall=66.67
+    so voi Dense128  : -1.00 diem (z=-0.51, 300 cau chung)
+
+[F2 DENSE256] Dense 256 frame, du 2.700 cau: CHUA CO
+[Q5c T256] Tro nen 256 frame xuong 12,5% (~4.000 token), thay = dense 256: CHUA CO
+[Q5a R05W3] RAP 5%, cua so +-3 unit: CHUA CO
+[Q6 R10S] RAP 10% train voi neo chia theo canh: CHUA CO
+[H1 SU10] Uniform 10% + token tom tat moi canh (HTP-LVU, khong train)  (294 cau)
+    short=68.71  medium=nan  long=nan  overall=68.71
+    so voi Uniform10 : -3.40 diem (z=-1.67, 294 cau chung)
+    so voi HoliTom10 : -1.02 diem (z=-0.45, 294 cau chung)
+
+[H2 RSS10] RAP 10% + neo chi nhin cung canh + token tom tat (HTP-LVU): CHUA CO
+[C0] Medoid cum k-means trong tung canh, khong train, 25% (HTP-LVU 1.2 + MAP-3D tube)  (2700 cau)
+    short=73.67  medium=61.33  long=52.89  overall=62.63
+    so voi Uniform25 : -0.44 diem (z=-0.79, 2700 cau chung)
+    so voi RunE25    : -1.56 diem (z=-2.42, 2700 cau chung)
+    so voi HoliTom25 : -1.22 diem (z=-2.03, 2700 cau chung)
+
+[Q6-1 M3D-B] RAP 25% + cross-attn phat khoang cach 3D (MAP-3D 3.3), KV +-3  (2700 cau)
+    short=73.33  medium=64.33  long=53.89  overall=63.85
+    so voi RunE25    : -0.33 diem (z=-1.10, 2700 cau chung)
+    so voi Uniform25 : +0.78 diem (z=+1.48, 2700 cau chung)
+    so voi HoliTom25 : +0.00 diem (z=+0.00, 2700 cau chung)
+
+[Q6-2 SU25] Uniform 25% + token tom tat moi canh (HTP-LVU residual bypass, khong train)  (2700 cau)
+    short=75.22  medium=62.22  long=53.33  overall=63.59
+    so voi Uniform25 : +0.52 diem (z=+0.94, 2700 cau chung)
+    so voi HoliTom25 : -0.26 diem (z=-0.43, 2700 cau chung)
+    so voi RunE25    : -0.59 diem (z=-0.91, 2700 cau chung)
+
+[Q6-3 M3D-BD] M3D-B + Deformable 3D Tube Adapter (MAP-3D 3.2): CHUA CO
+[Q6-4a V10E_s1] V-JEPA pretrain + KL 10%, seed 1 (kiem chung V10E): CHUA CO
+[Q6-4b R10E7k] Doi chung: RAP 10% KL 7.000 buoc, khong V-JEPA: CHUA CO
+[Q6-5 RSS25] RAP 25% + neo chi nhin cung canh (HTP-LVU S1) + token tom tat: CHUA CO
+[Q6-5 RSW25] RAP 25% + neo chi nhin cung canh (HTP-LVU S1), khong token tom tat: CHUA CO
+[Q6-6 M3DF@25] MAP-3D day du: 3.3 + 3.2 + Elastic 4.1, cham 25%: CHUA CO
+[Q6-6 M3DF@10] MAP-3D day du: 3.3 + 3.2 + Elastic 4.1, cham 10%: CHUA CO
+[F1 ELA_s1@25] RAP-Elastic seed 1, 25%  (2700 cau)
+    short=73.56  medium=65.00  long=54.11  overall=64.22
+    so voi RunE25    : +0.04 diem (z=+0.10, 2700 cau chung)
+    so voi Uniform25 : +1.15 diem (z=+2.06, 2700 cau chung)
+
+[F1 ELA_s1@10] RAP-Elastic seed 1, 10%  (2700 cau)
+    short=71.44  medium=58.89  long=52.78  overall=61.04
+    so voi R10E      : -0.56 diem (z=-1.30, 2700 cau chung)
+    so voi Uniform10 : +1.44 diem (z=+2.24, 2700 cau chung)
+

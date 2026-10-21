@@ -1,0 +1,128 @@
+HƯỚNG DẪN CHUYỂN SANG SERVER MỚI (KTV / RAP, Video-MME)
+Cập nhật 21/10/2026. Tất cả đường dẫn bên dưới tính từ thư mục KTV/ (trong repo Long_Video_Understanding).
+
+=====================================================================
+0. LINK PUBLIC ĐỂ TẢI (chi tiết đặt vào đâu xem mục 1-7)
+=====================================================================
+  Code (repo này)        https://github.com/Doccocaubai710/Long_Video_Understanding
+  Model Qwen2.5-VL-7B    https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct
+  Model V-JEPA 2         https://huggingface.co/facebook/vjepa2-vitl-fpc64-256
+  LLaVA-Video-178K       https://huggingface.co/datasets/lmms-lab/LLaVA-Video-178K
+                         (thư mục 0_30_s_academic_v0_1, 1_2_m_academic_v0_1, 2_3_m_academic_v0_1:
+                          file *_cap_processed.json, *_mc_v0_1_qa_processed.json và các file video *.tar.gz)
+  Video-MME              https://huggingface.co/datasets/lmms-lab/Video-MME
+  MSR-VTT                https://huggingface.co/datasets/friedrichor/MSR-VTT
+                         (bản mirror trên HF. Tôi chưa xác minh được server cũ tải MSR-VTT từ nguồn nào,
+                          chỉ cần thư mục video/*.mp4)
+  COCO train2017         http://images.cocodataset.org/zips/train2017.zip
+                         (hoặc từng ảnh: http://images.cocodataset.org/train2017/<ten>.jpg)
+  Repo baseline (chỉ khi chạy lại baseline):
+    DyCoke   https://github.com/KD-TAO/DyCoke
+    FastVID  https://github.com/LunarShen/FastVID
+    HoliTom  https://github.com/cokeshao/HoliTom
+    VidCom2  https://github.com/xuyang-liu16/VidCom2
+    KiToke   https://github.com/hnanhtuan/kitoke   (đặt vào KTV/kitoke)
+
+=====================================================================
+1. CODE: kéo từ GitHub (đã có trong repo)
+=====================================================================
+  git clone https://github.com/Doccocaubai710/Long_Video_Understanding.git
+  cd Long_Video_Understanding/KTV
+
+Trong repo đã có sẵn:
+  - Toàn bộ code *.py, *.sh, configs/, eval/, ktv/, playground/gt_qa_files/ (gồm cả QA của Video-MME:
+    VideoMME/val_qa.json, val_qa.csv, val_qa_subset300.json)
+  - local_data.py (tự dùng bản dữ liệu chép trên ổ local nếu có, không thì đọc thẳng Datasets/)
+  - outputs/rap_elastic/: queue6.sh, start_all.sh, copy_local.sh, tools.py, STATUS.txt, KET_QUA.txt,
+    các file train log và metrics, file dự đoán của M3D-B, SU25, C0...
+    (queue dựa vào các file này để biết run nào đã xong và bỏ qua run đó)
+  - File dự đoán của các mốc dùng để ngắt sớm và làm báo cáo:
+    outputs/kitoke_baseline/pred_videomme_f128_*.json (Uniform, HoliTom...), outputs/rap/ (Run E, R10E),
+    outputs/rap_vjepa/ (V10E), outputs/rap_vjepa25/ (V25E)
+  - outputs/coco_train2017_recaptioned.jsonl (28 MB). Script train đọc file này khi khởi động.
+  - playground/llava_video_probe_files.txt: danh sách đúng 2.601 video train đang dùng (xem mục 4a)
+
+KHÔNG có trong repo (do .gitignore): model, dữ liệu video, checkpoint .pt, các repo baseline có .git riêng.
+
+=====================================================================
+2. MÔI TRƯỜNG PYTHON
+=====================================================================
+  conda env create -f qwen25vl_environment.yml      # Python 3.10, torch 2.11.0+cu128, transformers 5.14.1,
+  conda activate qwen25vl                           # qwen-vl-utils 0.0.14, decord 0.6.0, av 17.1.0, opencv 5.0
+  (dòng "prefix:" cuối file là đường dẫn của server cũ, xóa hoặc sửa lại nếu conda báo lỗi)
+  Cần GPU có CUDA 12.8. Train M3D-BD dùng khoảng 31,5 GB VRAM, M3D-B khoảng 29 GB.
+
+=====================================================================
+3. MODEL: tải từ HuggingFace, đặt đúng thư mục
+=====================================================================
+  BẮT BUỘC:
+    Qwen/Qwen2.5-VL-7B-Instruct          -> KTV/Qwen/Qwen2.5-VL-7B-Instruct          (~16 GB)
+      huggingface-cli download Qwen/Qwen2.5-VL-7B-Instruct --local-dir Qwen/Qwen2.5-VL-7B-Instruct
+      (code dùng --model_path "Qwen/Qwen2.5-VL-7B-Instruct": nếu có thư mục này thì nạp từ đó,
+       không có thì tự tải về HF cache. Cách nào cũng được.)
+
+  CHỈ CẦN CHO RUN V-JEPA (V10E_s1, bước 4a của queue6):
+    facebook/vjepa2-vitl-fpc64-256        -> KTV/facebook/vjepa2-vitl-fpc64-256       (~6 GB)
+
+  KHÔNG CẦN cho queue hiện tại: lmms-lab/LLaVA-NeXT-Video-7B, liuhaotian/ (pipeline cũ).
+
+=====================================================================
+4. DỮ LIỆU: tải về KTV/Datasets/, giữ đúng cấu trúc thư mục
+=====================================================================
+4a. LLaVA-Video-178K (để TRAIN), nguồn HF dataset lmms-lab/LLaVA-Video-178K
+    KTV/Datasets/LLaVA-Video-178K-probe/
+      0_30_s_academic_v0_1_cap_processed.json      0_30_s_academic_mc_v0_1_qa_processed.json
+      1_2_m_academic_v0_1_cap_processed.json       1_2_m_academic_mc_v0_1_qa_processed.json
+      2_3_m_academic_v0_1_cap_processed.json       2_3_m_academic_mc_v0_1_qa_processed.json
+      academic_source/{Charades,NextQA,activitynet,youcook2}/...   (KHÔNG cần ego4d)
+    Server cũ chỉ có 2.601 video, khoảng 18,1 GB (Charades 495, NextQA 354, activitynet 842, youcook2 910).
+    !! Code train dùng MỌI video tìm thấy trong academic_source/. Nếu tải nhiều hơn, tập train sẽ khác
+       server cũ và kết quả không còn so sánh được với Run E, M3D-B... Muốn giống hệt server cũ thì chỉ giữ
+       các file có trong playground/llava_video_probe_files.txt (mỗi dòng là một đường dẫn tương đối
+       academic_source/...).
+
+4b. Video-MME (để CHẤM 2.700 câu), nguồn HF dataset lmms-lab/Video-MME
+    KTV/Datasets/Video-MME/data/data/<video_id>.mp4     900 video, khoảng 94,4 GB
+    (file QA đã có trong repo: playground/gt_qa_files/VideoMME/)
+
+4c. MSRVTT (CHỈ cho run V-JEPA, bước 4a của queue6)
+    KTV/Datasets/MSRVTT/video/*.mp4
+
+4d. COCO train2017: chỉ cần 200 ảnh, nhưng BẮT BUỘC cho mọi run train RAP
+    Recipe hiện tại không train bằng pseudo-video. Tuy vậy, lúc khởi động, train_rap_elastic.py / train_rap.py
+    vẫn mở 200 ảnh đầu tiên trong outputs/coco_train2017_recaptioned.jsonl để tạo mẫu val. Thiếu ảnh là bị lỗi ngay.
+    KTV/Datasets/COCO/train2017/<ten>.jpg  -> danh sách 200 tên ảnh: playground/coco_val_pseudo_files.txt
+    (tải nguyên bộ train2017 khoảng 18 GB, hoặc chỉ tải 200 ảnh này từ http://images.cocodataset.org/train2017/<ten>.jpg)
+
+4e. KHÔNG cần: NExTQA, ego4d, các thư mục khác trong Datasets/.
+
+=====================================================================
+5. CHECKPOINT: không có trên GitHub (quá 100 MB), phải chép tay từ server cũ (scp/rsync)
+=====================================================================
+  BẮT BUỘC nếu muốn train tiếp M3D-BD từ bước 2.000 (không có thì train lại từ đầu, mất thêm khoảng 4 giờ):
+    server cũ: KTV/outputs/rap_elastic/M3D-BD.pt   (587 MB, bước 2000/4000)
+               (bản sao: KTV/outputs/rap_elastic/M3D-BD_step2000.pt)
+    server mới: KTV/outputs/rap_elastic/M3D-BD.pt   <- ĐÚNG tên này, queue sẽ --resume từ file này
+
+  Tùy chọn (chỉ khi cần chấm lại hoặc phân tích):
+    KTV/outputs/rap_elastic/M3D-B.pt (537 MB), outputs/rap/runE.pt, outputs/rap/R10E.pt, outputs/rap_vjepa/V10E.pt...
+
+=====================================================================
+6. CHẠY LẠI QUEUE
+=====================================================================
+  cd Long_Video_Understanding/KTV
+  PY=$(which python) bash outputs/rap_elastic/start_all.sh     # PY = python của env qwen25vl
+  Theo dõi: outputs/rap_elastic/STATUS.txt (tiến độ), outputs/rap_elastic/KET_QUA.txt (kết quả), STOPS.txt (run bị ngắt sớm)
+
+  Queue tự bỏ qua các run đã xong (M3D-B, SU25) và tiếp tục theo thứ tự:
+    M3D-BD (train tiếp từ bước 2.000) -> chấm -> V10E_s1 -> R10E7k -> RSS25 -> M3DF -> các seed của M3D-B
+  Nếu /home trên server mới cũng là ổ mạng và bị chậm, có thể chép video sang ổ local:
+    KTV_LOCAL_DATA=/duong/dan/o/local bash outputs/rap_elastic/copy_local.sh
+  rồi chạy queue với cùng biến KTV_LOCAL_DATA. Nếu Datasets/ đã nằm trên ổ local thì bỏ qua bước này.
+
+=====================================================================
+7. REPO BASELINE (không có trong repo, chỉ cần khi chạy lại baseline)
+=====================================================================
+  DyCoke/, FastVID/, HoliTom/, VidCom2/ (ngang hàng với KTV/), KTV/kitoke/: mỗi thư mục là một repo git
+  riêng, clone lại từ upstream nếu cần. Queue RAP KHÔNG cần các repo này (bản port nằm trong
+  KTV/*_port.py, và kết quả baseline đã có sẵn trong outputs/kitoke_baseline/).

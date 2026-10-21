@@ -1,0 +1,40 @@
+defaults:
+  - _self_
+  - experiment: null
+
+video_dir: ???
+gt_file: ???
+output_dir: ???
+output_name: ???
+model_path: ???
+
+# Uniform frame sampling at fixed total token budget (v1 -- see script
+# docstring for why key_frame_path is not the default path yet).
+key_frame_path: null
+num_frames: 12
+tokens_num: 1872
+
+# run_inference_qwen25vl_native.py only: total dense video-token budget, in
+# 28x28-patch units (MAX_PIXELS = max_pixels_units*28*28). Default 16384
+# reproduces the validated Gate G1 result (native 63.33% vs SCORE's Vanilla
+# 63.8%) -- override only for a same-resolution verify_mode cross-check
+# against run_inference_qwen25vl_dyseg.py at a non-default MAX_PIXELS.
+max_pixels_units: 16384
+
+# run_inference_qwen25vl_native.py only: force an exact frame count instead
+# of letting qwen_vl_utils derive it from fps=2.0. Total token budget stays
+# ~constant (still governed by max_pixels_units) regardless of this value --
+# only how that budget is spread across time changes. null = default
+# fps-based frame count (unchanged behavior).
+force_nframes: null
+
+max_new_tokens: 32
+temperature: 0.2
+
+# Dataset sharding, same convention as run_inference_multiple_choice_qa.py.
+num_chunks: 1
+chunk_idx: 0
+
+hydra:
+  job:
+    chdir: false
