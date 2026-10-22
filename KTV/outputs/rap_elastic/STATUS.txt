@@ -83,3 +83,4 @@
 2026-10-22 04:19:16 START train M3D-BD (lan 1)
 2026-10-22 07:34:11 OK   train M3D-BD
 2026-10-22 07:35:03 START evalfull M3D-BD r=0.25 (lan 1, da co 0/2700)
+2026-10-22 08:24:12 DUNG TAT CA theo yeu cau nguoi dung (chuyen sang server moi): keepalive, queue6, cham M3D-BD dang do (1287/2700)

@@ -18,7 +18,8 @@ Repo đã clone sẵn ở `<DUONG_DAN>/Long_Video_Understanding`. Mọi lệnh b
   Queue tự bỏ qua run đã xong (dựa vào `*.train.log` có dòng `[train_rap] done` và file `pred_*.json` đủ 2.700 dòng).
   Vì vậy **không xóa** file log/metrics/pred nào trong `outputs/rap_elastic/`.
 - Đã xong ở server cũ: M3D-B (63,85), SU25 (63,59), C0, ELA/ELA_s1... M3D-BD đã train xong 4000/4000
-  và đang chấm dở. Queue sẽ chấm tiếp phần còn lại.
+  và đã chấm được 1.287/2.700 câu thì dừng hẳn ở server cũ (22/10 08:24 UTC). Queue sẽ chấm tiếp phần còn lại.
+  Server cũ đã dừng toàn bộ queue, nên server mới là nơi duy nhất chạy queue6.
 - `KTV/README.md` là README gốc của paper KTV (pipeline cũ), **không dùng** cho việc này.
 
 ## Việc cần làm
