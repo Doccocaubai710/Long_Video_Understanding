@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)https://www.vnptai.net/vi/Report_Video_Understanding.html -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Toàn Diện: Video Understanding &amp; Token Compression Trong MLLMs</title>
+    <style>
+        :root {
+            --primary: #0f2b5c;
+            --primary-light: #2563eb;
+            --secondary: #0f172a;
+            --accent: #0284c7;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --heading: #0f172a;
+            --border: #cbd5e1;
+            --tag-free: #059669;
+            --tag-train: #dc2626;
+            --tag-arch: #7c3aed;
+            --tag-data: #d97706;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.55;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(135deg, #09152e, #1e3a8a);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 25px;
+        }
+        .nav-summary {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            margin-bottom: 35px;
+        }
+        .nav-summary h3 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        .nav-summary ol {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 1rem;
+        }
+        .nav-summary ol > li {
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .nav-summary ul {
+            font-weight: 400;
+            padding-left: 20px;
+            margin-top: 4px;
+        }
+        .section-header {
+            background: #ffffff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 6px solid var(--primary-light);
+            margin-top: 45px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .section-header h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        .section-header p {
+            margin: 4px 0 0 0;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .subsection-title {
+            color: var(--secondary);
+            font-size: 1.25rem;
+            margin: 25px 0 15px 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        }
+        .card-title {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--heading);
+            font-weight: 700;
+        }
+        .card-tags {
+            margin: 8px 0 12px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .tag-free { background-color: #d1fae5; color: var(--tag-free); }
+        .tag-train { background-color: #fee2e2; color: var(--tag-train); }
+        .tag-arch { background-color: #ede9fe; color: var(--tag-arch); }
+        .tag-data { background-color: #fef3c7; color: var(--tag-data); }
+
+        .content-block {
+            margin-bottom: 12px;
+        }
+        .content-block strong {
+            display: block;
+            color: #475569;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .content-block p, .content-block ul {
+            margin: 0;
+            font-size: 0.92rem;
+            color: var(--text);
+        }
+        .content-block ul {
+            padding-left: 18px;
+        }
+        .content-block li {
+            margin-bottom: 4px;
+        }
+        .insight-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--accent);
+            padding: 10px 14px;
+            margin-top: auto;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.88rem;
+        }
+        .insight-box strong {
+            color: var(--accent);
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Hệ Thống Phân Loại Chuyên Đề: Video Understanding</h1>
+    <p>Tổng hợp chi tiết Phương pháp luận (Methodology) &amp; Key Insights từ 40+ Công trình Học thuật</p>
+</header>
+
+<div class="container">
+    <div class="nav-summary">
+        <h3>Cấu Trúc Báo Cáo Thuyết Trình</h3>
+        <ol>
+            <li><strong>Base trên mô hình sẵn có (Plug-and-Play / Zero-Shot / Compression)</strong>
+                <ul>
+                    <li>1.1. Query-Aware Selection (Lọc khung hình có hướng dẫn từ câu hỏi - Training-Free)</li>
+                    <li>1.2. Query-Agnostic Selection (Lọc khung hình độc lập câu hỏi &amp; tối ưu hình học - Training-Free)</li>
+                    <li>1.3. Training-Based Frame/Token Selection (Học chính sách lọc qua RL, Tiến hóa, Bộ chọn nhỏ)</li>
+                    <li>1.4. In-Model &amp; Layer-wise Token Pruning / Merging (Nén token trực tiếp bên trong Vision Encoder &amp; LLM)</li>
+                </ul>
+            </li>
+            <li><strong>Fine-tune lại mô hình base dựa trên dữ liệu lớn (Kiến trúc mô hình &amp; Huấn luyện nội sinh)</strong></li>
+            <li><strong>Video Engines, Reasoning Benchmarks &amp; Temporal Grounding (Dữ liệu, Đánh giá &amp; Định vị)</strong></li>
+        </ol>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PHẦN 1: BASE TRÊN MÔ HÌNH SẴN CÓ -->
+    <!-- ========================================== -->
+    <div class="section-header">
+        <h2>Phần 1: Base Trên Mô Hình Sẵn Có</h2>
+        <p>Các phương pháp nén, chọn lọc và tối ưu hóa suy luận dựa trên các mô hình nền tảng sẵn có (LLaVA, Qwen-VL, SigLIP, InternVL) mà không cần can thiệp tái huấn luyện toàn diện từ đầu.</p>
+    </div>
+
+    <!-- 1.1 Query-Aware Selection (Training-Free) -->
+    <h3 class="subsection-title">1.1. Query-Aware Keyframe Selection (Training-Free)</h3>
+    <div class="grid">
+        <!-- 79 -->
+        <div class="card">
+            <h4 class="card-title">(79) BOLT: Boost Large Vision-Language Model Without Training</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Query-Aware</span><span class="tag">Sampling</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Khắc phục lỗi chọn khung hình tham lam (greedy) bằng <em>Inverse Transform Sampling (ITS)</em>. Tính cosine similarity giữa query và visual tokens, xây dựng hàm phân phối tích lũy CDF theo trục thời gian video, sau đó lấy mẫu đều trên dải giá trị CDF để ánh xạ ngược lại các frame.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tránh tình trạng dồn cục các frame liên tiếp trong cùng một giây (do similarity cao), tự động cân bằng giữa độ liên quan tối đa và độ phủ rộng khắp video.
+            </div>
+        </div>
+        <!-- 81 -->
+        <div class="card">
+            <h4 class="card-title">(81) AKS: Adaptive Keyframe Sampling</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Optimization</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Định nghĩa việc chọn khung hình là bài toán tối ưu hóa đa mục tiêu: Relevance và Coverage. Áp dụng thuật toán đệ quy "Judge-and-Split": chia video thành các bin, chấm điểm xem bin nào chứa nhiều thông tin then chốt rồi tiếp tục chia nhỏ cho tới khi đạt số lượng frame mục tiêu.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Cơ chế phân giải đệ quy giúp tìm trúng vị trí vi mô chứa câu trả lời mà không đánh mất tính đại diện của cấu trúc vĩ mô.
+            </div>
+        </div>
+        <!-- 83 -->
+        <div class="card">
+            <h4 class="card-title">(83) FOCUS: Efficient Keyframe Selection via MAB</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Bandit / UCB</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Mô hình hóa video thành các "arms" trong bài toán Multi-Armed Bandit. Sử dụng bán kính tin cậy Bernstein (UCB) cân bằng giữa Khai thác (Exploitation - vùng giống query) và Thăm dò (Exploration - vùng chưa chắc chắn). Thực hiện 2 giai đoạn: chọn clip tiềm năng rồi mới chọn frame cụ thể.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Xử lý dưới 2% tổng số khung hình nhưng đạt độ chính xác cao; reward tính trên sampling frame thay vì trích xuất toàn bộ giúp giảm chi phí tính toán.
+            </div>
+        </div>
+        <!-- 84 -->
+        <div class="card">
+            <h4 class="card-title">(84) Logic-in-Frames: Dynamic Keyframe Search</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Logical Reasoning</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Phân rã câu hỏi thành 4 mối quan hệ logic cơ bản: Spatial, Temporal, Attribute, Causal. Dùng YOLO-World phát hiện thực thể và áp dụng rule kiểm tra logic để tính confidence. Distill điểm số từ frame có điểm cao sang các frame lân cận để duy trì ngữ cảnh thời gian.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Khung hình chính xác không chỉ cần khớp từ khóa ngữ nghĩa mà phải thỏa mãn cấu trúc quan hệ nhân quả/thời gian của sự kiện. Lấy mẫu trung bình 1.4% frame.
+            </div>
+        </div>
+        <!-- 85 -->
+        <div class="card">
+            <h4 class="card-title">(85) Video-EM: Event-Centric Episodic Memory</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Episodic Memory</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Phân rã câu hỏi tìm frame liên quan, dùng TransNetV2 mở rộng ranh giới sự kiện. Cấu trúc hóa trí nhớ bằng Qwen2.5-VL sinh Dynamic Scene Narratives kết hợp phát hiện mối quan hệ vật thể. Sử dụng CoT để lặp lại việc đánh giá xem tập hợp trí nhớ đã đủ trả lời câu hỏi chưa.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Chuyển đổi khung hình rời rạc thành biểu diễn trí nhớ sự kiện có cấu trúc giúp mô hình tái hiện lại không gian - thời gian với chi phí frame thấp nhất.
+            </div>
+        </div>
+        <!-- 86 -->
+        <div class="card">
+            <h4 class="card-title">(86) MarkIt: Training-Free Visual Markers</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Visual Prompting</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Phân tích đối tượng chính trong query, dùng open-world segmentation tô màu trực tiếp lên các đối tượng đó xuyên suốt video. Đồng thời ghi trực tiếp số thứ tự khung hình vào góc video để làm thước đo thời gian cho MLLM.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Biến bài toán định vị thời gian trừu tượng thành việc nhận diện các dấu vết trực quan hiển thị ngay trên pixel ảnh.
+            </div>
+        </div>
+        <!-- 87 -->
+        <div class="card">
+            <h4 class="card-title">(87) Where to Focus: Query-Modulated Multimodal Selection</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Multi-Expert Gating</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Cơ chế Q-Gate phối hợp 3 luồng: Visual Grounding (YOLO-World chi tiết đối tượng), Global Matching (CLIP toàn cảnh), và Contextual Alignment (Phụ đề/Lời thoại). LLM quyết định trọng số động cho từng luồng dựa trên câu hỏi.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Linh hoạt tắt (mute) luồng hình ảnh khi câu hỏi thiên về hội thoại và ngược lại; tránh hiện tượng các luồng dữ liệu tự gây nhiễu cho nhau.
+            </div>
+        </div>
+        <!-- 96 -->
+        <div class="card">
+            <h4 class="card-title">(96) AdaQ: Adaptive Quasi-Gaussian Sampling</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Gaussian Distribution</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Chuyển similarity giữa frame và query thành phân phối dạng Quasi-Gaussian với tâm là frame giống nhất. Tự động điều chỉnh nhiệt độ softmax τ dựa trên variance của similarity: query cục bộ có variance lớn → τ nhỏ → khoảng 3-σ hẹp; query toàn cục → τ lớn → phân phối phẳng hơn.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Độ sắc nét của phân phối lấy mẫu phải tương thích với tính chất tập trung hay phân tán của thông tin cần trả lời.
+            </div>
+        </div>
+        <!-- 97 -->
+        <div class="card">
+            <h4 class="card-title">(97) FORGE: Frame Orthogonality in Relevance Geometry</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Residual Orthogonality</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Khắc phục lỗi "Scalar collapse". Warp không gian embedding theo relevance, thực hiện SVD trích xuất các chiều hữu hiệu theo spectral entropy. Dùng Greedy Orthogonal Selection: chọn frame có residual norm lớn nhất rồi trực giao hóa các vector còn lại.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Các frame liên quan nhưng trùng lặp sẽ có hướng vector gần nhau (thể tích tăng ít); chỉ khi frame mang thông tin bổ sung trực giao thì thể tích mới tăng tối đa.
+            </div>
+        </div>
+        <!-- 98 -->
+        <div class="card">
+            <h4 class="card-title">(98) ReMem: Temporal Granularity-Adaptive Framework</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Graph Diffusion</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>LLM ước lượng temporal granularity và visual entities. Xây dựng memory graph với cạnh Semantic và Temporal. Thực hiện Graph Diffusion (Personalized PageRank style) lan truyền từ các memory node gần query sang các node lân cận, sau đó phân cụm sự kiện để cấp budget.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Một frame hữu ích có thể vì nó liên kết cấu trúc sự kiện với frame liên quan chứ bản thân nó không nhất thiết phải có similarity cao với query.
+            </div>
+        </div>
+        <!-- 99 -->
+        <div class="card">
+            <h4 class="card-title">(99) EchoPrune: Temporal Echoes for VideoLLMs</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">MMR Pruning</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Đo lường token redundancy dưới dạng "Temporal Echoes": đo khả năng tái tạo token hiện tại từ vùng lân cận của frame trước. Kết hợp relevance giữa token và query với echo matching thành điểm MMR: giữ lại token có độ liên quan cao và ít bị lặp lại.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Lấy nhiều frame hơn nhưng giảm số token/frame; token được giữ lại phải mang tính novelty thay vì chỉ là sự phản chiếu lại của frame quá khứ.
+            </div>
+        </div>
+        <!-- 101 -->
+        <div class="card">
+            <h4 class="card-title">(101) DyToK: LLM-Guided Keyframe Prior</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free (Prior)</span><span class="tag">Assistant Model</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Dùng một assistant model nhỏ cùng họ kiến trúc với model chính để tính attention giữa question token cuối cùng và visual tokens ở các deep layer. Lấy attention trung bình gán trọng số ngân sách token cho từng frame.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Keyframe prior không phụ thuộc mạnh vào model scale; attention map từ model nhỏ có sự tương quan cao với model lớn.
+            </div>
+        </div>
+        <!-- 110 -->
+        <div class="card">
+            <h4 class="card-title">(110) ADARD-KEY: Adaptive Relevance-Diversity Sampling</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Determinant Max-Volume</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Tối ưu hóa Relevance-Diversity bằng log-determinant của ma trận Gram. Sử dụng cập nhật Sherman-Morrison để đạt runtime gần như tuyến tính. Cơ chế VB-Scale tự động nhận biết: nếu relevance "nhọn" → ưu tiên relevance; nếu relevance "phẳng" → chuyển sang ưu tiên diversity.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tránh bẫy nhiễu: khi không có frame nào thực sự liên quan nổi bật, ép chọn theo relevance sẽ chọn nhầm nhiễu; lúc này phủ rộng diversity an toàn hơn nhiều.
+            </div>
+        </div>
+        <!-- 111 -->
+        <div class="card">
+            <h4 class="card-title">(111) From Frames to Clips (F2C)</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Watershed Peaks</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Dùng thuật toán Watershed tìm các local maxima trên đường cong similarity giữa frame và query làm anchor keyframe. Mở rộng các anchor thành clip dựa trên hàm tối ưu 3 thành phần: Relevance, Redundancy và Temporal Reward (thưởng cho clip dài để giữ chuyển động).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Cân bằng đánh đổi 3 chiều: độ phân giải cao → clip ngắn; độ phân giải thấp → clip dài liên tục.
+            </div>
+        </div>
+        <!-- 112 -->
+        <div class="card">
+            <h4 class="card-title">(112) VIDEOTREE: Adaptive Tree-based Representation</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free (LLM-based)</span><span class="tag">Tree Expansion</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Gom cụm visual embedding thành các cluster đại diện và caption từng cluster. Đưa query và caption vào LLM chấm điểm liên quan (1-3). Mở rộng chiều rộng (Breadth) ở tầng đầu và mở rộng chiều sâu (Depth) chia nhỏ chỉ đối với các cluster có độ liên quan cao.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Khám phá cây phân cấp giúp tập trung tính toán sâu vào đúng phân đoạn chứa bằng chứng mà không cần mở rộng toàn bộ video.
+            </div>
+        </div>
+        <!-- 116 -->
+        <div class="card">
+            <h4 class="card-title">(116) CDPruner: Conditional Diversity for Token Pruning</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">DPP Selection</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Không dùng raw attention trong LLM. Xây dựng ma trận conditional similarity dựa trên tích giữa độ liên quan instruction và độ tương đồng cosine giữa các token. Sử dụng Determinantal Point Processes (DPP) để chọn tập con token tối đa hóa thể tích.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tương thích hoàn hảo với FlashAttention (nơi attention matrix bị ẩn) vì chỉ thao tác trên token embedding và instruction alignment.
+            </div>
+        </div>
+        <!-- 117 -->
+        <div class="card">
+            <h4 class="card-title">(117) QCA: Query- and Content-Aware Keyframe Selection</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Content Deviation</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Chia video thành S segment. Đánh giá segment bằng 2 tiêu chí: Semantic Matching (BLIP-2) và Content Deviation (khoảng cách và hiệp phương sai của feature segment so với toàn video). Phân bổ ngân sách frame, chọn anchor và lọc candidate theo khoảng cách Euclidean đa dạng.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Ưu tiên các segment vừa khớp query vừa có nội dung biến đổi phong phú nội tại, tránh các đoạn tĩnh kéo dài.
+            </div>
+        </div>
+        <!-- 119 -->
+        <div class="card">
+            <h4 class="card-title">(119) Adaptive Greedy Frame Selection</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Dual Embedding</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Kết hợp 2 không gian bổ trợ: SigLIP cho Query Relevance và DINOv2 cho Semantic Coverage. Sử dụng hàm mục tiêu Facility Location Coverage kết hợp Greedy Selection. Tích hợp bộ phân loại câu hỏi (7 category) để tự động điều chỉnh preset tham số.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tách biệt rõ ràng: mô hình căn chỉnh văn bản tìm manh mối truy vấn, còn mô hình tự giám sát hình ảnh bảo toàn cấu trúc phân cảnh.
+            </div>
+        </div>
+        <!-- 122 -->
+        <div class="card">
+            <h4 class="card-title">(122) VidCom²: Video Compression Commander</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Global vs Local Uniqueness</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Giai đoạn 1: So sánh token với vector pooling đại diện toàn video để tính điểm độc đáo của frame → điều chỉnh retention ratio. Giai đoạn 2: Tính điểm độc đáo nội bộ frame kết hợp điểm độc đáo toàn video để chọn ra các visual tokens quan trọng nhất.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Cân bằng 2 cấp độ: giữ nhiều token ở cảnh chuyển tiếp/hành động mới, đồng thời bắt trọn chi tiết cục bộ dị biệt trong từng frame.
+            </div>
+        </div>
+    </div>
+
+    <!-- 1.2 Query-Agnostic Selection (Training-Free) -->
+    <h3 class="subsection-title">1.2. Query-Agnostic Selection &amp; Redundancy Reduction (Training-Free)</h3>
+    <div class="grid">
+        <!-- 80 -->
+        <div class="card">
+            <h4 class="card-title">(80) Video Panels for Long Video Understanding</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Panel Mosaic</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Ghép nhiều khung hình video thành các "bảng" (panels) trên một ảnh duy nhất (lưới 10x10) trước khi đưa vào VLM.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Đánh đổi độ phân giải không gian lấy độ phân giải thời gian cực cao mà không làm tăng độ dài ngữ cảnh token của LLM.
+            </div>
+        </div>
+        <!-- 82 -->
+        <div class="card">
+            <h4 class="card-title">(82) KTV: Keyframes and Key Tokens Selection</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Centroid + Redundancy</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Giai đoạn 1: Gom cụm DINOv2 chọn frame gần centroid. Giai đoạn 2: Tính attention giữa token [CLS] với các patch token (saliency) và phạt độ tương đồng cosine trung bình nội khung (redundancy). Cấp k token theo tỷ lệ tương đồng frame-level.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tránh thiên lệch sai lầm của query-aware (ví dụ hỏi "ai mở cửa" thì CLIP dễ chăm chăm nhìn vào cái cửa thay vì chủ thể thực hiện hành động).
+            </div>
+        </div>
+        <!-- 90 -->
+        <div class="card">
+            <h4 class="card-title">(90) EFS: Event-Anchored Frame Selection</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Event Boundaries</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Dùng DINOv2 tính độ tương đồng giữa các frame kề nhau. Tìm các điểm cực tiểu (local minima) làm ranh giới sự kiện và hợp nhất theo budget. Chọn anchor frame có relevance cao nhất rồi mở rộng bằng MMR thích nghi với nhịp độ video.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Cực kỳ nhẹ (thuật toán chọn frame chiếm &lt;1% thời gian tiền xử lý), xác định ranh giới sự kiện trước khi phân bổ token.
+            </div>
+        </div>
+        <!-- 91 -->
+        <div class="card">
+            <h4 class="card-title">(91) WFS-SB: Wavelet-based Semantic Boundary</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Wavelet Transform</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Sử dụng Biến đổi Wavelet đa độ phân giải để loại bỏ nhiễu tần số cao trên tín hiệu similarity. Điểm cực trị ở thang đo thô nhất được dùng làm ranh giới ngữ nghĩa. Phân bổ ngân sách thích nghi dựa trên độ dài, relevance và variance của phân đoạn.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Video understanding quan trọng nhất là bắt trúng thời điểm thông tin thay đổi chứ không chỉ tìm những frame giống query.
+            </div>
+        </div>
+        <!-- 92 -->
+        <div class="card">
+            <h4 class="card-title">(92) MMG-Vid: Maximizing Marginal Gains</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Marginal Value</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Phân đoạn video theo độ tương đồng cosine. Phân bổ ngân sách theo Marginal Value (Đại diện + Đa dạng mới). Cắt tỉa token bằng cụm TG-DPC: so sánh token nội khung và liên khung.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Vật thể di chuyển mang lợi ích cận biên cao nên được giữ lại, trong khi nền tĩnh liên tục bị cắt bớt do đã có mặt ở khung trước.
+            </div>
+        </div>
+        <!-- 94 -->
+        <div class="card">
+            <h4 class="card-title">(94) FLASHVID: Tree-Based Spatiotemporal Token Merging</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Token Tree</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>ADTS: Chọn token đại diện giải bài toán Max-Min Diversity kết hợp [CLS] attention và Event relevance (Global Average Pooling). TSTM: Xây dựng cây dư thừa không gian - thời gian, gộp các token giống nhau ở khung hình trước.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Dư thừa trong video không cố định tọa độ do vật thể di chuyển; cấu trúc cây cho phép theo vết và gộp động chính xác. "Ít hơn là nhiều hơn" - nén bớt token thừa giúp tăng độ chính xác.
+            </div>
+        </div>
+        <!-- 95 -->
+        <div class="card">
+            <h4 class="card-title">(95) KiToke: Kernel-based Interval-aware Compression</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Gaussian Kernel</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Tính diversity score bằng nghịch đảo mật độ Gaussian kernel → lấy mẫu theo xác suất đa dạng. Phát hiện interval ranh giới bằng sai khác vị trí đối tượng và độ lệch cục bộ. Gộp các token bị loại vào token được giữ trong cùng interval bằng weighted average.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tuyệt đối không merge token vượt qua ranh giới temporal interval để tránh trộn lẫn ngữ nghĩa của các scene khác nhau.
+            </div>
+        </div>
+        <!-- 103 -->
+        <div class="card">
+            <h4 class="card-title">(103) FLoC: Facility Location-Based Compression</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">Facility Location</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Mô hình hóa việc chọn visual token thành hàm mục tiêu Facility Location: đo mức độ tập token chọn ra bao phủ toàn bộ tập ban đầu. Áp dụng thuật toán Lazy Greedy kết hợp priority queue theo upper bound của gain để tăng tốc.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Khắc phục nhược điểm của K-means (vốn thiên lệch chọn trung tâm các vùng đông đúc/nền tĩnh), Facility Location đảm bảo bao phủ cả các chi tiết và vật thể hiếm.
+            </div>
+        </div>
+        <!-- 109 -->
+        <div class="card">
+            <h4 class="card-title">(109) MaxInfo: Maximum Volume Frame Selection</h4>
+            <div class="card-tags"><span class="tag tag-free">Training-Free</span><span class="tag">MaxVol / SVD</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Biểu diễn frame bằng [CLS] embedding. Dùng Truncated SVD giảm chiều ma trận, sau đó dùng thuật toán Rectangular MaxVol để chọn ra nhóm frame có thể tích hình học lớn nhất trong không gian đặc trưng.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tối đa hóa thể tích hình học tự nhiên ưu tiên tính đa dạng và độ bao phủ; SigLIP-base cho kết quả frame selection vượt trội so với CLIP và DINOv2.
+            </div>
+        </div>
+    </div>
+
+    <!-- 1.3 Training-Based Frame/Token Selection -->
+    <h3 class="subsection-title">1.3. Training-Based Selection (RL, Evolutionary, Policy Agents)</h3>
+    <div class="grid">
+        <!-- 105 -->
+        <div class="card">
+            <h4 class="card-title">(105) SCORE: Dynamic Token Compression via RL</h4>
+            <div class="card-tags"><span class="tag tag-train">RL / Policy</span><span class="tag">Group RL</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Ghép đặc trưng token với temporal residual (surprise signal). Huấn luyện Bernoulli gating policy bằng Group RL: sinh K mask/video, tính reward gồm CE loss (chất lượng) và Sparsity reward theo cơ chế Split-Advantage. Curriculum learning từ pseudo-video sang video thật.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Nén token dựa trên hàm mục tiêu hạ nguồn (downstream objective); loại bỏ context thừa giúp độ chính xác cao hơn cả khi giữ full token.
+            </div>
+        </div>
+        <!-- 121 -->
+        <div class="card">
+            <h4 class="card-title">(121) TSPO: Temporal Sampling Policy Optimization</h4>
+            <div class="card-tags"><span class="tag tag-train">RL / GRPO</span><span class="tag">Agentic Sampler</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Xây dựng temporal agent (3.5M params) dùng local window attention và Gumbel-Softmax để chọn frame. Huấn luyện bằng GRPO trên Video-MLLM đóng băng với 2 reward: Answering Accuracy và Temporal Localization (trên dữ liệu Needle-in-a-Haystack).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Mô hình sampler nhỏ học cách định vị chính xác vùng bằng chứng mà không cần cập nhật trọng số của Video-LLM lớn.
+            </div>
+        </div>
+        <!-- 130 -->
+        <div class="card">
+            <h4 class="card-title">(130) Modularized Dynamic-Granularity Video LLM</h4>
+            <div class="card-tags"><span class="tag tag-train">RL / DPO</span><span class="tag">Counterfactual</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Chia video thành Positive và Negative Segments. Cấp các module projector có độ mịn khác nhau (coarse, base, fine). Dùng Counterfactual Validation (đảo ngược độ mịn để kiểm tra lỗi) và tối ưu hóa bằng DPO.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Đánh giá phản thực (granularity inversion) ngăn chặn hiện tượng mô hình đoán trúng đáp án nhưng dựa trên việc nhìn sai vị trí sự kiện.
+            </div>
+        </div>
+        <!-- 131 -->
+        <div class="card">
+            <h4 class="card-title">(131) EvoComp: Evolutionary Visual Token Compression</h4>
+            <div class="card-tags"><span class="tag tag-train">Evolutionary</span><span class="tag">Learned Masking</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Chèn compressor 1-layer Transformer trước LLM. Dùng thuật toán tiến hóa (crossover, mutation) tìm binary mask tối ưu theo task loss sau khi gom nhóm theo vocabulary embedding. Huấn luyện compressor bằng GHM classification loss và cosine regularization.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Nhãn huấn luyện nén được tạo ra theo hướng task-specific: token được giữ không phải vì nổi bật mà vì trực tiếp giảm thiểu loss trả lời.
+            </div>
+        </div>
+        <!-- 138 & 140 -->
+        <div class="card">
+            <h4 class="card-title">(138, 140) AVIOT &amp; Token-Budget Distillation</h4>
+            <div class="card-tags"><span class="tag tag-train">Trainable</span><span class="tag">Distillation / OT</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <ul>
+                    <li><strong>AVIOT (138):</strong> Áp dụng Optimal Transport (OT) để tổng hợp nhiều frame thành một số lượng nhỏ "target support" học được thay vì chỉ loại bỏ cơ học.</li>
+                    <li><strong>Token-Budget Distillation (140):</strong> Chuyển giao ngữ nghĩa toàn vẹn từ mô hình full-token sang mô hình nén token thông qua cơ chế chưng cất tri thức theo ngân sách định sẵn.</li>
+                </ul>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Biểu diễn nén học qua tối ưu vận chuyển và chưng cất giúp giữ lại 10-25% frame nhưng vẫn vượt baseline không nén.
+            </div>
+        </div>
+    </div>
+
+    <!-- 1.4 In-Model & Layer-wise Token Pruning / Merging -->
+    <h3 class="subsection-title">1.4. In-Model &amp; Layer-wise Token Pruning / Merging</h3>
+    <div class="grid">
+        <!-- 88 -->
+        <div class="card">
+            <h4 class="card-title">(88) SToP: Sink-Token-Aware Pruning</h4>
+            <div class="card-tags"><span class="tag tag-free">In-Model</span><span class="tag">Sink Tokens</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Nhận diện <em>Sink Tokens</em> (token có attention cao liên tục qua trục thời gian nhưng không có ngữ nghĩa). SToP tính Sink Score, thực hiện trừ điểm phạt khi cắt tỉa không gian (STSP) và cộng điểm phạt để loại bỏ khi cắt tỉa thời gian (STTP).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Cắt tỉa trực tiếp theo raw attention dễ giữ nhầm toàn bộ sink tokens và vứt bỏ các chi tiết hành động thực sự có attention biến thiên.
+            </div>
+        </div>
+        <!-- 89 -->
+        <div class="card">
+            <h4 class="card-title">(89) AdaptToken: Entropy-based Adaptive Selection</h4>
+            <div class="card-tags"><span class="tag tag-free">In-Model</span><span class="tag">Entropy Gating</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Chia video thành các nhóm frame, chạy thử giải mã LLM để đo Entropy. Entropy thấp → mô hình tự tin → giữ nhiều token chi tiết; Entropy cao → cắt tỉa mạnh tay. Bản Lite dừng sớm (Early Stopping) nếu tìm thấy ≥ 3 nhóm có entropy &lt; 0.75.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Xử lý video lên tới 10.000 frame; bản Lite giảm 50% thời gian suy luận mà không giảm độ chính xác.
+            </div>
+        </div>
+        <!-- 102 -->
+        <div class="card">
+            <h4 class="card-title">(102) Streaming STC: Cacher &amp; Pruner</h4>
+            <div class="card-tags"><span class="tag tag-free">Streaming</span><span class="tag">Dual Anchor</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>STC-Cacher: Lưu activation trung gian của reference frame; chỉ tính lại dynamic tokens có key-similarity thấp. STC-Pruner: Đánh giá token dựa trên Temporal Context Anchor (độ mới theo thời gian) và Spatial Context Anchor (độ nổi bật trong không gian) để giữ top-K.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tăng tốc video streaming cực đại bằng cách tái sử dụng KV cache tầng ViT và chỉ đưa vào LLM các token mang thông tin mới.
+            </div>
+        </div>
+        <!-- 104 -->
+        <div class="card">
+            <h4 class="card-title">(104) FastVID: Dynamic Density Pruning</h4>
+            <div class="card-tags"><span class="tag tag-free">In-Model</span><span class="tag">Density + Attention</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>DySeg phân đoạn theo cosine similarity. STPrune chia ngân sách thành 2 luồng bổ trợ: DTM (Density-based Token Merging theo anchor cục bộ) để giữ ngữ cảnh chung, và ATS (Attention-based Token Selection từ [CLS]) để giữ chi tiết nổi bật.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> DTM trả lời "Nội dung tổng thể là gì?", ATS trả lời "Chi tiết nào nổi bật?". Sự kết hợp giúp giữ trọn vẹn cả cấu trúc nền lẫn vật thể nhỏ.
+            </div>
+        </div>
+        <!-- 106 -->
+        <div class="card">
+            <h4 class="card-title">(106) HoliTom: Holistic Token Merging</h4>
+            <div class="card-tags"><span class="tag tag-free">In-Model</span><span class="tag">Multi-Stage Merging</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>1. Temporal Merging: Dùng quy hoạch động tìm phân đoạn lặp lại để merge vào lần xuất hiện đầu. 2. Spatial Merging: Dùng attention cho token không lặp và DPC-KNN cho token lặp. 3. Inner-LLM Merging: Tiếp tục gộp token tại layer K của LLM dựa trên attention của token cuối.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Nén toàn diện kết hợp cả trước và bên trong LLM, duy trì thứ tự không gian gốc để hạn chế mất mát positional structure.
+            </div>
+        </div>
+        <!-- 108 -->
+        <div class="card">
+            <h4 class="card-title">(108) PruneVid: Question-Guided In-LLM Pruning</h4>
+            <div class="card-tags"><span class="tag tag-free">In-LLM</span><span class="tag">KV Cache Pruning</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Gộp token tĩnh theo thời gian và không gian. Đưa visual tokens và câu hỏi qua các layer đầu của LLM; tại layer trung gian M (layer 10), tính attention lớn nhất từ question tokens tới visual tokens để giữ top-α. Đồng thời cắt bỏ KV-cache tương ứng.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Cắt KV cache sớm trong quá trình prefill giúp các bước decoding về sau hoàn toàn nhẹ tải, không phải mang theo các token rác.
+            </div>
+        </div>
+        <!-- 113 -->
+        <div class="card">
+            <h4 class="card-title">(113) LaVA-PruMerge: Adaptive Token Reduction</h4>
+            <div class="card-tags"><span class="tag tag-free">In-Model</span><span class="tag">IQR Threshold</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Dùng [CLS] attention xác định vùng nổi bật. Chọn important tokens thích nghi bằng ngưỡng khoảng tứ phân vị IQR: Q3 + 1.5*IQR. Token Supplement: Gộp các token bị loại vào token quan trọng bằng KNN theo key similarity.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Ngưỡng IQR tự động điều chỉnh theo từng phân phối ảnh; gộp thông tin lân cận tránh việc vứt bỏ hoàn toàn các đặc trưng hậu cảnh.
+            </div>
+        </div>
+        <!-- 114 -->
+        <div class="card">
+            <h4 class="card-title">(114) DyCoke: Dynamic Token Compression</h4>
+            <div class="card-tags"><span class="tag tag-free">In-LLM</span><span class="tag">DP-Cache Recovery</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Stage I: TTM trượt 4 frame gộp token lặp. Stage II: Dynamic KV Cache Pruning. Duy trì 2 bộ đệm: Active KV Cache và Dynamic Pruning Cache (DP Cache). Nếu attention phân bổ lại ở các bước decoding sau, kích hoạt nạp lại các token từ DP Cache vào KV Cache.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Token không quan trọng ở bước giải mã này có thể trở nên sống còn ở bước sau; cơ chế phục hồi token giải quyết triệt để lỗi one-shot pruning.
+            </div>
+        </div>
+        <!-- 115 -->
+        <div class="card">
+            <h4 class="card-title">(115) AdaTP: Attention-Debiased Token Pruning</h4>
+            <div class="card-tags"><span class="tag tag-free">In-LLM</span><span class="tag">Progressive Debiasing</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Khắc phục bias vị trí của LLM attention. Chia segment. Global Debiasing: chọn token attention cao theo từng segment. Local Debiasing: chỉ giữ 1 token cho mỗi tọa độ không gian trong 1 segment để tránh trùng lặp. Áp dụng Progressive Pruning tăng dần qua các layer.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Giảm dần token qua các tầng ổn định hơn cắt đột ngột một lần; loại bỏ bias dồn attention vào đầu/cuối chuỗi của Transformer.
+            </div>
+        </div>
+        <!-- 118 -->
+        <div class="card">
+            <h4 class="card-title">(118) StateKV: Linear Scaling Video VLMs</h4>
+            <div class="card-tags"><span class="tag tag-free">Architecture Engine</span><span class="tag">Linear Scaling</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Duy trì 2 trạng thái KV tại mỗi layer: <em>Detailed State</em> (toàn bộ token của frame hiện tại) và <em>Compressed State</em> (tập cố định B token quan trọng nhất từ các frame quá khứ). Frame hiện tại chỉ attend vào frame đó và Compressed State.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Attention liên khung hình tập trung chủ yếu vào các temporal sinks thay đổi chậm; giới hạn tương tác giúp đưa độ phức tạp prefill video về tuyến tính O(N).
+            </div>
+        </div>
+        <!-- 124 -->
+        <div class="card">
+            <h4 class="card-title">(124) FrameFusion: Merging &amp; Pruning</h4>
+            <div class="card-tags"><span class="tag tag-free">In-LLM</span><span class="tag">Layer Dynamics</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Dựa trên quan sát: thứ hạng similarity rất ổn định ở các layer đầu còn importance score biến động mạnh. Thực hiện 2 giai đoạn trong LLM: <em>Similarity Merging ở layer nông</em> (gộp các token tương đồng) và <em>Importance Pruning ở layer sâu</em> (cắt tỉa theo attention).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tuyệt đối không prune ở layer đầu vì attention chưa hội tụ; merge trước để giảm số lượng rồi mới prune ở tầng sâu mang lại độ ổn định tối đa.
+            </div>
+        </div>
+        <!-- 125 -->
+        <div class="card">
+            <h4 class="card-title">(125) VisionZip: Dominant &amp; Contextual Merging</h4>
+            <div class="card-tags"><span class="tag tag-free">Vision Encoder</span><span class="tag">Dominant Tokens</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Bước 1: Chọn dominant tokens dựa vào attention nhận từ [CLS] (hoặc mean attention với SigLIP). Bước 2: Với các contextual tokens còn lại, tính similarity dựa trên Key representation của Self-Attention và gộp vào dominant token gần nhất.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tách biệt rõ ràng phần thông tin chủ đạo và phần thông tin ngữ cảnh xung quanh; có thể dùng hoàn toàn training-free hoặc fine-tune nhẹ projector trong 30 phút.
+            </div>
+        </div>
+        <!-- 126 -->
+        <div class="card">
+            <h4 class="card-title">(126) Beyond Text-Visual Attention</h4>
+            <div class="card-tags"><span class="tag tag-free">Vision Encoder</span><span class="tag">Visual Cues Only</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Chỉ ra lỗi Attention Shift và Dispersion khi dùng text-visual attention. Thay vào đó, chọn important tokens hoàn toàn bằng visual attention của encoder. Giữ diverse tokens bằng cách tính cosine similarity và loại bỏ dần các token trùng lặp. Giữ nguyên bản không pooling.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Trong thiết lập training-free, giữ các token đa dạng nguyên bản an toàn hơn làm mờ bằng average-pooling.
+            </div>
+        </div>
+        <!-- 127 -->
+        <div class="card">
+            <h4 class="card-title">(127) FastV: Plug-and-Play Acceleration</h4>
+            <div class="card-tags"><span class="tag tag-free">In-LLM</span><span class="tag">Anchor Tokens</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Phát hiện: Sau layer 2, attention dồn mạnh vào các text/system tokens (Anchor Tokens) và giảm sâu ở visual tokens. FastV xử lý bình thường ở 2 layer đầu, sau đó prune vĩnh viễn R% visual tokens có attention score thấp nhất từ layer K trở đi.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Visual tokens đã truyền thông tin vào các anchor token ở tầng đầu; pruning sau layer 2 là điểm cân bằng hoàn hảo giữa tốc độ và độ chính xác.
+            </div>
+        </div>
+        <!-- 128 -->
+        <div class="card">
+            <h4 class="card-title">(128) ToMe: Token Merging in ViT</h4>
+            <div class="card-tags"><span class="tag tag-free">ViT Block</span><span class="tag">Bipartite Matching</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Đặt module gộp giữa nhánh Self-Attention và FFN. Dùng Bipartite Soft Matching: chia token thành 2 tập A và B, tìm các cặp có Key-similarity cao nhất để merge bằng weighted average. Tích hợp Proportional Attention (± log s).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Thuật toán bipartite matching gần tuyến tính; token đại diện cho nhiều patch cần được khuếch đại ảnh hưởng trong attention tương ứng với quy mô của nó.
+            </div>
+        </div>
+        <!-- 134 -->
+        <div class="card">
+            <h4 class="card-title">(134) OOD-VTP: Robustness via Token Compression</h4>
+            <div class="card-tags"><span class="tag tag-free">In-LLM</span><span class="tag">Robustness / OOD</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Xác định các visual token bị lệch phân phối (OOD) so với textual feature space ở các layer trung gian. Đo khoảng cách bằng negative mean attention tới các text token cuối. Loại bỏ các token có khoảng cách lớn nhất tại các robust-pruning layers (layer 13-18).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Ngược với các phương pháp thông thường: loại bỏ token xa ngôn ngữ nhất giúp tăng khả năng chống jailbreak và giảm ảo giác.
+            </div>
+        </div>
+        <!-- 136 EvoCut -->
+        <div class="card">
+            <h4 class="card-title">(136 EvoCut) Multi-Layer Evolution-Aware Compression</h4>
+            <div class="card-tags"><span class="tag tag-free">Vision Encoder</span><span class="tag">State Deviation</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Đo delta chuyển đổi trạng thái của token qua từng layer. Dùng K-means tìm các hướng tiến hóa chung của nền. Token nào chệch hướng khỏi cụm chung được gán điểm deviation cao. Tích lũy điểm chệch hướng qua EMA từ layer 12 và chọn top-K.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Vùng chữ và vật thể nổi bật luôn có hướng biến đổi đặc trưng lệch khỏi xu hướng chung của nền; tích lũy qua nhiều tầng loại bỏ nhiễu cục bộ.
+            </div>
+        </div>
+        <!-- 136 InfoMerge -->
+        <div class="card">
+            <h4 class="card-title">(136 InfoMerge) Information-aware Token Compression</h4>
+            <div class="card-tags"><span class="tag tag-free">In-Model</span><span class="tag">Fingerprint Difference</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>DySeg phân đoạn. Tính Temporal Fingerprint Difference (TFD) để phát hiện các vị trí tĩnh liên tục. Phân bổ budget theo Segment Uniqueness và Spectral Entropy. Nén bằng ATS (ức chế vị trí tĩnh) và DTM với hard mask.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Sử dụng entropy phổ để đo độ phong phú biểu diễn; khóa cứng (hard mask) các vị trí tĩnh ngăn chặn việc lặp lại thông tin dư thừa.
+            </div>
+        </div>
+        <!-- 137 -->
+        <div class="card">
+            <h4 class="card-title">(137) EarlyTom: Early Token Compression</h4>
+            <div class="card-tags"><span class="tag tag-free">Vision Encoder</span><span class="tag">Early Stage</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Nén ngay trong Vision Encoder để giảm TTFT. Stage I: Streaming Frame Segmentation và gộp các frame ở giữa (Middle-frame Merging). Stage II: Tách frame thành Dynamic (đầu/cuối → Global Top-K) và Static (ở giữa → Local Window Selection).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Phần lớn độ trễ nằm ở ViT encoding; nén sớm ngay từ các layer đầu của vision encoder tối ưu hiệu năng toàn diện từ gốc.
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PHẦN 2: FINE-TUNE DỰA TRÊN DỮ LIỆU LỚN -->
+    <!-- ========================================== -->
+    <div class="section-header">
+        <h2>Phần 2: Fine-tune Mô Hình Base Dựa Trên Dữ Liệu Lớn</h2>
+        <p>Các phương pháp thay đổi kiến trúc mô hình, thiết kế projector chuyên biệt, tích hợp bộ nhớ học được hoặc fine-tune toàn diện trên quy mô dữ liệu lớn (SFT/RL).</p>
+    </div>
+    <div class="grid">
+        <!-- Seed1.5-VL -->
+        <div class="card">
+            <h4 class="card-title">(7) Seed1.5-VL Technical Report</h4>
+            <div class="card-tags"><span class="tag tag-train">Pre-train &amp; RL</span><span class="tag">Native Dynamic FPS</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Kiến trúc MoE 20B active. Vision Encoder Seed-ViT (532M) dùng 2D RoPE, MIM với EVA02-CLIP-E và Omni-modal Pretraining. Video Encoding dùng <em>Dynamic Frame-Resolution Sampling</em>: tự động điều chỉnh FPS (1-5 FPS) và resolution ({128 đến 640 tokens/frame}) theo budget tối đa 81,920 tokens. Huấn luyện RL Hybrid: RLHF kết hợp RLVR (Verifiable Rewards) và Rejection Sampling.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Dynamic resolution/FPS linh hoạt: dùng resolution cao cho ít frame hoặc resolution thấp cho nhiều frame giúp tối ưu hóa tổng ngân sách token cho từng loại video.
+            </div>
+        </div>
+        <!-- Kimi-VL -->
+        <div class="card">
+            <h4 class="card-title">(8) KIMI-VL Technical Report</h4>
+            <div class="card-tags"><span class="tag tag-train">Large-Scale</span><span class="tag">Long-Context</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>MoE 2.8B activated (16B total). MoonViT xử lý native-resolution tới 3.2M pixels với 2D RoPE. Joint Long-context Activation Stage mở rộng ngữ cảnh từ 8K lên 128K context. Dữ liệu video pretraining quy mô lớn gồm dense captions cho long video. Hậu huấn luyện kết hợp Long-CoT SFT và RL với length-based penalty để chống overthinking.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Mở rộng context lên 128K kết hợp tỷ lệ dữ liệu video dài hợp lý giúp mô hình tiếp nhận video thời lượng lớn một cách tự nhiên.
+            </div>
+        </div>
+        <!-- Qwen3-VL -->
+        <div class="card">
+            <h4 class="card-title">(32) Qwen3-VL Technical Report</h4>
+            <div class="card-tags"><span class="tag tag-train">Frontier VLM</span><span class="tag">Interleaved MRoPE</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>SigLIP-2 encoder. Tích hợp <em>Interleaved MRoPE</em> phân bổ đều tần số cao/thấp trên trục không gian - thời gian. <em>DeepStack</em> đưa visual tokens từ 3 tầng của vision encoder trực tiếp vào 3 hidden states đầu của LLM. Video Timestamp dạng chuỗi văn bản (&lt;3.0 seconds&gt;). Huấn luyện 4 stage lên tới Ultra-Long-Context, hậu huấn luyện với SAPO RL.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Interleaved MRoPE giải quyết triệt để vấn đề lệch bước thời gian của video dài; DeepStack bảo toàn thông tin thị giác đa tầng không bị mai một qua projector.
+            </div>
+        </div>
+        <!-- 69 -->
+        <div class="card">
+            <h4 class="card-title">(69) FlexMem: Long Video via Visual Memory</h4>
+            <div class="card-tags"><span class="tag tag-arch">Architecture</span><span class="tag">KV Compression</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Xây dựng hệ thống bộ nhớ thị giác mô phỏng con người. Sử dụng các bản sao lưu KV cache của dữ liệu thị giác. Áp dụng cơ chế nén luồng kép (Dual-pathway Compression) để ghi nhận đặc trưng quan trọng. Trích xuất linh hoạt các mảnh bộ nhớ phù hợp theo câu hỏi.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Xử lý trên 1.000 khung hình video trên một GPU RTX 3090 tiêu dùng mà không gặp rào cản tràn VRAM.
+            </div>
+        </div>
+        <!-- 73 -->
+        <div class="card">
+            <h4 class="card-title">(73) SVLM Compressor for Long Video</h4>
+            <div class="card-tags"><span class="tag tag-train">Trainable</span><span class="tag">Memory Tokens</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Kiến trúc gồm SVLM-based local compressor và LLM global decoder. SVLM dùng causal attention học k_max=128 learnable memory tokens M cho mỗi phân đoạn video. Khi infer, dùng Logit-Based Relevance Score nhị phân Yes/No để cắt tỉa thích nghi (ATA) lấy các token đầu.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Hiện tượng <em>Semantic Front-Loading</em>: compressor cục bộ luôn gói các bằng chứng quan trọng nhất vào những memory token sinh ra đầu tiên.
+            </div>
+        </div>
+        <!-- 74 -->
+        <div class="card">
+            <h4 class="card-title">(74) Video-XL: Hour-Scale Video Understanding</h4>
+            <div class="card-tags"><span class="tag tag-train">Trainable</span><span class="tag">Curriculum Compression</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Chuyển quyền lựa chọn nén cho LLM. Huấn luyện Curriculum Learning tăng dần hệ số nén từ 2-4 lên 8, 12, 16. Chia interval, tự động gộp các interval có độ tương đồng visual semantic cao. Đặt các token nén xen kẽ với visual tokens để học cách thu thập thông tin.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Curriculum nén tăng dần giúp mô hình học cách thích ứng với tỷ lệ nén cực hạn mà không bị sụt giảm hiệu năng đột ngột.
+            </div>
+        </div>
+        <!-- 75 -->
+        <div class="card">
+            <h4 class="card-title">(75) LongVU: Spatiotemporal Adaptive Compression</h4>
+            <div class="card-tags"><span class="tag tag-train">Trainable Projector</span><span class="tag">DINOv2 + SigLIP</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Kết hợp SigLIP (image-text) và DINOv2 (vision-only) qua bộ gom không gian SVA. Dùng DINOv2 loại bỏ các frame tương đồng cao. Áp dụng Cross-modal Query Attention để chọn frame giữ nguyên độ phân giải, các frame còn lại qua spatial pooling. Nén spatial token bằng cách so sánh với frame đầu tiên.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> DINOv2 vượt trội hơn CLIP trong việc phân biệt các biến đổi nhỏ giữa các frame; kết hợp 2 encoder bù đắp hoàn hảo giữa ngữ nghĩa và hình học.
+            </div>
+        </div>
+        <!-- 76 -->
+        <div class="card">
+            <h4 class="card-title">(76) Long Context Transfer from Language to Vision</h4>
+            <div class="card-tags"><span class="tag tag-train">Pre-train Transfer</span><span class="tag">UniRes</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Giả thuyết: năng lực xử lý context dài có thể chuyển giao từ text sang vision nếu được căn chỉnh thực sự. Huấn luyện long context (224K) thuần túy trên text trước. Sau đó chỉ huấn luyện mô hình bằng ảnh tĩnh ngắn (UniRes: nén 576 tokens → 144 tokens/grid) nhưng đánh giá trực tiếp trên video dài.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Không cần huấn luyện trên video dài tốn kém; mô hình ngôn ngữ ngữ cảnh dài tự tổng quát hóa sang video nếu biểu diễn thị giác ngắn được căn chỉnh chuẩn xác.
+            </div>
+        </div>
+        <!-- 77 & 78 -->
+        <div class="card">
+            <h4 class="card-title">(77, 78) Dynamic-VLM &amp; AdaRETAKE</h4>
+            <div class="card-tags"><span class="tag tag-train">Architecture / KV</span><span class="tag">PivotKV</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <ul>
+                    <li><strong>Dynamic-VLM (77):</strong> Đánh số positional encoding theo thời gian (1s:image, 2s:image), thử nghiệm Pooling, Merging và Pruning.</li>
+                    <li><strong>AdaRETAKE (78):</strong> DPSelect tìm keyframe theo khoảng cách cực đại địa phương. PivotKV: Dùng keyframe làm điểm tựa để nén KV-cache của các frame khác theo attention score, phân bổ tỷ lệ nén động theo từng tầng mô hình.</li>
+                </ul>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Dư thừa xảy ra theo cả thời gian lẫn tầng mô hình (layer); các tầng khác nhau cần mức độ chi tiết token khác nhau.
+            </div>
+        </div>
+        <!-- 100 -->
+        <div class="card">
+            <h4 class="card-title">(100) LP-Comp &amp; QC-Comp: Progressive Compression</h4>
+            <div class="card-tags"><span class="tag tag-train">Fine-Tuned</span><span class="tag">Progressive Layers</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>LP-Comp: Fine-tune các tầng của LLM để giảm dần số token/frame qua từng layer; tận dụng Causal Attention để giữ lại các suffix token (đã hấp thụ thông tin tiền tố). QC-Comp: Tính attention cục bộ theo phân đoạn để chọn Top-k frame liên quan khi inference.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Nén diễn ra từ từ bên trong các layer của LLM giúp mô hình tự học cách tổng hợp thông tin bị loại bỏ vào các token được giữ lại.
+            </div>
+        </div>
+        <!-- 120 -->
+        <div class="card">
+            <h4 class="card-title">(120) LLaVA-OneVision-2: Codec Visual Representation</h4>
+            <div class="card-tags"><span class="tag tag-train">Native Architecture</span><span class="tag">Video Codec</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Thay đổi đơn vị biểu diễn video cơ bản: không dùng frame RGB thông thường mà đọc trực tiếp từ video codec: I-frame (mốc không gian), P-frame, motion vectors (vùng di chuyển) và residual bit-cost (vùng thay đổi) để tạo visual canvas. Huấn luyện trên 8M video samples.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Video nén bản chất đã chứa sẵn tín hiệu về sự dư thừa không gian - thời gian thông qua bit-cost; tận dụng codec giúp loại bỏ hoàn toàn việc tính toán lại từ pixel.
+            </div>
+        </div>
+        <!-- 123 -->
+        <div class="card">
+            <h4 class="card-title">(123) SlowFast-LLaVA-1.5: Token-Efficient Architecture</h4>
+            <div class="card-tags"><span class="tag tag-train">Architecture</span><span class="tag">Dual Pathway</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Đưa cơ chế SlowFast vào projector, huấn luyện lại projector và LLM. Slow pathway: Giảm số frame nhưng giữ độ phân giải không gian bằng pooling nhẹ. Fast pathway: Giữ FPS cao nhưng giảm mạnh độ phân giải không gian. Ghép 2 luồng token bằng special tokens.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tách biệt luồng không gian chi tiết và luồng thời gian tốc độ cao giúp mô hình hiểu sâu hành động mà không bùng nổ số lượng token.
+            </div>
+        </div>
+        <!-- 135 -->
+        <div class="card">
+            <h4 class="card-title">(135) VisCo: LLMs as Intrinsic Encoders</h4>
+            <div class="card-tags"><span class="tag tag-train">Trainable</span><span class="tag">Hierarchical KV Passing</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Thêm tập learnable memory tokens tương tác với visual tokens trong encoder. Hierarchical KV passing: Lưu key/value của memory tokens ở từng layer encoder và nạp trực tiếp vào KV cache của decoder tại đúng tầng tương ứng. Chỉ train memory tokens và LoRA.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Giữ lại thông tin đa tầng trừu tượng (thô ở tầng nông, trừu tượng ở tầng sâu); ghép memory token với token gốc thậm chí giúp vượt qua cả mô hình ban đầu.
+            </div>
+        </div>
+        <!-- 136 ETC -->
+        <div class="card">
+            <h4 class="card-title">(136 ETC) Extreme Token Compression via Distillation</h4>
+            <div class="card-tags"><span class="tag tag-train">Trainable</span><span class="tag">Information Distillation</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Biểu diễn nén Z phải là một sufficient statistic có điều kiện theo instruction. Chèn M compressed tokens làm bottleneck (text chỉ được attend vào Z, Z attend vào visual tokens). Áp dụng Variational Information Distillation (VID) tối đa hóa mutual information để khôi phục target.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Tránh hiện tượng làm mờ đặc trưng khi dùng MSE loss thông thường; ép biểu diễn nén chỉ giữ các thông tin tối cần thiết để dự đoán câu trả lời.
+            </div>
+        </div>
+        <!-- 139 -->
+        <div class="card">
+            <h4 class="card-title">(139) SEER: Selective Visual-Text Compression</h4>
+            <div class="card-tags"><span class="tag tag-train">SFT Pipeline</span><span class="tag">Select-Retrieve-Reason</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Pipeline 3 bước: 1. Visual Selection: Dự đoán vùng ảnh/khung hình chứa bằng chứng. 2. Text Retrieval: Truy hồi text/OCR tương ứng với vùng đã chọn. 3. Reasoning: LLM nhận toàn bộ ảnh (để giữ global context) kết hợp text được truy hồi chi tiết để trả lời.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Dùng hình ảnh để định vị nhanh vùng bằng chứng trước, sau đó chỉ kích hoạt trích xuất văn bản chi tiết ở đúng vùng đó.
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PHẦN 3: VIDEO ENGINES, BENCHMARKS & GROUNDING -->
+    <!-- ========================================== -->
+    <div class="section-header">
+        <h2>Phần 3: Video Engines, Reasoning Benchmarks &amp; Temporal Grounding</h2>
+        <p>Hệ thống đường ống xử lý dữ liệu video quy mô lớn, các bài toán kiểm thử suy luận thế giới (World Models) và các cơ chế định vị/lý luận sự kiện đa bước (Agentic Workflows).</p>
+    </div>
+    <div class="grid">
+        <!-- 29 -->
+        <div class="card">
+            <h4 class="card-title">(29) LLaVA-Video: Synthetic Data Engine</h4>
+            <div class="card-tags"><span class="tag tag-data">Data Engine</span><span class="tag">Hierarchical Caption</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Tạo bộ dữ liệu LLaVA-Video-178K. Dùng PySceneDetect lọc cắt cảnh tĩnh. Dùng GPT-4o sinh mô tả chi tiết phân cấp: Level 1 (mỗi 10s), Level 2 (mỗi 30s tổng hợp 3 clip level 1) và Level 3 (tóm tắt toàn video ở cuối). Xây dựng 16 nhóm câu hỏi QA.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Khắc phục sự nghèo nàn về mô tả chi tiết và chuyển cảnh thời gian của các tập dữ liệu cũ bằng quy trình tóm tắt phân tầng lũy tiến.
+            </div>
+        </div>
+        <!-- 30 -->
+        <div class="card">
+            <h4 class="card-title">(30) Tarsier2: Comprehensive Video Understanding</h4>
+            <div class="card-tags"><span class="tag tag-data">Data &amp; DPO</span><span class="tag">Negative Corrupt</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Pre-train trên 40M video (20M in-house gồm video bình luận phim đã xóa chữ OCR). SFT với 150k video description có định vị thời gian chi tiết. DPO với 20k preference pairs: negative sample được tạo bằng cách làm hỏng, xóa hoặc xáo trộn thứ tự các clip của video.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> DPO với mẫu negative tạo từ chính video bị xáo trộn giúp mô hình cực kỳ nhạy bén với tính tuần tự và nhân quả của các khung hình.
+            </div>
+        </div>
+        <!-- 31 -->
+        <div class="card">
+            <h4 class="card-title">(31) Live: Video LLM with Streaming Speech</h4>
+            <div class="card-tags"><span class="tag tag-data">Streaming ASR</span><span class="tag">Live Commentary</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Xây dựng Live-CC-5M và Live-WhisperX-526K. Thu thập 10.7M video, dùng XLM-RoBERTa lọc tiếng Anh, dùng Qwen-VL-2B lọc bỏ talking-head và caption không khớp nội dung. Dùng WhisperX sinh lời thoại streaming chính xác căn chỉnh với visual.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Loại bỏ triệt để các khung hình talking-head không chứa tương quan hành động, đồng bộ luồng giọng nói trực tiếp để phục vụ thuyết minh video thời gian thực.
+            </div>
+        </div>
+        <!-- 56 & 57 -->
+        <div class="card">
+            <h4 class="card-title">(56, 57) NeMo Curator &amp; Cosmos-Curate</h4>
+            <div class="card-tags"><span class="tag tag-data">Infrastructure</span><span class="tag">Video Curation</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Hệ thống lọc dữ liệu video phân tán (Ray/Cosmos-Xenna). TransNetV2 phát hiện scene, lọc theo aesthetic threshold (&gt;3.5) và lọc cảnh tĩnh không có chuyển động (motion-filter). Trích xuất embedding (Cosmos-embed/InternVideo2), dùng K-means phân cụm và lọc trùng lặp ngữ nghĩa (Semantic Deduplication).</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Lọc trùng lặp ngữ nghĩa dựa trên embedding và loại bỏ cảnh tĩnh là bước tiền xử lý then chốt trước khi nạp dữ liệu vào huấn luyện Video-LLM quy mô lớn.
+            </div>
+        </div>
+        <!-- 59 -->
+        <div class="card">
+            <h4 class="card-title">(59) VBVR: Video Reasoning Suite</h4>
+            <div class="card-tags"><span class="tag tag-arch">World Models</span><span class="tag">Image-to-Video</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Bộ dữ liệu Image-to-Video (I2V) quy mô 1M video và 200 loại nhiệm vụ. Đầu vào: Ảnh ban đầu + Prompt; Đầu ra: Video thể hiện toàn bộ quá trình suy luận và giải quyết vấn đề. Kiểm tra 5 trụ cột nhận thức: Không gian, Biến đổi, Kiến thức thế giới, Tính trừu tượng và Nhận thức.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Chuyển dịch từ việc dùng chatbot mô tả video sang việc huấn luyện World Models (như Sora, Kling, Wan) có khả năng suy nghĩ và tương tác vật lý logic.
+            </div>
+        </div>
+        <!-- 93 -->
+        <div class="card">
+            <h4 class="card-title">(93) FocusGraph: Graph Frame Selection</h4>
+            <div class="card-tags"><span class="tag tag-arch">Embodied AI</span><span class="tag">Scene Graph</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Áp dụng cho video góc nhìn thứ nhất (Egocentric). Giai đoạn 1: Qwen2.5-VL tóm tắt clip thành biểu diễn Scene Graph dạng văn bản để LLM chọn clip tiềm năng. Giai đoạn 2: PSFR dùng dòng quang học thưa (sparse optical flow) theo dõi các điểm đặc trưng; kích hoạt chọn keyframe khi các patch bị mất dấu vết.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Scene graph giúp ổn định hóa các quan hệ đối tượng vốn dễ bị rung lắc và chuyển động mạnh của camera hành trình.
+            </div>
+        </div>
+        <!-- 107 -->
+        <div class="card">
+            <h4 class="card-title">(107) VidCoM: Fast Video Comprehension with Tools</h4>
+            <div class="card-tags"><span class="tag tag-arch">Agentic</span><span class="tag">Hungarian Matching</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Trích xuất Scene Graph (triplets) và BLIP-2 Caption. InsOVER: Dùng thuật toán Hungarian so khớp tối ưu các thành phần câu hỏi với visual sub-events. Tinh chỉnh biên sự kiện qua nhiều vòng tương tác với LLM reasoning agent.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Không cần một single-pass duy nhất; vòng lặp tương tác giữa LLM và công cụ trích xuất cấu trúc giúp thu hẹp chính xác ranh giới sự kiện cần tìm.
+            </div>
+        </div>
+        <!-- 129 -->
+        <div class="card">
+            <h4 class="card-title">(129) VideoGAIA: General AI Assistants Benchmark</h4>
+            <div class="card-tags"><span class="tag tag-arch">Benchmark</span><span class="tag">Agentic Tasks</span></div>
+            <div class="content-block">
+                <strong>Phương pháp (Method):</strong>
+                <p>Benchmark 271 tác vụ thực tế phức tạp trên 6 domain. Mô hình hóa theo chu trình Agentic: Video + Nhiệm vụ → Quan sát → Tìm kiếm thông tin ngoài → Quay lại video kiểm tra giả thuyết → Tổng hợp câu trả lời mở.</p>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Các benchmark hỏi đáp đóng (như Video-MME) đã bão hòa; tương lai đánh giá nằm ở năng lực phối hợp công cụ ngoài và tra cứu video đa bước (hiện chưa model nào vượt 60%).
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    Tài liệu Báo Cáo Kỹ Thuật Chuyên Sâu: Video Understanding, Frame Selection &amp; Token Pruning/Merging trong Multimodal LLMs.
+</footer>
+
+<script type="module" src="./Báo Cáo Toàn Diện_ Video Understanding &amp; Token Compression Trong MLLMs_files/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;25d311e599bf48e1b319773871b4a6f4&quot;,&quot;r&quot;:1,&quot;spa&quot;:2}" crossorigin="anonymous"></script>
+
+</body></html>

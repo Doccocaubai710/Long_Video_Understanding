@@ -8,10 +8,10 @@ device: auto
 # --- Tang 1 (RECON) ---
 stage1_dir: outputs/casqta_stage1
 stage1_stats: outputs/casqta_stage1_stats.txt
-gamma: 0.90
+gamma: 0.90          # energy stop -> K adaptive
 rho: 0.2             # nguong tau tuong doi
 k_min: 8
-k_max: 80
+k_max: 28
 theta: 0.55           # nguong mo clip theo residual
 l_max: 2
 target_fps: 1.0      # ha ve ~1 FPS truoc khi chay
@@ -33,7 +33,7 @@ use_query: true
 # Cach A (muc 7 file idea): B thich ung theo K thay vi hang so co dinh.
 # b_bar > 0 -> B_video = clip(K * b_bar, K * b_min, b_max). Dat b_bar=0 de
 # quay lai B co dinh (tokens_num) nhu truoc.
-b_bar: 80
+b_bar: 144           # b_bar de xuat trong file idea (muc 6)
 # Tran vat ly: context_len(4096) * rope_scaling_factor - text_reserve.
 # Voi rope_scaling_factor=2 trong config inference -> ~7792. De du an toan.
 b_max: 7200

@@ -32,7 +32,7 @@ import json
 import statistics
 import sys
 
-TOKEN_LEVELS = [288, 144, 72, 36, 18]  # must match qta_allocated.py
+TOKEN_LEVELS = [576, 288, 144, 72, 36, 18]  # must match qta_allocated.py
 
 
 def compute_remain_tokens(order, num_frames, tokens_num):
@@ -145,6 +145,8 @@ def main():
     print(f"crash (unbound branch): {n_unbound}")
     print(f"QTA spread flattened:   {n_flattened}  "
           f"(order values are CAS-QTA token budgets but llava_arch.py reads them as legacy rank)")
+    print(f"CAS-QTA format detected:{n_format_mismatch:>4}  (order values drawn from TOKEN_LEVELS, "
+          f"i.e. this JSON needs the order>=12 patch to be applied)")
     print(f"context overflow:       {n_overflow}  (realized tokens > budget={budget})")
     if totals:
         print(f"intended tokens/question: mean={statistics.mean(intended_totals):.0f} "
