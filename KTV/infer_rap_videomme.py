@@ -59,6 +59,7 @@ def main():
     ap.add_argument("--prefetch", type=int, default=2)  # so video giai ma truoc (luong nen); 0 = tat
     args = ap.parse_args()
     args.video_dir = local_mirror(args.video_dir)
+    args.model_path = local_mirror(args.model_path)
 
     device = "cuda"
     max_pixels = args.max_pixels_units * 28 * 28

@@ -63,3 +63,23 @@
 2026-10-21 10:16:08 DONE evalfull M3D-B (2700/2700): overall      2700     1724         0  0.6385
 2026-10-21 10:16:18 DONE evalfull SU25 (2700/2700): overall      2700     1717         0  0.6359
 2026-10-21 10:16:20 START train M3D-BD (lan 1)
+2026-10-21 10:22:21 KEEPALIVE START (pid 1245089)
+2026-10-21 11:23:03 KEEPALIVE START (pid 1258017)
+2026-10-22 02:21:12 CHAY LAI theo yeu cau nguoi dung sau khi container tao lai (Lustre van cham: doc song song ~18 MB/s): chep env/model/data sang /root/local_data (o cache) roi chay queue6
+2026-10-22 02:21:12 BOOTSTRAP START (pid 2070)
+2026-10-22 02:21:12 BOOTSTRAP chep env + model
+2026-10-22 02:21:12 BOOTSTRAP chep data (16 luong)
+2026-10-22 03:47:43 BOOTSTRAP copy_env.sh qua cham (cp -a ca thu muc, torch ~3 gio) -> dung, thay bang copy_env_fast.sh (chep tung file 64 luong)
+2026-10-22 04:02:33 BOOTSTRAP Lustre treo ca file .pyc nho (~30 file/phut) -> dung chep env, cai torch 2.11.0+cu128 / transformers 5.14.1 / sympy 1.14.0 tu pip vao env local (chep model Qwen van chay)
+2026-10-22 04:04:08 BOOTSTRAP env local xong (pip), import torch/transformers/decord/cv2/qwen_vl_utils ok trong 7s
+2026-10-22 04:14:13 BOOTSTRAP env + data train san sang sau 113 phut
+2026-10-22 04:14:16 BOOTSTRAP chay queue6 voi PY=/root/local_env/qwen25vl/bin/python
+2026-10-22 04:14:16 BOOTSTRAP END
+2026-10-22 04:14:17 QUEUE6 START (pid 248811) -- M3D-B, SU25, M3D-BD, V10E_s1, R10E7k, roi RSS25/RSW25, M3DF, seeds
+2026-10-22 04:14:17 KEEPALIVE START (pid 248824)
+2026-10-22 04:14:22 OK   train M3D-B
+2026-10-22 04:19:06 DONE evalfull M3D-B (2700/2700): overall      2700     1724         0  0.6385
+2026-10-22 04:19:13 DONE evalfull SU25 (2700/2700): overall      2700     1717         0  0.6359
+2026-10-22 04:19:16 START train M3D-BD (lan 1)
+2026-10-22 07:34:11 OK   train M3D-BD
+2026-10-22 07:35:03 START evalfull M3D-BD r=0.25 (lan 1, da co 0/2700)

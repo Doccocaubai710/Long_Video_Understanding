@@ -1,4 +1,4 @@
-KET QUA HANG DOI rap_elastic -- cap nhat 2026-10-21 10:16 UTC
+KET QUA HANG DOI rap_elastic -- cap nhat 2026-10-22 07:34 UTC
 Tien do chi tiet: outputs/rap_elastic/STATUS.txt. Ke hoach: outputs/rap_elastic/queue.sh (dau file).
 So 'sub300' chi tren 300 cau (de quyet dinh noi bo, nhieu nhieu). So 'full' tren du 2.700 cau.
 z: McNemar so cap tung cau, |z| > 1,96 la co y nghia.

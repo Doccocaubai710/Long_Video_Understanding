@@ -146,6 +146,7 @@ def main():
     args = ap.parse_args()
     args.video_root = local_mirror(args.video_root, "academic_source")
     args.msrvtt_dir = local_mirror(args.msrvtt_dir)
+    args.model_path = local_mirror(args.model_path)
 
     device = "cuda"
     rng = random.Random(args.seed)

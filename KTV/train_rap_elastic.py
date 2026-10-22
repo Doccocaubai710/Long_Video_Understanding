@@ -343,6 +343,7 @@ def main():
                                                 "1_2_m_academic_v0_1_cap_processed.json,2_3_m_academic_v0_1_cap_processed.json")
     args = ap.parse_args()
     args.video_root = local_mirror(args.video_root, "academic_source")
+    args.model_path = local_mirror(args.model_path)
 
     device = "cuda"
     rng = random.Random(args.seed)

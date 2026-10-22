@@ -1,5 +1,5 @@
 HƯỚNG DẪN CHUYỂN SANG SERVER MỚI (KTV / RAP, Video-MME)
-Cập nhật 21/10/2026. Tất cả đường dẫn bên dưới tính từ thư mục KTV/ (trong repo Long_Video_Understanding).
+Cập nhật 22/10/2026. Tất cả đường dẫn bên dưới tính từ thư mục KTV/ (trong repo Long_Video_Understanding).
 
 =====================================================================
 0. LINK PUBLIC ĐỂ TẢI (chi tiết đặt vào đâu xem mục 1-7)
@@ -99,10 +99,12 @@ KHÔNG có trong repo (do .gitignore): model, dữ liệu video, checkpoint .pt,
 =====================================================================
 5. CHECKPOINT: không có trên GitHub (quá 100 MB), phải chép tay từ server cũ (scp/rsync)
 =====================================================================
-  BẮT BUỘC nếu muốn train tiếp M3D-BD từ bước 2.000 (không có thì train lại từ đầu, mất thêm khoảng 4 giờ):
-    server cũ: KTV/outputs/rap_elastic/M3D-BD.pt   (587 MB, bước 2000/4000)
-               (bản sao: KTV/outputs/rap_elastic/M3D-BD_step2000.pt)
-    server mới: KTV/outputs/rap_elastic/M3D-BD.pt   <- ĐÚNG tên này, queue sẽ --resume từ file này
+  M3D-BD đã train xong (22/10 07:34 UTC) và đang chấm. Queue sẽ bỏ qua bước train (log có "[train_rap] done")
+  nhưng vẫn cần checkpoint để chấm nốt, nên BẮT BUỘC chép:
+    server cũ: KTV/outputs/rap_elastic/M3D-BD.pt   (587 MB, xong 4000/4000)
+    server mới: KTV/outputs/rap_elastic/M3D-BD.pt   <- ĐÚNG tên này
+  Run nào đang train dở lúc chuyển (xem STATUS.txt): chép thêm <ten>.pt cùng tên để train tiếp, không thì train lại từ đầu.
+  File chấm dở pred_videomme_f128_<ten>_r*.json đã có trong repo, queue chấm tiếp từ câu còn thiếu.
 
   Tùy chọn (chỉ khi cần chấm lại hoặc phân tích):
     KTV/outputs/rap_elastic/M3D-B.pt (537 MB), outputs/rap/runE.pt, outputs/rap/R10E.pt, outputs/rap_vjepa/V10E.pt...
@@ -112,6 +114,9 @@ KHÔNG có trong repo (do .gitignore): model, dữ liệu video, checkpoint .pt,
 =====================================================================
   cd Long_Video_Understanding/KTV
   PY=$(which python) bash outputs/rap_elastic/start_all.sh     # PY = python của env qwen25vl
+  (BẮT BUỘC đặt PY. Có PY thì start_all.sh chỉ chạy queue6.sh + keepalive.sh bằng python đó. Không có PY thì nó
+   chạy bootstrap.sh của server cũ: chép env /home/hoang/miniconda3 + dữ liệu sang /root/local_data, sai trên server mới.)
+  keepalive.sh: queue chết thì tự chạy lại, tiến trình 2 giờ không ghi gì thì dừng để queue chạy lại từ checkpoint.
   Theo dõi: outputs/rap_elastic/STATUS.txt (tiến độ), outputs/rap_elastic/KET_QUA.txt (kết quả), STOPS.txt (run bị ngắt sớm)
 
   Queue tự bỏ qua các run đã xong (M3D-B, SU25) và tiếp tục theo thứ tự:

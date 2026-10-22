@@ -728,3 +728,683 @@ T=16 N=187 n_kept=748 cap_len=172 ret=0.2500 n_scene=0 ce=1.2351 cov=0.2446 dpp=
 [h264 @ 0x5555b6cb6340] mmco: unref short failure
 [h264 @ 0x5555b6cb6340] mmco: unref short failure
 T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.0155 cov=0.1995 dpp=0.0011 kd=0.0142 delta_ratio=0.1303 loss=0.0342 step=2150 kind=real sec=7.2700 mem_gb=31.5000
+[local_data] dung ban local /root/local_data/KTV/Datasets/LLaVA-Video-178K-probe thay cho Datasets/LLaVA-Video-178K-probe
+[train_rap] args={'out': 'outputs/rap_elastic/M3D-BD.pt', 'model_path': 'Qwen/Qwen2.5-VL-7B-Instruct', 'resume': 'outputs/rap_elastic/M3D-BD.pt', 'init_from': '', 'retention': 0.25, 'retention_set': '', 'val_retentions': '', 'alloc': '', 'alloc_floor': 0.5, 'bias3d': 1, 'gamma': 1.0, 'deform': 1, 'scene_window': 0, 'summary': 0, 'scene_kappa': 2.0, 'scene_local': 8, 'scene_min_len': 2, 'scene_max_len': 8, 'max_frames': 128, 'max_pixels_units': 16384, 'num_steps': 4000, 'pseudo_steps': 0, 'pseudo_prob_after': 0.0, 'lr': 0.0001, 'warmup': 100, 'accum': 2, 'w_ce': 0.0, 'w_ce_qa': 1.0, 'qa_prob': 0.0, 'qa_turns': 6, 'qa_files': '0_30_s_academic_mc_v0_1_qa_processed.json,1_2_m_academic_mc_v0_1_qa_processed.json,2_3_m_academic_mc_v0_1_qa_processed.json', 'w_cov': 0.1, 'w_dpp': 0.05, 'w_kd': 1.0, 'd_model': 1024, 'num_layers': 2, 'window': 3, 'max_caption_tokens': 384, 'val_every': 250, 'n_val': 8, 'ckpt_every': 250, 'seed': 0, 'pseudo_jsonl': 'outputs/coco_train2017_recaptioned.jsonl', 'pseudo_image_dir': 'Datasets/COCO/train2017', 'video_root': '/root/local_data/KTV/Datasets/LLaVA-Video-178K-probe', 'captions_files': '0_30_s_academic_v0_1_cap_processed.json,1_2_m_academic_v0_1_cap_processed.json,2_3_m_academic_v0_1_cap_processed.json'}
+Loading weights:   0%|          | 0/729 [00:00<?, ?it/s]Loading weights:   0%|          | 1/729 [00:46<9:27:38, 46.78s/it]Loading weights:   1%|          | 4/729 [00:47<1:50:24,  9.14s/it]Loading weights:   1%|          | 5/729 [00:48<1:20:22,  6.66s/it]Loading weights:   1%|          | 6/729 [00:48<57:47,  4.80s/it]  Loading weights:   1%|▏         | 10/729 [00:48<22:06,  1.84s/it]Loading weights:   2%|▏         | 13/729 [00:49<14:30,  1.22s/it]Loading weights:   2%|▏         | 16/729 [00:49<09:21,  1.27it/s]Loading weights:   2%|▏         | 18/729 [00:49<07:35,  1.56it/s]Loading weights:   3%|▎         | 24/729 [00:49<03:41,  3.18it/s]Loading weights:   4%|▍         | 28/729 [00:50<02:40,  4.35it/s]Loading weights:   4%|▍         | 31/729 [00:50<02:10,  5.35it/s]Loading weights:   5%|▍         | 35/729 [00:50<01:34,  7.34it/s]Loading weights:   5%|▌         | 39/729 [00:51<02:22,  4.86it/s]Loading weights:   6%|▌         | 42/729 [00:51<01:51,  6.14it/s]Loading weights:   7%|▋         | 51/729 [00:51<00:56, 11.94it/s]Loading weights:   8%|▊         | 55/729 [00:52<00:58, 11.54it/s]Loading weights:   8%|▊         | 60/729 [00:52<00:44, 15.05it/s]Loading weights:   9%|▉         | 64/729 [00:52<00:39, 16.86it/s]Loading weights:   9%|▉         | 64/729 [01:09<00:39, 16.86it/s]Loading weights:   9%|▉         | 65/729 [01:16<23:22,  2.11s/it]Loading weights:  10%|█         | 75/729 [01:18<11:16,  1.03s/it]Loading weights:  11%|█         | 78/729 [01:18<09:11,  1.18it/s]Loading weights:  12%|█▏        | 84/729 [01:19<06:20,  1.69it/s]Loading weights:  12%|█▏        | 88/729 [01:20<05:35,  1.91it/s][local_data] dung ban local /root/local_data/KTV/Datasets/LLaVA-Video-178K-probe thay cho Datasets/LLaVA-Video-178K-probe
+[local_data] dung ban local /root/local_data/KTV/Qwen/Qwen2.5-VL-7B-Instruct thay cho Qwen/Qwen2.5-VL-7B-Instruct
+[train_rap] args={'out': 'outputs/rap_elastic/M3D-BD.pt', 'model_path': '/root/local_data/KTV/Qwen/Qwen2.5-VL-7B-Instruct', 'resume': 'outputs/rap_elastic/M3D-BD.pt', 'init_from': '', 'retention': 0.25, 'retention_set': '', 'val_retentions': '', 'alloc': '', 'alloc_floor': 0.5, 'bias3d': 1, 'gamma': 1.0, 'deform': 1, 'scene_window': 0, 'summary': 0, 'scene_kappa': 2.0, 'scene_local': 8, 'scene_min_len': 2, 'scene_max_len': 8, 'max_frames': 128, 'max_pixels_units': 16384, 'num_steps': 4000, 'pseudo_steps': 0, 'pseudo_prob_after': 0.0, 'lr': 0.0001, 'warmup': 100, 'accum': 2, 'w_ce': 0.0, 'w_ce_qa': 1.0, 'qa_prob': 0.0, 'qa_turns': 6, 'qa_files': '0_30_s_academic_mc_v0_1_qa_processed.json,1_2_m_academic_mc_v0_1_qa_processed.json,2_3_m_academic_mc_v0_1_qa_processed.json', 'w_cov': 0.1, 'w_dpp': 0.05, 'w_kd': 1.0, 'd_model': 1024, 'num_layers': 2, 'window': 3, 'max_caption_tokens': 384, 'val_every': 250, 'n_val': 8, 'ckpt_every': 250, 'seed': 0, 'pseudo_jsonl': 'outputs/coco_train2017_recaptioned.jsonl', 'pseudo_image_dir': 'Datasets/COCO/train2017', 'video_root': '/root/local_data/KTV/Datasets/LLaVA-Video-178K-probe', 'captions_files': '0_30_s_academic_v0_1_cap_processed.json,1_2_m_academic_v0_1_cap_processed.json,2_3_m_academic_v0_1_cap_processed.json'}
+Loading weights:   0%|          | 0/729 [00:00<?, ?it/s]Loading weights:   0%|          | 1/729 [00:00<06:12,  1.96it/s]Loading weights:   2%|▏         | 17/729 [00:00<00:21, 33.86it/s]Loading weights:   6%|▌         | 41/729 [00:00<00:08, 77.73it/s]Loading weights:   9%|▉         | 64/729 [00:00<00:06, 108.42it/s]Loading weights:  11%|█         | 80/729 [00:01<00:05, 113.61it/s]Loading weights:  14%|█▎        | 100/729 [00:01<00:04, 131.54it/s]Loading weights:  16%|█▌        | 116/729 [00:01<00:05, 108.20it/s]Loading weights:  19%|█▊        | 136/729 [00:01<00:05, 104.23it/s]Loading weights:  20%|██        | 149/729 [00:02<00:10, 54.43it/s] Loading weights:  22%|██▏       | 159/729 [00:02<00:11, 49.96it/s]Loading weights:  23%|██▎       | 167/729 [00:02<00:14, 38.42it/s]Loading weights:  25%|██▌       | 184/729 [00:02<00:10, 52.85it/s]Loading weights:  27%|██▋       | 196/729 [00:03<00:08, 61.08it/s]Loading weights:  30%|███       | 220/729 [00:03<00:05, 90.40it/s]Loading weights:  32%|███▏      | 234/729 [00:03<00:05, 90.41it/s]Loading weights:  35%|███▌      | 256/729 [00:03<00:04, 112.69it/s]Loading weights:  37%|███▋      | 271/729 [00:03<00:03, 118.04it/s]Loading weights:  40%|████      | 292/729 [00:03<00:03, 134.95it/s]Loading weights:  42%|████▏     | 308/729 [00:03<00:03, 137.22it/s]Loading weights:  45%|████▍     | 328/729 [00:03<00:02, 138.75it/s]Loading weights:  65%|██████▌   | 475/729 [00:03<00:00, 464.01it/s]Loading weights:  90%|████████▉ | 655/729 [00:04<00:00, 808.05it/s]Loading weights: 100%|██████████| 729/729 [00:04<00:00, 176.22it/s]
+[train_rap] pseudo images=118087 real videos=2569 val=8+8
+[train_rap] resampler params=48.9M start_step=2000
+[train_rap] retention_set=[0.25] val_retentions=[0.25]
+qwen-vl-utils using decord to read video.
+[transformers] `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+[h264 @ 0x555589a89f80] mmco: unref short failure
+[val] step=2000 real/ce_dense=1.2682 real/ce_rap=1.2840 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2950 real/erank_anchor=50.4631 real/erank_out=50.5231 real/gap_closed=0.6423 real/kl_rap=0.0171 real/kl_uniform=0.0371
+/home/hoang/Long_Video_Understanding/KTV/train_rap_elastic.py:271: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  out["ce"] = float(ce)
+[h264 @ 0x5555b6d16180] mmco: unref short failure
+[h264 @ 0x5555b6d16180] mmco: unref short failure
+[h264 @ 0x5555b6d16180] mmco: unref short failure
+[h264 @ 0x5555b6d16180] mmco: unref short failure
+T=5 N=2691 n_kept=3363 cap_len=183 ret=0.2500 n_scene=0 ce=0.9139 cov=0.1838 dpp=0.0000 kd=0.0130 delta_ratio=0.1261 loss=0.0314 step=2010 kind=real sec=6.1400 mem_gb=29.0000
+T=16 N=1008 n_kept=4032 cap_len=270 ret=0.2500 n_scene=0 ce=1.0013 cov=0.2005 dpp=0.0000 kd=0.0093 delta_ratio=0.1355 loss=0.0294 step=2020 kind=real sec=15.9800 mem_gb=29.0000
+[h264 @ 0x5555ace27e00] mmco: unref short failure
+[h264 @ 0x5555ace27e00] mmco: unref short failure
+[h264 @ 0x5555b6420640] mmco: unref short failure
+[h264 @ 0x5555b6420640] mmco: unref short failure
+[h264 @ 0x5555b6420640] mmco: unref short failure
+[h264 @ 0x5555b6420640] mmco: unref short failure
+[h264 @ 0x555589a4bc00] mmco: unref short failure
+[h264 @ 0x555589a4bc00] mmco: unref short failure
+T=29 N=170 n_kept=1232 cap_len=385 ret=0.2500 n_scene=0 ce=1.0003 cov=0.2475 dpp=0.0003 kd=0.0210 delta_ratio=0.1350 loss=0.0458 step=2030 kind=real sec=2.0200 mem_gb=29.0000
+T=29 N=221 n_kept=1602 cap_len=302 ret=0.2500 n_scene=0 ce=0.8767 cov=0.2317 dpp=0.0000 kd=0.0148 delta_ratio=0.1234 loss=0.0380 step=2040 kind=real sec=2.6100 mem_gb=29.0000
+T=17 N=221 n_kept=939 cap_len=274 ret=0.2500 n_scene=0 ce=0.7404 cov=0.2441 dpp=0.0021 kd=0.0141 delta_ratio=0.1491 loss=0.0386 step=2050 kind=real sec=1.5200 mem_gb=29.0000
+[h264 @ 0x5555b6e3cc80] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.4362 cov=0.2095 dpp=0.0001 kd=0.0104 delta_ratio=0.1304 loss=0.0314 step=2060 kind=real sec=6.4700 mem_gb=29.0000
+T=10 N=1590 n_kept=3975 cap_len=216 ret=0.2500 n_scene=0 ce=1.1925 cov=0.1811 dpp=0.0000 kd=0.0095 delta_ratio=0.1396 loss=0.0277 step=2070 kind=real sec=6.4500 mem_gb=29.0000
+T=9 N=1196 n_kept=2691 cap_len=157 ret=0.2500 n_scene=0 ce=0.7767 cov=0.1870 dpp=0.0000 kd=0.0100 delta_ratio=0.1302 loss=0.0287 step=2080 kind=real sec=4.6100 mem_gb=29.0000
+[h264 @ 0x5555b62c8480] mmco: unref short failure
+[h264 @ 0x5555b62c8480] mmco: unref short failure
+[h264 @ 0x5555b62c8480] mmco: unref short failure
+[h264 @ 0x5555b62c8480] mmco: unref short failure
+[h264 @ 0x5555af260c00] mmco: unref short failure
+T=7 N=391 n_kept=684 cap_len=145 ret=0.2500 n_scene=0 ce=1.0201 cov=0.2036 dpp=0.0012 kd=0.0197 delta_ratio=0.1451 loss=0.0401 step=2090 kind=real sec=1.0200 mem_gb=29.0000
+[h264 @ 0x5555af1e02c0] mmco: unref short failure
+[h264 @ 0x5555af1e02c0] mmco: unref short failure
+[h264 @ 0x5555af1e02c0] mmco: unref short failure
+[h264 @ 0x5555af1e02c0] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.0114 cov=0.2175 dpp=0.0002 kd=0.0098 delta_ratio=0.1274 loss=0.0315 step=2100 kind=real sec=9.2900 mem_gb=29.0000
+[h264 @ 0x5555b5b54a00] mmco: unref short failure
+[h264 @ 0x5555b5b49200] Missing reference picture, default is 65548
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555b5b49200] Missing reference picture, default is 65548
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555b5b54a00] mmco: unref short failure
+[h264 @ 0x5555b5b54a00] mmco: unref short failure
+[h264 @ 0x5555b5b49200] Missing reference picture, default is 65548
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555b5b49200] Missing reference picture, default is 65548
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555aced6400] mmco: unref short failure
+[h264 @ 0x5555b5b54a00] mmco: unref short failure
+[h264 @ 0x5555b5b54a00] mmco: unref short failure
+T=9 N=1196 n_kept=2691 cap_len=162 ret=0.2500 n_scene=0 ce=0.9763 cov=0.1911 dpp=0.0000 kd=0.0057 delta_ratio=0.1204 loss=0.0248 step=2110 kind=real sec=3.8200 mem_gb=29.0000
+[h264 @ 0x5555b5c52700] mmco: unref short failure
+[h264 @ 0x5555b5c52700] mmco: unref short failure
+[h264 @ 0x5555b6407080] mmco: unref short failure
+[h264 @ 0x5555b6407080] mmco: unref short failure
+T=29 N=170 n_kept=1232 cap_len=288 ret=0.2500 n_scene=0 ce=1.0457 cov=0.2436 dpp=0.0030 kd=0.0128 delta_ratio=0.1474 loss=0.0373 step=2120 kind=real sec=1.9200 mem_gb=29.0000
+T=64 N=252 n_kept=4032 cap_len=345 ret=0.2500 n_scene=0 ce=1.4492 cov=0.2358 dpp=0.0002 kd=0.0118 delta_ratio=0.1367 loss=0.0354 step=2130 kind=real sec=6.3400 mem_gb=29.0000
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+[h264 @ 0x5555b6144d80] mmco: unref short failure
+T=5 N=1196 n_kept=1495 cap_len=136 ret=0.2500 n_scene=0 ce=1.1832 cov=0.1797 dpp=0.0000 kd=0.0096 delta_ratio=0.1226 loss=0.0276 step=2140 kind=real sec=2.1300 mem_gb=29.0000
+[h264 @ 0x5555b6379700] mmco: unref short failure
+[h264 @ 0x5555b6379700] mmco: unref short failure
+[h264 @ 0x5555b6379700] mmco: unref short failure
+T=24 N=170 n_kept=1020 cap_len=320 ret=0.2500 n_scene=0 ce=1.2210 cov=0.2404 dpp=0.0000 kd=0.0315 delta_ratio=0.1425 loss=0.0555 step=2150 kind=real sec=1.6200 mem_gb=29.0000
+T=28 N=170 n_kept=1190 cap_len=277 ret=0.2500 n_scene=0 ce=1.1398 cov=0.2632 dpp=0.0019 kd=0.0171 delta_ratio=0.1607 loss=0.0435 step=2160 kind=real sec=1.8800 mem_gb=29.0000
+[h264 @ 0x5555b5ec2340] mmco: unref short failure
+T=10 N=391 n_kept=977 cap_len=161 ret=0.2500 n_scene=0 ce=1.0858 cov=0.1894 dpp=0.0000 kd=0.0082 delta_ratio=0.1248 loss=0.0272 step=2170 kind=real sec=1.6100 mem_gb=29.0000
+[h264 @ 0x5555b6a60f00] mmco: unref short failure
+[h264 @ 0x5555b6a60f00] mmco: unref short failure
+[h264 @ 0x5555b6a60f00] mmco: unref short failure
+[h264 @ 0x5555b6a60f00] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3026 cov=0.2257 dpp=0.0002 kd=0.0219 delta_ratio=0.1318 loss=0.0445 step=2180 kind=real sec=7.7500 mem_gb=29.0000
+[h264 @ 0x5555b61e21c0] mmco: unref short failure
+[h264 @ 0x5555b6de00c0] mmco: unref short failure
+[h264 @ 0x5555b6de00c0] mmco: unref short failure
+T=15 N=187 n_kept=701 cap_len=228 ret=0.2500 n_scene=0 ce=1.0561 cov=0.2642 dpp=0.0003 kd=0.0210 delta_ratio=0.1430 loss=0.0474 step=2190 kind=real sec=1.1200 mem_gb=29.0000
+[h264 @ 0x5555af2501c0] mmco: unref short failure
+[h264 @ 0x5555af2501c0] mmco: unref short failure
+[h264 @ 0x5555af2501c0] mmco: unref short failure
+T=24 N=391 n_kept=2346 cap_len=206 ret=0.2500 n_scene=0 ce=1.1418 cov=0.2097 dpp=0.0000 kd=0.0110 delta_ratio=0.1175 loss=0.0320 step=2200 kind=real sec=3.5800 mem_gb=29.0000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=0.9803 cov=0.2533 dpp=0.0013 kd=0.0350 delta_ratio=0.1397 loss=0.0604 step=2210 kind=real sec=7.7200 mem_gb=31.4000
+[h264 @ 0x5555b5c60980] mmco: unref short failure
+[h264 @ 0x5555b6578b00] mmco: unref short failure
+[h264 @ 0x5555b6578b00] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1534 cov=0.2428 dpp=0.0000 kd=0.0152 delta_ratio=0.1348 loss=0.0395 step=2220 kind=real sec=9.9600 mem_gb=31.4000
+T=64 N=234 n_kept=3744 cap_len=193 ret=0.2500 n_scene=0 ce=1.2273 cov=0.2264 dpp=0.0005 kd=0.0182 delta_ratio=0.1191 loss=0.0408 step=2230 kind=real sec=6.0600 mem_gb=31.4000
+[h264 @ 0x5555b61f8780] mmco: unref short failure
+[h264 @ 0x5555b61f8780] mmco: unref short failure
+[h264 @ 0x5555b61f8780] mmco: unref short failure
+[h264 @ 0x5555b61f8780] mmco: unref short failure
+T=20 N=798 n_kept=3990 cap_len=363 ret=0.2500 n_scene=0 ce=0.8469 cov=0.1893 dpp=0.0001 kd=0.0051 delta_ratio=0.1181 loss=0.0241 step=2240 kind=real sec=6.7000 mem_gb=31.4000
+[h264 @ 0x5555b6c93e80] mmco: unref short failure
+[h264 @ 0x5555b6c93e80] mmco: unref short failure
+T=9 N=299 n_kept=672 cap_len=164 ret=0.2500 n_scene=0 ce=0.9588 cov=0.2170 dpp=0.0007 kd=0.0181 delta_ratio=0.1462 loss=0.0398 step=2250 kind=real sec=1.2000 mem_gb=31.4000
+[h264 @ 0x5555b5ad9e40] mmco: unref short failure
+[val] step=2250 real/ce_dense=1.2682 real/ce_rap=1.2812 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2974 real/erank_anchor=50.4631 real/erank_out=50.4809 real/gap_closed=0.7043 real/kl_rap=0.0166 real/kl_uniform=0.0371
+T=5 N=2691 n_kept=3363 cap_len=114 ret=0.2500 n_scene=0 ce=1.0806 cov=0.1798 dpp=0.0000 kd=0.0101 delta_ratio=0.1258 loss=0.0281 step=2260 kind=real sec=5.0600 mem_gb=31.5000
+[h264 @ 0x5555b6d563c0] mmco: unref short failure
+[h264 @ 0x5555b6d563c0] mmco: unref short failure
+[h264 @ 0x5555b6d563c0] mmco: unref short failure
+[h264 @ 0x5555b6d563c0] mmco: unref short failure
+T=20 N=798 n_kept=3990 cap_len=246 ret=0.2500 n_scene=0 ce=0.8506 cov=0.1907 dpp=0.0000 kd=0.0042 delta_ratio=0.1354 loss=0.0233 step=2270 kind=real sec=6.3700 mem_gb=31.5000
+[h264 @ 0x5555b6cec200] mmco: unref short failure
+[h264 @ 0x5555b6cec200] mmco: unref short failure
+[h264 @ 0x5555b6cec200] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.0170 cov=0.2271 dpp=0.0007 kd=0.0254 delta_ratio=0.1502 loss=0.0482 step=2280 kind=real sec=6.3100 mem_gb=31.5000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1343 cov=0.2240 dpp=0.0000 kd=0.0165 delta_ratio=0.1456 loss=0.0389 step=2290 kind=real sec=6.2700 mem_gb=31.5000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3364 cov=0.2327 dpp=0.0003 kd=0.0228 delta_ratio=0.1325 loss=0.0461 step=2300 kind=real sec=7.6600 mem_gb=31.5000
+T=17 N=221 n_kept=939 cap_len=274 ret=0.2500 n_scene=0 ce=0.7547 cov=0.2416 dpp=0.0006 kd=0.0119 delta_ratio=0.1369 loss=0.0361 step=2310 kind=real sec=1.5500 mem_gb=31.5000
+T=12 N=391 n_kept=1173 cap_len=223 ret=0.2500 n_scene=0 ce=1.0623 cov=0.2151 dpp=0.0000 kd=0.0125 delta_ratio=0.1055 loss=0.0341 step=2320 kind=real sec=1.7900 mem_gb=31.5000
+[h264 @ 0x5555b63897c0] Missing reference picture, default is 65530
+[h264 @ 0x5555b62a91c0] mmco: unref short failure
+[h264 @ 0x5555b62a91c0] mmco: unref short failure
+[h264 @ 0x5555b6119f00] mmco: unref short failure
+[h264 @ 0x5555b6119f00] mmco: unref short failure
+T=14 N=357 n_kept=1249 cap_len=225 ret=0.2500 n_scene=0 ce=1.0358 cov=0.2243 dpp=0.0000 kd=0.0291 delta_ratio=0.1191 loss=0.0515 step=2330 kind=real sec=1.9400 mem_gb=31.5000
+T=64 N=240 n_kept=3840 cap_len=376 ret=0.2500 n_scene=0 ce=1.0578 cov=0.2654 dpp=0.0003 kd=0.0208 delta_ratio=0.1277 loss=0.0473 step=2340 kind=real sec=16.9700 mem_gb=31.5000
+T=11 N=391 n_kept=1075 cap_len=159 ret=0.2500 n_scene=0 ce=0.9742 cov=0.2132 dpp=0.0000 kd=0.0059 delta_ratio=0.1262 loss=0.0272 step=2350 kind=real sec=1.6500 mem_gb=31.5000
+[h264 @ 0x5555b5c7b7c0] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3033 cov=0.2520 dpp=0.0016 kd=0.0359 delta_ratio=0.1496 loss=0.0612 step=2360 kind=real sec=7.6100 mem_gb=31.5000
+[h264 @ 0x5555b5f18c40] mmco: unref short failure
+T=64 N=221 n_kept=3536 cap_len=385 ret=0.2500 n_scene=0 ce=1.4388 cov=0.2324 dpp=0.0001 kd=0.0124 delta_ratio=0.1309 loss=0.0356 step=2370 kind=real sec=5.6000 mem_gb=31.5000
+[h264 @ 0x5555a7986080] mmco: unref short failure
+[h264 @ 0x5555a7986080] mmco: unref short failure
+[h264 @ 0x5555a7986080] mmco: unref short failure
+[h264 @ 0x5555a7986080] mmco: unref short failure
+[h264 @ 0x5555a7986080] mmco: unref short failure
+[h264 @ 0x5555a7986080] mmco: unref short failure
+[h264 @ 0x5555a7986080] mmco: unref short failure
+T=22 N=391 n_kept=2150 cap_len=375 ret=0.2500 n_scene=0 ce=0.6838 cov=0.2287 dpp=0.0000 kd=0.0101 delta_ratio=0.1356 loss=0.0330 step=2380 kind=real sec=3.2000 mem_gb=31.5000
+[h264 @ 0x5555b62d4a40] mmco: unref short failure
+[h264 @ 0x5555b62d4a40] mmco: unref short failure
+[h264 @ 0x5555b62d4a40] mmco: unref short failure
+[h264 @ 0x5555b62d4a40] mmco: unref short failure
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=0.9748 cov=0.2275 dpp=0.0008 kd=0.0260 delta_ratio=0.1435 loss=0.0488 step=2390 kind=real sec=7.4600 mem_gb=31.5000
+[h264 @ 0x5555b5ebe680] Missing reference picture, default is 65530
+[h264 @ 0x5555b5ccd040] mmco: unref short failure
+[h264 @ 0x5555b5ccd040] mmco: unref short failure
+[h264 @ 0x5555b5cee000] mmco: unref short failure
+[h264 @ 0x5555b5cee000] mmco: unref short failure
+T=28 N=170 n_kept=1190 cap_len=211 ret=0.2500 n_scene=0 ce=1.2721 cov=0.2076 dpp=0.0000 kd=0.0094 delta_ratio=0.1277 loss=0.0302 step=2400 kind=real sec=1.8600 mem_gb=31.5000
+[h264 @ 0x5555b5eb7880] mmco: unref short failure
+[h264 @ 0x5555b5eb7880] mmco: unref short failure
+T=63 N=252 n_kept=3969 cap_len=385 ret=0.2500 n_scene=0 ce=1.2200 cov=0.2089 dpp=0.0007 kd=0.0198 delta_ratio=0.1272 loss=0.0408 step=2410 kind=real sec=5.8800 mem_gb=31.5000
+[h264 @ 0x5555b63de000] mmco: unref short failure
+[h264 @ 0x5555b63de000] mmco: unref short failure
+[h264 @ 0x5555b63de000] mmco: unref short failure
+[h264 @ 0x5555b63de000] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.4538 cov=0.2416 dpp=0.0006 kd=0.0314 delta_ratio=0.1369 loss=0.0556 step=2420 kind=real sec=9.3200 mem_gb=31.5000
+T=13 N=169 n_kept=549 cap_len=169 ret=0.2500 n_scene=0 ce=1.3048 cov=0.2386 dpp=0.0005 kd=0.0187 delta_ratio=0.1441 loss=0.0426 step=2430 kind=real sec=0.9500 mem_gb=31.5000
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+[h264 @ 0x5555b6da7cc0] mmco: unref short failure
+T=64 N=221 n_kept=3536 cap_len=385 ret=0.2500 n_scene=0 ce=1.3576 cov=0.2508 dpp=0.0003 kd=0.0189 delta_ratio=0.1410 loss=0.0440 step=2440 kind=real sec=5.9400 mem_gb=31.5000
+T=23 N=221 n_kept=1270 cap_len=188 ret=0.2500 n_scene=0 ce=1.1568 cov=0.2357 dpp=0.0005 kd=0.0121 delta_ratio=0.1328 loss=0.0357 step=2450 kind=real sec=1.9600 mem_gb=31.5000
+T=7 N=299 n_kept=523 cap_len=174 ret=0.2500 n_scene=0 ce=1.1074 cov=0.2276 dpp=0.0000 kd=0.0243 delta_ratio=0.1418 loss=0.0470 step=2460 kind=real sec=1.0200 mem_gb=31.5000
+[h264 @ 0x5555b5eed840] mmco: unref short failure
+T=7 N=510 n_kept=892 cap_len=202 ret=0.2500 n_scene=0 ce=0.7833 cov=0.2249 dpp=0.0000 kd=0.0165 delta_ratio=0.1400 loss=0.0390 step=2470 kind=real sec=1.4900 mem_gb=31.5000
+T=64 N=220 n_kept=3520 cap_len=385 ret=0.2500 n_scene=0 ce=1.2711 cov=0.2617 dpp=0.0001 kd=0.0317 delta_ratio=0.1361 loss=0.0579 step=2480 kind=real sec=5.3200 mem_gb=31.5000
+T=9 N=170 n_kept=382 cap_len=137 ret=0.2500 n_scene=0 ce=0.9161 cov=0.2418 dpp=0.0008 kd=0.0144 delta_ratio=0.1487 loss=0.0386 step=2490 kind=real sec=0.7900 mem_gb=31.5000
+T=29 N=170 n_kept=1232 cap_len=261 ret=0.2500 n_scene=0 ce=1.0111 cov=0.2433 dpp=0.0002 kd=0.0103 delta_ratio=0.1600 loss=0.0347 step=2500 kind=real sec=1.9300 mem_gb=31.5000
+[h264 @ 0x5555b6109b40] mmco: unref short failure
+[val] step=2500 real/ce_dense=1.2682 real/ce_rap=1.2835 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2956 real/erank_anchor=50.4631 real/erank_out=50.5135 real/gap_closed=0.6537 real/kl_rap=0.0169 real/kl_uniform=0.0371
+[h264 @ 0x5555b6451740] mmco: unref short failure
+[h264 @ 0x5555b6451740] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1481 cov=0.2348 dpp=0.0035 kd=0.0693 delta_ratio=0.1583 loss=0.0929 step=2510 kind=real sec=7.5300 mem_gb=31.5000
+[h264 @ 0x5555b6d68b00] mmco: unref short failure
+[h264 @ 0x5555b6d68b00] mmco: unref short failure
+T=16 N=1008 n_kept=4032 cap_len=284 ret=0.2500 n_scene=0 ce=0.9208 cov=0.2097 dpp=0.0000 kd=0.0071 delta_ratio=0.1498 loss=0.0281 step=2520 kind=real sec=6.2300 mem_gb=31.5000
+[h264 @ 0x5555b5c2f880] mmco: unref short failure
+[h264 @ 0x5555b5c2f880] mmco: unref short failure
+[h264 @ 0x5555b5c2f880] mmco: unref short failure
+[h264 @ 0x5555b5c2f880] mmco: unref short failure
+[h264 @ 0x5555b5c2f880] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+[h264 @ 0x5555b5ec7cc0] mmco: unref short failure
+T=11 N=1196 n_kept=3289 cap_len=245 ret=0.2500 n_scene=0 ce=1.0955 cov=0.1842 dpp=0.0000 kd=0.0091 delta_ratio=0.1208 loss=0.0275 step=2530 kind=real sec=4.8800 mem_gb=31.5000
+[h264 @ 0x5555b6cfd0c0] mmco: unref short failure
+[h264 @ 0x5555b6cfd0c0] mmco: unref short failure
+T=13 N=1222 n_kept=3971 cap_len=257 ret=0.2500 n_scene=0 ce=0.8812 cov=0.1937 dpp=0.0000 kd=0.0092 delta_ratio=0.1302 loss=0.0285 step=2540 kind=real sec=6.0500 mem_gb=31.5000
+T=8 N=1989 n_kept=3978 cap_len=127 ret=0.2500 n_scene=0 ce=1.0784 cov=0.1771 dpp=0.0000 kd=0.0081 delta_ratio=0.1304 loss=0.0258 step=2550 kind=real sec=6.3100 mem_gb=31.5000
+[h264 @ 0x5555b5baec80] mmco: unref short failure
+T=8 N=1196 n_kept=2392 cap_len=134 ret=0.2500 n_scene=0 ce=1.0251 cov=0.1939 dpp=0.0000 kd=0.0268 delta_ratio=0.1163 loss=0.0462 step=2560 kind=real sec=3.5400 mem_gb=31.5000
+[h264 @ 0x5555b59edd40] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.2409 cov=0.2274 dpp=0.0007 kd=0.0089 delta_ratio=0.1260 loss=0.0317 step=2570 kind=real sec=6.1000 mem_gb=31.5000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.6737 cov=0.2155 dpp=0.0006 kd=0.0360 delta_ratio=0.1281 loss=0.0575 step=2580 kind=real sec=6.8700 mem_gb=31.5000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3261 cov=0.2421 dpp=0.0001 kd=0.0192 delta_ratio=0.1223 loss=0.0434 step=2590 kind=real sec=6.3700 mem_gb=31.5000
+T=7 N=510 n_kept=892 cap_len=202 ret=0.2500 n_scene=0 ce=0.7849 cov=0.2241 dpp=0.0000 kd=0.0127 delta_ratio=0.1353 loss=0.0351 step=2600 kind=real sec=2.7400 mem_gb=31.5000
+[h264 @ 0x5555b5e53100] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.0381 cov=0.2434 dpp=0.0009 kd=0.0237 delta_ratio=0.1516 loss=0.0481 step=2610 kind=real sec=9.8500 mem_gb=31.5000
+[h264 @ 0x5555b5a8ea40] mmco: unref short failure
+[h264 @ 0x5555b5a8ea40] mmco: unref short failure
+[h264 @ 0x5555b5a8ea40] mmco: unref short failure
+[h264 @ 0x5555b5a8ea40] mmco: unref short failure
+T=14 N=221 n_kept=773 cap_len=148 ret=0.2500 n_scene=0 ce=1.2857 cov=0.2520 dpp=0.0008 kd=0.0230 delta_ratio=0.1447 loss=0.0483 step=2620 kind=real sec=1.3200 mem_gb=31.5000
+[h264 @ 0x5555b61cfd80] mmco: unref short failure
+[h264 @ 0x5555b61cfd80] mmco: unref short failure
+T=23 N=700 n_kept=4025 cap_len=372 ret=0.2500 n_scene=0 ce=0.8001 cov=0.2094 dpp=0.0000 kd=0.0143 delta_ratio=0.1196 loss=0.0353 step=2630 kind=real sec=6.3900 mem_gb=31.5000
+[h264 @ 0x5555b6a50fc0] mmco: unref short failure
+[h264 @ 0x5555b6a50fc0] mmco: unref short failure
+T=64 N=221 n_kept=3536 cap_len=175 ret=0.2500 n_scene=0 ce=1.2594 cov=0.2394 dpp=0.0003 kd=0.0115 delta_ratio=0.1133 loss=0.0355 step=2640 kind=real sec=5.8400 mem_gb=31.5000
+[h264 @ 0x5555b615bcc0] mmco: unref short failure
+[h264 @ 0x5555b615bcc0] mmco: unref short failure
+[h264 @ 0x5555b615bcc0] mmco: unref short failure
+[h264 @ 0x5555b615bcc0] mmco: unref short failure
+[h264 @ 0x5555b615bcc0] mmco: unref short failure
+[h264 @ 0x5555b615bcc0] mmco: unref short failure
+[h264 @ 0x5555b615bcc0] mmco: unref short failure
+T=64 N=231 n_kept=3696 cap_len=385 ret=0.2500 n_scene=0 ce=0.9074 cov=0.2371 dpp=0.0001 kd=0.0086 delta_ratio=0.1218 loss=0.0323 step=2650 kind=real sec=5.8100 mem_gb=31.5000
+T=24 N=170 n_kept=1020 cap_len=161 ret=0.2500 n_scene=0 ce=1.2253 cov=0.2537 dpp=0.0011 kd=0.0189 delta_ratio=0.1312 loss=0.0443 step=2660 kind=real sec=1.5900 mem_gb=31.5000
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.1110 cov=0.2308 dpp=0.0000 kd=0.0095 delta_ratio=0.1153 loss=0.0326 step=2670 kind=real sec=5.9200 mem_gb=31.5000
+[h264 @ 0x5555b5d531c0] mmco: unref short failure
+[h264 @ 0x5555b5d531c0] mmco: unref short failure
+T=6 N=221 n_kept=331 cap_len=153 ret=0.2500 n_scene=0 ce=0.9994 cov=0.2385 dpp=0.0001 kd=0.0194 delta_ratio=0.1123 loss=0.0432 step=2680 kind=real sec=1.4200 mem_gb=31.5000
+[h264 @ 0x5555b61709c0] mmco: unref short failure
+[h264 @ 0x5555b61709c0] mmco: unref short failure
+[h264 @ 0x5555b61709c0] mmco: unref short failure
+T=29 N=170 n_kept=1232 cap_len=228 ret=0.2500 n_scene=0 ce=1.0472 cov=0.2591 dpp=0.0002 kd=0.0150 delta_ratio=0.1267 loss=0.0409 step=2690 kind=real sec=1.8900 mem_gb=31.5000
+[h264 @ 0x5555b5c5f480] mmco: unref short failure
+[h264 @ 0x5555b5c5f480] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3136 cov=0.2308 dpp=0.0000 kd=0.0368 delta_ratio=0.1367 loss=0.0599 step=2700 kind=real sec=6.5000 mem_gb=31.5000
+[h264 @ 0x5555b6dbafc0] mmco: unref short failure
+[h264 @ 0x5555b6dbafc0] mmco: unref short failure
+T=25 N=187 n_kept=1168 cap_len=304 ret=0.2500 n_scene=0 ce=1.0646 cov=0.2113 dpp=0.0001 kd=0.0300 delta_ratio=0.1454 loss=0.0511 step=2710 kind=real sec=1.7700 mem_gb=31.5000
+T=10 N=1196 n_kept=2990 cap_len=167 ret=0.2500 n_scene=0 ce=0.8046 cov=0.1834 dpp=0.0000 kd=0.0071 delta_ratio=0.1209 loss=0.0255 step=2720 kind=real sec=4.2300 mem_gb=31.5000
+[h264 @ 0x5555b5f55d80] Missing reference picture, default is 65530
+[h264 @ 0x5555b6c894c0] Missing reference picture, default is 65530
+[h264 @ 0x5555b5c8d5c0] mmco: unref short failure
+[h264 @ 0x5555b5c8d5c0] mmco: unref short failure
+[h264 @ 0x5555b5f55d80] Missing reference picture, default is 65530
+[h264 @ 0x5555b6c894c0] Missing reference picture, default is 65530
+[h264 @ 0x5555b5c8d5c0] mmco: unref short failure
+[h264 @ 0x5555b5c8d5c0] mmco: unref short failure
+[h264 @ 0x5555b5f55d80] Missing reference picture, default is 65530
+[h264 @ 0x5555b5f7b7c0] mmco: unref short failure
+[h264 @ 0x5555b5f7b7c0] mmco: unref short failure
+[h264 @ 0x5555b6c894c0] mmco: unref short failure
+[h264 @ 0x5555b6c894c0] mmco: unref short failure
+[h264 @ 0x5555b6cd5540] mmco: unref short failure
+[h264 @ 0x5555b6cd5540] mmco: unref short failure
+T=23 N=299 n_kept=1719 cap_len=329 ret=0.2500 n_scene=0 ce=1.2037 cov=0.2221 dpp=0.0003 kd=0.0235 delta_ratio=0.1331 loss=0.0457 step=2730 kind=real sec=2.6100 mem_gb=31.5000
+[h264 @ 0x5555b6a725c0] mmco: unref short failure
+[h264 @ 0x5555b6a725c0] mmco: unref short failure
+[h264 @ 0x5555b6a725c0] mmco: unref short failure
+[h264 @ 0x5555b6a725c0] mmco: unref short failure
+[h264 @ 0x5555b6a725c0] mmco: unref short failure
+T=21 N=299 n_kept=1569 cap_len=385 ret=0.2500 n_scene=0 ce=0.9887 cov=0.2447 dpp=0.0000 kd=0.0263 delta_ratio=0.1291 loss=0.0507 step=2740 kind=real sec=2.5200 mem_gb=31.7000
+[h264 @ 0x5555b6d6aa40] mmco: unref short failure
+[h264 @ 0x5555b6d6aa40] mmco: unref short failure
+[h264 @ 0x5555b6d6aa40] mmco: unref short failure
+[h264 @ 0x5555b6d6aa40] mmco: unref short failure
+T=26 N=594 n_kept=3861 cap_len=385 ret=0.2500 n_scene=0 ce=0.9933 cov=0.2100 dpp=0.0005 kd=0.0120 delta_ratio=0.1230 loss=0.0331 step=2750 kind=real sec=6.6600 mem_gb=31.7000
+[h264 @ 0x5555b5da6cc0] mmco: unref short failure
+[val] step=2750 real/ce_dense=1.2682 real/ce_rap=1.2816 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2937 real/erank_anchor=50.4631 real/erank_out=50.4847 real/gap_closed=0.6969 real/kl_rap=0.0171 real/kl_uniform=0.0371
+[h264 @ 0x5555b5cf0000] mmco: unref short failure
+[h264 @ 0x5555b5cf0000] mmco: unref short failure
+[h264 @ 0x5555b5cf0000] mmco: unref short failure
+[h264 @ 0x5555b5cf0000] mmco: unref short failure
+[h264 @ 0x5555b5cf0000] mmco: unref short failure
+T=12 N=510 n_kept=1530 cap_len=224 ret=0.2500 n_scene=0 ce=1.3802 cov=0.2225 dpp=0.0004 kd=0.0105 delta_ratio=0.1263 loss=0.0328 step=2760 kind=real sec=2.2600 mem_gb=31.7000
+[h264 @ 0x5555b5ce6940] mmco: unref short failure
+[h264 @ 0x5555b5ce6940] mmco: unref short failure
+[h264 @ 0x5555b5ce6940] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=354 ret=0.2500 n_scene=0 ce=1.2742 cov=0.2333 dpp=0.0019 kd=0.0170 delta_ratio=0.1312 loss=0.0404 step=2770 kind=real sec=7.1000 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=0.9399 cov=0.2510 dpp=0.0070 kd=0.0426 delta_ratio=0.1785 loss=0.0681 step=2780 kind=real sec=11.5100 mem_gb=31.7000
+T=13 N=1222 n_kept=3971 cap_len=286 ret=0.2500 n_scene=0 ce=0.9772 cov=0.1891 dpp=0.0000 kd=0.0066 delta_ratio=0.1148 loss=0.0255 step=2790 kind=real sec=6.1500 mem_gb=31.7000
+[h264 @ 0x5555b5d92c40] mmco: unref short failure
+[h264 @ 0x5555b61d3f00] mmco: unref short failure
+T=64 N=231 n_kept=3696 cap_len=385 ret=0.2500 n_scene=0 ce=1.4187 cov=0.2312 dpp=0.0002 kd=0.0094 delta_ratio=0.1201 loss=0.0325 step=2800 kind=real sec=6.2500 mem_gb=31.7000
+[h264 @ 0x5555b6339300] mmco: unref short failure
+[h264 @ 0x5555b6339300] mmco: unref short failure
+[h264 @ 0x5555b6339300] mmco: unref short failure
+[h264 @ 0x5555b6339300] mmco: unref short failure
+T=10 N=1196 n_kept=2990 cap_len=167 ret=0.2500 n_scene=0 ce=1.2822 cov=0.1962 dpp=0.0000 kd=0.0104 delta_ratio=0.1176 loss=0.0300 step=2810 kind=real sec=4.3900 mem_gb=31.7000
+T=14 N=1125 n_kept=3937 cap_len=159 ret=0.2500 n_scene=0 ce=0.9827 cov=0.1977 dpp=0.0000 kd=0.0146 delta_ratio=0.1293 loss=0.0344 step=2820 kind=real sec=5.8500 mem_gb=31.7000
+[h264 @ 0x5555b5c50fc0] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=161 ret=0.2500 n_scene=0 ce=1.3276 cov=0.2338 dpp=0.0000 kd=0.0110 delta_ratio=0.1154 loss=0.0344 step=2830 kind=real sec=5.9400 mem_gb=31.7000
+[h264 @ 0x5555b5f79f00] mmco: unref short failure
+[h264 @ 0x5555b5f79f00] mmco: unref short failure
+[h264 @ 0x5555b5f79f00] mmco: unref short failure
+[h264 @ 0x5555b5f79f00] mmco: unref short failure
+T=10 N=510 n_kept=1275 cap_len=148 ret=0.2500 n_scene=0 ce=1.2236 cov=0.2117 dpp=0.0009 kd=0.0367 delta_ratio=0.1480 loss=0.0579 step=2840 kind=real sec=2.7900 mem_gb=31.7000
+T=60 N=170 n_kept=2550 cap_len=385 ret=0.2500 n_scene=0 ce=1.1505 cov=0.2596 dpp=0.0019 kd=0.0134 delta_ratio=0.1364 loss=0.0394 step=2850 kind=real sec=3.8200 mem_gb=31.7000
+T=20 N=510 n_kept=2550 cap_len=249 ret=0.2500 n_scene=0 ce=0.7545 cov=0.1967 dpp=0.0000 kd=0.0073 delta_ratio=0.1385 loss=0.0270 step=2860 kind=real sec=3.8400 mem_gb=31.7000
+[h264 @ 0x5555b5d769c0] mmco: unref short failure
+[h264 @ 0x5555b5d769c0] mmco: unref short failure
+T=17 N=221 n_kept=939 cap_len=168 ret=0.2500 n_scene=0 ce=0.9395 cov=0.2273 dpp=0.0000 kd=0.0199 delta_ratio=0.1269 loss=0.0427 step=2870 kind=real sec=1.4900 mem_gb=31.7000
+T=23 N=700 n_kept=4025 cap_len=384 ret=0.2500 n_scene=0 ce=0.9539 cov=0.2067 dpp=0.0000 kd=0.0106 delta_ratio=0.1113 loss=0.0312 step=2880 kind=real sec=5.9500 mem_gb=31.7000
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3060 cov=0.2263 dpp=0.0005 kd=0.0097 delta_ratio=0.1385 loss=0.0323 step=2890 kind=real sec=6.1400 mem_gb=31.7000
+T=28 N=391 n_kept=2737 cap_len=228 ret=0.2500 n_scene=0 ce=1.1423 cov=0.2001 dpp=0.0000 kd=0.0076 delta_ratio=0.1078 loss=0.0276 step=2900 kind=real sec=4.1500 mem_gb=31.7000
+T=18 N=880 n_kept=3960 cap_len=155 ret=0.2500 n_scene=0 ce=1.1543 cov=0.2113 dpp=0.0000 kd=0.0203 delta_ratio=0.1083 loss=0.0415 step=2910 kind=real sec=5.6600 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.1494 cov=0.2336 dpp=0.0000 kd=0.0121 delta_ratio=0.1382 loss=0.0355 step=2920 kind=real sec=6.1700 mem_gb=31.7000
+[h264 @ 0x5555b63da6c0] mmco: unref short failure
+T=28 N=576 n_kept=4032 cap_len=277 ret=0.2500 n_scene=0 ce=0.9330 cov=0.2169 dpp=0.0000 kd=0.0282 delta_ratio=0.1129 loss=0.0499 step=2930 kind=real sec=7.4500 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.3250 cov=0.2550 dpp=0.0007 kd=0.0150 delta_ratio=0.1387 loss=0.0405 step=2940 kind=real sec=6.8200 mem_gb=31.7000
+T=16 N=299 n_kept=1196 cap_len=285 ret=0.2500 n_scene=0 ce=1.1469 cov=0.2307 dpp=0.0000 kd=0.0249 delta_ratio=0.1335 loss=0.0480 step=2950 kind=real sec=1.9300 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=167 ret=0.2500 n_scene=0 ce=1.1594 cov=0.2329 dpp=0.0003 kd=0.0150 delta_ratio=0.1358 loss=0.0383 step=2960 kind=real sec=6.2400 mem_gb=31.7000
+[h264 @ 0x5555b695cc80] mmco: unref short failure
+[h264 @ 0x5555b695cc80] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.7333 cov=0.2315 dpp=0.0003 kd=0.0240 delta_ratio=0.1406 loss=0.0471 step=2970 kind=real sec=8.4400 mem_gb=31.7000
+[h264 @ 0x5555b695b200] mmco: unref short failure
+[h264 @ 0x5555b695b200] mmco: unref short failure
+[h264 @ 0x5555b695b200] mmco: unref short failure
+[h264 @ 0x5555b695b200] mmco: unref short failure
+T=9 N=1196 n_kept=2691 cap_len=148 ret=0.2500 n_scene=0 ce=0.7368 cov=0.1820 dpp=0.0000 kd=0.0063 delta_ratio=0.1260 loss=0.0245 step=2980 kind=real sec=3.8600 mem_gb=31.7000
+[h264 @ 0x5555b5daeec0] mmco: unref short failure
+[h264 @ 0x5555b5daeec0] mmco: unref short failure
+[h264 @ 0x5555b5daeec0] mmco: unref short failure
+[h264 @ 0x5555b5daeec0] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.3122 cov=0.2328 dpp=0.0000 kd=0.0084 delta_ratio=0.1489 loss=0.0316 step=2990 kind=real sec=8.6100 mem_gb=31.7000
+[h264 @ 0x5555b64cba80] mmco: unref short failure
+[h264 @ 0x5555b64cba80] mmco: unref short failure
+[h264 @ 0x5555b64cba80] mmco: unref short failure
+[h264 @ 0x5555b64cba80] mmco: unref short failure
+[h264 @ 0x5555b64cba80] mmco: unref short failure
+[h264 @ 0x5555b61f8140] mmco: unref short failure
+[h264 @ 0x5555b5f80000] mmco: unref short failure
+[h264 @ 0x5555b6522740] mmco: unref short failure
+[h264 @ 0x5555b6522740] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1785 cov=0.2417 dpp=0.0002 kd=0.0129 delta_ratio=0.1264 loss=0.0371 step=3000 kind=real sec=7.9400 mem_gb=31.7000
+[h264 @ 0x5555b6ca6280] mmco: unref short failure
+[val] step=3000 real/ce_dense=1.2682 real/ce_rap=1.2839 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2942 real/erank_anchor=50.4631 real/erank_out=50.5210 real/gap_closed=0.6444 real/kl_rap=0.0172 real/kl_uniform=0.0371
+[h264 @ 0x5555b61d3840] mmco: unref short failure
+[h264 @ 0x5555b61d3840] mmco: unref short failure
+T=29 N=391 n_kept=2834 cap_len=385 ret=0.2500 n_scene=0 ce=1.3338 cov=0.2142 dpp=0.0000 kd=0.0111 delta_ratio=0.1228 loss=0.0325 step=3010 kind=real sec=4.3500 mem_gb=31.7000
+[h264 @ 0x5555b5f6e1c0] mmco: unref short failure
+[h264 @ 0x5555b5d35d80] mmco: unref short failure
+[h264 @ 0x5555b5d35d80] mmco: unref short failure
+[h264 @ 0x5555b5d35d80] mmco: unref short failure
+T=18 N=880 n_kept=3960 cap_len=233 ret=0.2500 n_scene=0 ce=1.0719 cov=0.1972 dpp=0.0000 kd=0.0091 delta_ratio=0.1081 loss=0.0288 step=3020 kind=real sec=5.8500 mem_gb=31.7000
+T=64 N=221 n_kept=3536 cap_len=366 ret=0.2500 n_scene=0 ce=0.9342 cov=0.2425 dpp=0.0000 kd=0.0083 delta_ratio=0.1174 loss=0.0325 step=3030 kind=real sec=9.6000 mem_gb=31.7000
+T=14 N=1125 n_kept=3937 cap_len=289 ret=0.2500 n_scene=0 ce=0.7659 cov=0.1859 dpp=0.0000 kd=0.0065 delta_ratio=0.1294 loss=0.0251 step=3040 kind=real sec=5.8700 mem_gb=31.7000
+[h264 @ 0x5555b5f29740] mmco: unref short failure
+[h264 @ 0x5555b5f23a80] mmco: unref short failure
+[h264 @ 0x5555b697d1c0] mmco: unref short failure
+T=64 N=231 n_kept=3696 cap_len=385 ret=0.2500 n_scene=0 ce=1.3122 cov=0.2386 dpp=0.0007 kd=0.0197 delta_ratio=0.1289 loss=0.0436 step=3050 kind=real sec=6.0000 mem_gb=31.7000
+T=28 N=187 n_kept=1309 cap_len=268 ret=0.2500 n_scene=0 ce=1.2336 cov=0.2447 dpp=0.0004 kd=0.0136 delta_ratio=0.1309 loss=0.0381 step=3060 kind=real sec=2.0000 mem_gb=31.7000
+T=6 N=1196 n_kept=1794 cap_len=160 ret=0.2500 n_scene=0 ce=1.0100 cov=0.1959 dpp=0.0000 kd=0.0204 delta_ratio=0.1274 loss=0.0400 step=3070 kind=real sec=5.5000 mem_gb=31.7000
+[h264 @ 0x5555b6d6dbc0] mmco: unref short failure
+[h264 @ 0x5555b5a82280] mmco: unref short failure
+T=12 N=1196 n_kept=3588 cap_len=184 ret=0.2500 n_scene=0 ce=1.0959 cov=0.1784 dpp=0.0000 kd=0.0069 delta_ratio=0.0912 loss=0.0247 step=3080 kind=real sec=5.0900 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=242 ret=0.2500 n_scene=0 ce=1.2737 cov=0.2191 dpp=0.0001 kd=0.0110 delta_ratio=0.1229 loss=0.0329 step=3090 kind=real sec=6.1100 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.2074 cov=0.2474 dpp=0.0003 kd=0.0136 delta_ratio=0.1335 loss=0.0384 step=3100 kind=real sec=6.7700 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3427 cov=0.2404 dpp=0.0005 kd=0.0187 delta_ratio=0.1497 loss=0.0428 step=3110 kind=real sec=11.4800 mem_gb=31.7000
+[h264 @ 0x5555b5b855c0] mmco: unref short failure
+[h264 @ 0x5555b5b855c0] mmco: unref short failure
+[h264 @ 0x5555b5eece00] mmco: unref short failure
+[h264 @ 0x5555b5eece00] mmco: unref short failure
+[h264 @ 0x5555b5eece00] mmco: unref short failure
+[h264 @ 0x5555b5eece00] mmco: unref short failure
+T=27 N=170 n_kept=1147 cap_len=180 ret=0.2500 n_scene=0 ce=0.8038 cov=0.2573 dpp=0.0006 kd=0.0224 delta_ratio=0.1472 loss=0.0482 step=3120 kind=real sec=1.7700 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.0162 cov=0.1961 dpp=0.0001 kd=0.0125 delta_ratio=0.1154 loss=0.0321 step=3130 kind=real sec=7.4400 mem_gb=31.7000
+[h264 @ 0x5555b6a81440] mmco: unref short failure
+[h264 @ 0x5555b6a81440] mmco: unref short failure
+T=27 N=170 n_kept=1147 cap_len=222 ret=0.2500 n_scene=0 ce=1.2467 cov=0.2699 dpp=0.0026 kd=0.0133 delta_ratio=0.1464 loss=0.0405 step=3140 kind=real sec=7.0400 mem_gb=31.7000
+T=10 N=391 n_kept=977 cap_len=161 ret=0.2500 n_scene=0 ce=1.0893 cov=0.1869 dpp=0.0000 kd=0.0087 delta_ratio=0.1175 loss=0.0274 step=3150 kind=real sec=1.4700 mem_gb=31.7000
+T=27 N=170 n_kept=1147 cap_len=162 ret=0.2500 n_scene=0 ce=1.1286 cov=0.2715 dpp=0.0025 kd=0.0199 delta_ratio=0.1723 loss=0.0471 step=3160 kind=real sec=1.7500 mem_gb=31.7000
+T=12 N=170 n_kept=510 cap_len=278 ret=0.2500 n_scene=0 ce=1.0727 cov=0.2527 dpp=0.0000 kd=0.0552 delta_ratio=0.1457 loss=0.0805 step=3170 kind=real sec=0.9100 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.0521 cov=0.2479 dpp=0.0010 kd=0.0296 delta_ratio=0.1639 loss=0.0545 step=3180 kind=real sec=7.8200 mem_gb=31.7000
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+[h264 @ 0x5555b5ccea80] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=302 ret=0.2500 n_scene=0 ce=1.3826 cov=0.2509 dpp=0.0012 kd=0.0090 delta_ratio=0.1334 loss=0.0342 step=3190 kind=real sec=6.1500 mem_gb=31.7000
+T=19 N=170 n_kept=807 cap_len=254 ret=0.2500 n_scene=0 ce=1.1253 cov=0.2313 dpp=0.0001 kd=0.0159 delta_ratio=0.1420 loss=0.0391 step=3200 kind=real sec=1.3300 mem_gb=31.7000
+T=18 N=880 n_kept=3960 cap_len=155 ret=0.2500 n_scene=0 ce=1.1697 cov=0.2117 dpp=0.0002 kd=0.0178 delta_ratio=0.1161 loss=0.0390 step=3210 kind=real sec=5.7900 mem_gb=31.7000
+T=14 N=1125 n_kept=3937 cap_len=185 ret=0.2500 n_scene=0 ce=1.0341 cov=0.1741 dpp=0.0000 kd=0.0055 delta_ratio=0.1166 loss=0.0230 step=3220 kind=real sec=6.2800 mem_gb=31.7000
+T=64 N=221 n_kept=3536 cap_len=385 ret=0.2500 n_scene=0 ce=1.4391 cov=0.2335 dpp=0.0004 kd=0.0170 delta_ratio=0.1393 loss=0.0404 step=3230 kind=real sec=5.7900 mem_gb=31.7000
+[h264 @ 0x5555b69164c0] mmco: unref short failure
+[h264 @ 0x5555b69164c0] mmco: unref short failure
+[h264 @ 0x5555b69164c0] mmco: unref short failure
+[h264 @ 0x5555b69164c0] mmco: unref short failure
+T=28 N=299 n_kept=2093 cap_len=285 ret=0.2500 n_scene=0 ce=1.0482 cov=0.2381 dpp=0.0004 kd=0.0149 delta_ratio=0.1300 loss=0.0387 step=3240 kind=real sec=3.1500 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=355 ret=0.2500 n_scene=0 ce=1.1958 cov=0.2453 dpp=0.0022 kd=0.0150 delta_ratio=0.1300 loss=0.0396 step=3250 kind=real sec=13.3200 mem_gb=31.7000
+[h264 @ 0x5555b6495f40] mmco: unref short failure
+[val] step=3250 real/ce_dense=1.2682 real/ce_rap=1.2823 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2949 real/erank_anchor=50.4631 real/erank_out=50.4826 real/gap_closed=0.6805 real/kl_rap=0.0171 real/kl_uniform=0.0371
+T=64 N=221 n_kept=3536 cap_len=385 ret=0.2500 n_scene=0 ce=1.1625 cov=0.2116 dpp=0.0000 kd=0.0088 delta_ratio=0.1242 loss=0.0299 step=3260 kind=real sec=5.6500 mem_gb=31.7000
+[h264 @ 0x5555b61ccdc0] mmco: unref short failure
+[h264 @ 0x5555b61ccdc0] mmco: unref short failure
+[h264 @ 0x5555b61ccdc0] mmco: unref short failure
+[h264 @ 0x5555b77f6340] mmco: unref short failure
+[h264 @ 0x5555b77f6340] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+T=6 N=1196 n_kept=1794 cap_len=155 ret=0.2500 n_scene=0 ce=0.8115 cov=0.1864 dpp=0.0005 kd=0.0151 delta_ratio=0.1310 loss=0.0337 step=3270 kind=real sec=2.7200 mem_gb=31.7000
+T=20 N=170 n_kept=850 cap_len=318 ret=0.2500 n_scene=0 ce=0.7548 cov=0.2610 dpp=0.0015 kd=0.0235 delta_ratio=0.1528 loss=0.0497 step=3280 kind=real sec=4.7500 mem_gb=31.7000
+[h264 @ 0x5555b6963c00] mmco: unref short failure
+T=12 N=170 n_kept=510 cap_len=143 ret=0.2500 n_scene=0 ce=1.1360 cov=0.2440 dpp=0.0000 kd=0.0477 delta_ratio=0.1462 loss=0.0721 step=3290 kind=real sec=0.8600 mem_gb=31.7000
+[h264 @ 0x5555b65784c0] mmco: unref short failure
+[h264 @ 0x5555b65784c0] mmco: unref short failure
+[h264 @ 0x5555b65784c0] mmco: unref short failure
+T=17 N=943 n_kept=4007 cap_len=225 ret=0.2500 n_scene=0 ce=0.8357 cov=0.1958 dpp=0.0000 kd=0.0129 delta_ratio=0.1202 loss=0.0324 step=3300 kind=real sec=6.2400 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.2752 cov=0.2300 dpp=0.0012 kd=0.0229 delta_ratio=0.1332 loss=0.0459 step=3310 kind=real sec=8.5000 mem_gb=31.7000
+T=12 N=1196 n_kept=3588 cap_len=308 ret=0.2500 n_scene=0 ce=0.9479 cov=0.1861 dpp=0.0000 kd=0.0069 delta_ratio=0.1083 loss=0.0255 step=3320 kind=real sec=8.6700 mem_gb=31.7000
+[h264 @ 0x5555b5aae600] mmco: unref short failure
+[h264 @ 0x5555b5aae600] mmco: unref short failure
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.4478 cov=0.2549 dpp=0.0005 kd=0.0370 delta_ratio=0.1360 loss=0.0625 step=3330 kind=real sec=6.2100 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1549 cov=0.2253 dpp=0.0006 kd=0.0225 delta_ratio=0.1206 loss=0.0451 step=3340 kind=real sec=6.3600 mem_gb=31.7000
+T=17 N=238 n_kept=1011 cap_len=236 ret=0.2500 n_scene=0 ce=1.1998 cov=0.2240 dpp=0.0003 kd=0.0120 delta_ratio=0.1355 loss=0.0344 step=3350 kind=real sec=1.5200 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.2329 cov=0.2234 dpp=0.0003 kd=0.0174 delta_ratio=0.1115 loss=0.0397 step=3360 kind=real sec=6.9500 mem_gb=31.7000
+T=8 N=1980 n_kept=3960 cap_len=137 ret=0.2500 n_scene=0 ce=1.1377 cov=0.1761 dpp=0.0000 kd=0.0094 delta_ratio=0.1161 loss=0.0270 step=3370 kind=real sec=6.1100 mem_gb=31.7000
+T=29 N=221 n_kept=1602 cap_len=244 ret=0.2500 n_scene=0 ce=0.9922 cov=0.2334 dpp=0.0000 kd=0.0177 delta_ratio=0.1274 loss=0.0411 step=3380 kind=real sec=2.4500 mem_gb=31.7000
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+T=9 N=1736 n_kept=3906 cap_len=145 ret=0.2500 n_scene=0 ce=0.8463 cov=0.1726 dpp=0.0000 kd=0.0055 delta_ratio=0.1068 loss=0.0228 step=3390 kind=real sec=5.7500 mem_gb=31.7000
+T=23 N=700 n_kept=4025 cap_len=385 ret=0.2500 n_scene=0 ce=1.0507 cov=0.2021 dpp=0.0000 kd=0.0124 delta_ratio=0.1146 loss=0.0326 step=3400 kind=real sec=6.0500 mem_gb=31.7000
+T=10 N=221 n_kept=552 cap_len=256 ret=0.2500 n_scene=0 ce=1.5674 cov=0.2366 dpp=0.0006 kd=0.0300 delta_ratio=0.1390 loss=0.0536 step=3410 kind=real sec=0.9600 mem_gb=31.7000
+T=23 N=170 n_kept=977 cap_len=251 ret=0.2500 n_scene=0 ce=1.0568 cov=0.2565 dpp=0.0016 kd=0.0163 delta_ratio=0.1335 loss=0.0420 step=3420 kind=real sec=1.5300 mem_gb=31.7000
+[h264 @ 0x5555b6546e00] mmco: unref short failure
+[h264 @ 0x5555b6546e00] mmco: unref short failure
+[h264 @ 0x5555af036140] mmco: unref short failure
+[h264 @ 0x5555af036140] mmco: unref short failure
+[h264 @ 0x5555b785c180] mmco: unref short failure
+[h264 @ 0x5555b785c180] mmco: unref short failure
+T=29 N=221 n_kept=1602 cap_len=220 ret=0.2500 n_scene=0 ce=1.0383 cov=0.2465 dpp=0.0000 kd=0.0196 delta_ratio=0.1298 loss=0.0443 step=3430 kind=real sec=2.4200 mem_gb=31.7000
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+[h264 @ 0x5555b5e2c240] mmco: unref short failure
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.1427 cov=0.2042 dpp=0.0000 kd=0.0161 delta_ratio=0.1358 loss=0.0365 step=3440 kind=real sec=7.3600 mem_gb=31.7000
+T=9 N=1736 n_kept=3906 cap_len=164 ret=0.2500 n_scene=0 ce=1.2552 cov=0.1920 dpp=0.0008 kd=0.0137 delta_ratio=0.1141 loss=0.0329 step=3450 kind=real sec=6.3500 mem_gb=31.7000
+T=19 N=170 n_kept=807 cap_len=190 ret=0.2500 n_scene=0 ce=1.0488 cov=0.2446 dpp=0.0007 kd=0.0325 delta_ratio=0.1314 loss=0.0570 step=3460 kind=real sec=1.3000 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=285 ret=0.2500 n_scene=0 ce=1.1930 cov=0.2212 dpp=0.0004 kd=0.0140 delta_ratio=0.1255 loss=0.0361 step=3470 kind=real sec=6.2400 mem_gb=31.7000
+T=18 N=391 n_kept=1759 cap_len=168 ret=0.2500 n_scene=0 ce=1.1524 cov=0.2076 dpp=0.0000 kd=0.0059 delta_ratio=0.1034 loss=0.0267 step=3480 kind=real sec=2.7100 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1003 cov=0.2433 dpp=0.0001 kd=0.0181 delta_ratio=0.1289 loss=0.0424 step=3490 kind=real sec=7.4500 mem_gb=31.7000
+T=15 N=1056 n_kept=3960 cap_len=265 ret=0.2500 n_scene=0 ce=0.7884 cov=0.2071 dpp=0.0000 kd=0.0140 delta_ratio=0.1312 loss=0.0347 step=3500 kind=real sec=5.7000 mem_gb=31.7000
+[h264 @ 0x5555b7757b80] mmco: unref short failure
+[val] step=3500 real/ce_dense=1.2682 real/ce_rap=1.2812 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2953 real/erank_anchor=50.4631 real/erank_out=50.4964 real/gap_closed=0.7060 real/kl_rap=0.0172 real/kl_uniform=0.0371
+[h264 @ 0x5555b6c97840] mmco: unref short failure
+[h264 @ 0x5555b5a6f4c0] Missing reference picture, default is 65530
+[h264 @ 0x5555b6a15680] mmco: unref short failure
+[h264 @ 0x5555b6a15680] mmco: unref short failure
+[h264 @ 0x5555b5a6f4c0] Missing reference picture, default is 65530
+[h264 @ 0x5555b6a15680] mmco: unref short failure
+[h264 @ 0x5555b6a15680] mmco: unref short failure
+[h264 @ 0x5555b783cc80] mmco: unref short failure
+T=64 N=221 n_kept=3536 cap_len=385 ret=0.2500 n_scene=0 ce=1.3547 cov=0.2292 dpp=0.0003 kd=0.0089 delta_ratio=0.1286 loss=0.0318 step=3510 kind=real sec=5.2500 mem_gb=31.7000
+T=25 N=170 n_kept=1062 cap_len=328 ret=0.2500 n_scene=0 ce=1.0126 cov=0.2547 dpp=0.0003 kd=0.0172 delta_ratio=0.1352 loss=0.0427 step=3520 kind=real sec=1.7500 mem_gb=31.7000
+[h264 @ 0x5555b698b980] mmco: unref short failure
+[h264 @ 0x5555b698b980] mmco: unref short failure
+[h264 @ 0x5555b698b980] mmco: unref short failure
+[h264 @ 0x5555b698b980] mmco: unref short failure
+[h264 @ 0x5555b698b980] mmco: unref short failure
+[h264 @ 0x5555b698b980] mmco: unref short failure
+T=17 N=170 n_kept=722 cap_len=185 ret=0.2500 n_scene=0 ce=1.0739 cov=0.2694 dpp=0.0005 kd=0.0206 delta_ratio=0.1404 loss=0.0475 step=3530 kind=real sec=1.1800 mem_gb=31.7000
+[h264 @ 0x5555b6d96740] mmco: unref short failure
+[h264 @ 0x5555b6d96740] mmco: unref short failure
+[h264 @ 0x5555b65c4d80] mmco: unref short failure
+[h264 @ 0x5555b65c4d80] mmco: unref short failure
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.3169 cov=0.2691 dpp=0.0003 kd=0.0442 delta_ratio=0.1759 loss=0.0712 step=3540 kind=real sec=13.4800 mem_gb=31.7000
+T=11 N=1428 n_kept=3927 cap_len=284 ret=0.2500 n_scene=0 ce=0.7628 cov=0.1802 dpp=0.0000 kd=0.0114 delta_ratio=0.1117 loss=0.0294 step=3550 kind=real sec=5.9300 mem_gb=31.7000
+[h264 @ 0x5555b6453ec0] mmco: unref short failure
+[h264 @ 0x5555b6453ec0] mmco: unref short failure
+[h264 @ 0x5555b6453ec0] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.2388 cov=0.2494 dpp=0.0004 kd=0.0142 delta_ratio=0.1311 loss=0.0391 step=3560 kind=real sec=7.5700 mem_gb=31.7000
+T=5 N=299 n_kept=373 cap_len=114 ret=0.2500 n_scene=0 ce=0.8439 cov=0.2287 dpp=0.0000 kd=0.0227 delta_ratio=0.1206 loss=0.0456 step=3570 kind=real sec=2.0200 mem_gb=31.7000
+T=29 N=527 n_kept=3820 cap_len=268 ret=0.2500 n_scene=0 ce=1.0757 cov=0.2006 dpp=0.0000 kd=0.0112 delta_ratio=0.1306 loss=0.0313 step=3580 kind=real sec=5.9600 mem_gb=31.7000
+T=9 N=391 n_kept=879 cap_len=117 ret=0.2500 n_scene=0 ce=1.0527 cov=0.2119 dpp=0.0006 kd=0.0181 delta_ratio=0.1277 loss=0.0393 step=3590 kind=real sec=1.3200 mem_gb=31.7000
+T=14 N=1125 n_kept=3937 cap_len=289 ret=0.2500 n_scene=0 ce=0.9231 cov=0.1890 dpp=0.0000 kd=0.0097 delta_ratio=0.1147 loss=0.0286 step=3600 kind=real sec=6.1900 mem_gb=31.7000
+T=26 N=594 n_kept=3861 cap_len=274 ret=0.2500 n_scene=0 ce=0.8837 cov=0.1892 dpp=0.0000 kd=0.0071 delta_ratio=0.1066 loss=0.0260 step=3610 kind=real sec=5.9400 mem_gb=31.7000
+T=14 N=1125 n_kept=3937 cap_len=214 ret=0.2500 n_scene=0 ce=1.0707 cov=0.1821 dpp=0.0000 kd=0.0060 delta_ratio=0.1074 loss=0.0242 step=3620 kind=real sec=6.1400 mem_gb=31.7000
+[h264 @ 0x5555b6d96740] mmco: unref short failure
+[h264 @ 0x5555b6d96740] mmco: unref short failure
+[h264 @ 0x5555b6d96740] mmco: unref short failure
+[h264 @ 0x5555b6d96740] mmco: unref short failure
+[h264 @ 0x5555b6d96740] mmco: unref short failure
+[h264 @ 0x5555b7838fc0] Missing reference picture, default is 65530
+[h264 @ 0x5555b6976a80] Missing reference picture, default is 65530
+[h264 @ 0x5555b69d4fc0] mmco: unref short failure
+[h264 @ 0x5555b69d4fc0] mmco: unref short failure
+[h264 @ 0x5555b7838fc0] Missing reference picture, default is 65530
+[h264 @ 0x5555b6976a80] Missing reference picture, default is 65530
+[h264 @ 0x5555b69d4fc0] mmco: unref short failure
+[h264 @ 0x5555b69d4fc0] mmco: unref short failure
+[h264 @ 0x5555b7838fc0] Missing reference picture, default is 65530
+[h264 @ 0x5555b78310c0] mmco: unref short failure
+[h264 @ 0x5555b78310c0] mmco: unref short failure
+[h264 @ 0x5555b6976a80] mmco: unref short failure
+[h264 @ 0x5555b6976a80] mmco: unref short failure
+T=29 N=170 n_kept=1232 cap_len=344 ret=0.2500 n_scene=0 ce=1.1092 cov=0.2270 dpp=0.0007 kd=0.0222 delta_ratio=0.1324 loss=0.0449 step=3630 kind=real sec=2.1300 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=0.8893 cov=0.2392 dpp=0.0000 kd=0.0177 delta_ratio=0.1467 loss=0.0416 step=3640 kind=real sec=6.3500 mem_gb=31.7000
+T=15 N=187 n_kept=701 cap_len=228 ret=0.2500 n_scene=0 ce=1.0523 cov=0.2609 dpp=0.0010 kd=0.0204 delta_ratio=0.1361 loss=0.0465 step=3650 kind=real sec=1.1300 mem_gb=31.7000
+[h264 @ 0x5555b6c6d280] mmco: unref short failure
+[h264 @ 0x5555b6c6d280] mmco: unref short failure
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.2351 cov=0.2354 dpp=0.0000 kd=0.0118 delta_ratio=0.1376 loss=0.0353 step=3660 kind=real sec=6.3900 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.2381 cov=0.2224 dpp=0.0002 kd=0.0108 delta_ratio=0.1199 loss=0.0330 step=3670 kind=real sec=6.7800 mem_gb=31.7000
+T=5 N=2691 n_kept=3363 cap_len=119 ret=0.2500 n_scene=0 ce=1.2816 cov=0.1639 dpp=0.0000 kd=0.0116 delta_ratio=0.1125 loss=0.0280 step=3680 kind=real sec=5.1400 mem_gb=31.7000
+[h264 @ 0x5555b68b0e80] mmco: unref short failure
+[h264 @ 0x5555b68b0e80] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1366 cov=0.2353 dpp=0.0001 kd=0.0115 delta_ratio=0.1434 loss=0.0350 step=3690 kind=real sec=6.2600 mem_gb=31.7000
+[h264 @ 0x5555b5a87280] mmco: unref short failure
+[h264 @ 0x5555b5a87280] mmco: unref short failure
+[h264 @ 0x5555b5a87280] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.5634 cov=0.2441 dpp=0.0000 kd=0.0263 delta_ratio=0.1430 loss=0.0507 step=3700 kind=real sec=6.1300 mem_gb=31.7000
+[h264 @ 0x5555b5a20680] mmco: unref short failure
+[h264 @ 0x5555b5a20680] mmco: unref short failure
+T=25 N=221 n_kept=1381 cap_len=286 ret=0.2500 n_scene=0 ce=0.8810 cov=0.2232 dpp=0.0001 kd=0.0181 delta_ratio=0.1282 loss=0.0405 step=3710 kind=real sec=2.1400 mem_gb=31.7000
+[h264 @ 0x5555b648aac0] mmco: unref short failure
+[h264 @ 0x5555b648aac0] mmco: unref short failure
+[h264 @ 0x5555b648aac0] mmco: unref short failure
+[h264 @ 0x5555b648aac0] mmco: unref short failure
+[h264 @ 0x5555b648aac0] mmco: unref short failure
+[h264 @ 0x5555b648aac0] mmco: unref short failure
+[h264 @ 0x5555b648aac0] mmco: unref short failure
+T=64 N=231 n_kept=3696 cap_len=385 ret=0.2500 n_scene=0 ce=1.3495 cov=0.2185 dpp=0.0000 kd=0.0089 delta_ratio=0.1288 loss=0.0308 step=3720 kind=real sec=6.9900 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.4215 cov=0.2408 dpp=0.0005 kd=0.0261 delta_ratio=0.1447 loss=0.0502 step=3730 kind=real sec=7.8100 mem_gb=31.7000
+[h264 @ 0x5555b6550bc0] mmco: unref short failure
+[h264 @ 0x5555b6550bc0] mmco: unref short failure
+[h264 @ 0x5555b6550bc0] mmco: unref short failure
+T=5 N=221 n_kept=276 cap_len=104 ret=0.2500 n_scene=0 ce=1.0928 cov=0.2344 dpp=0.0000 kd=0.0592 delta_ratio=0.1318 loss=0.0826 step=3740 kind=real sec=0.5100 mem_gb=31.7000
+[h264 @ 0x5555b5e4e800] mmco: unref short failure
+[h264 @ 0x5555b5e4e800] mmco: unref short failure
+[h264 @ 0x5555b5e4e800] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3599 cov=0.2379 dpp=0.0000 kd=0.0246 delta_ratio=0.1441 loss=0.0484 step=3750 kind=real sec=6.8900 mem_gb=31.7000
+[h264 @ 0x5555b6555940] mmco: unref short failure
+[val] step=3750 real/ce_dense=1.2682 real/ce_rap=1.2807 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2956 real/erank_anchor=50.4631 real/erank_out=50.4926 real/gap_closed=0.7173 real/kl_rap=0.0173 real/kl_uniform=0.0371
+[h264 @ 0x5555b7783100] mmco: unref short failure
+T=29 N=221 n_kept=1602 cap_len=278 ret=0.2500 n_scene=0 ce=1.1242 cov=0.2182 dpp=0.0005 kd=0.0117 delta_ratio=0.1310 loss=0.0335 step=3760 kind=real sec=2.5600 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.2398 cov=0.2230 dpp=0.0002 kd=0.0107 delta_ratio=0.1239 loss=0.0330 step=3770 kind=real sec=6.6300 mem_gb=31.7000
+[h264 @ 0x5555b6455b80] mmco: unref short failure
+[h264 @ 0x5555b6455b80] mmco: unref short failure
+[h264 @ 0x5555b6455b80] mmco: unref short failure
+T=27 N=170 n_kept=1147 cap_len=137 ret=0.2500 n_scene=0 ce=0.9210 cov=0.2371 dpp=0.0014 kd=0.0079 delta_ratio=0.1396 loss=0.0317 step=3780 kind=real sec=1.7600 mem_gb=31.7000
+[h264 @ 0x5555b69c9d00] mmco: unref short failure
+[h264 @ 0x5555b69c9d00] mmco: unref short failure
+[h264 @ 0x5555b69c9d00] mmco: unref short failure
+[h264 @ 0x5555b69c9d00] mmco: unref short failure
+[h264 @ 0x5555b60fe140] mmco: unref short failure
+[h264 @ 0x5555b60fe140] mmco: unref short failure
+[h264 @ 0x5555b60fe140] mmco: unref short failure
+[h264 @ 0x5555b60fe140] mmco: unref short failure
+T=27 N=414 n_kept=2794 cap_len=250 ret=0.2500 n_scene=0 ce=1.0413 cov=0.2019 dpp=0.0000 kd=0.0194 delta_ratio=0.1139 loss=0.0396 step=3790 kind=real sec=4.0900 mem_gb=31.7000
+[h264 @ 0x5555b6db67c0] mmco: unref short failure
+[h264 @ 0x5555b6db67c0] mmco: unref short failure
+[h264 @ 0x5555b6db67c0] mmco: unref short failure
+[h264 @ 0x5555b6db67c0] mmco: unref short failure
+[h264 @ 0x5555b6db67c0] mmco: unref short failure
+[h264 @ 0x5555b6db67c0] mmco: unref short failure
+[h264 @ 0x5555b6db67c0] mmco: unref short failure
+T=23 N=299 n_kept=1719 cap_len=329 ret=0.2500 n_scene=0 ce=1.2028 cov=0.2211 dpp=0.0010 kd=0.0210 delta_ratio=0.1320 loss=0.0432 step=3800 kind=real sec=2.7700 mem_gb=31.7000
+[h264 @ 0x5555b64ef500] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1325 cov=0.2313 dpp=0.0000 kd=0.0203 delta_ratio=0.1329 loss=0.0435 step=3810 kind=real sec=6.0800 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=193 ret=0.2500 n_scene=0 ce=1.2223 cov=0.2244 dpp=0.0004 kd=0.0154 delta_ratio=0.1157 loss=0.0378 step=3820 kind=real sec=6.0200 mem_gb=31.7000
+[h264 @ 0x5555b5ace840] mmco: unref short failure
+[h264 @ 0x5555b5eabe40] mmco: unref short failure
+[h264 @ 0x5555b5eabe40] mmco: unref short failure
+[h264 @ 0x5555b5eabe40] mmco: unref short failure
+[h264 @ 0x5555b5eabe40] mmco: unref short failure
+T=64 N=234 n_kept=3744 cap_len=242 ret=0.2500 n_scene=0 ce=1.4155 cov=0.2068 dpp=0.0000 kd=0.0112 delta_ratio=0.1244 loss=0.0319 step=3830 kind=real sec=6.1500 mem_gb=31.7000
+[h264 @ 0x5555b61ccdc0] mmco: unref short failure
+[h264 @ 0x5555b61ccdc0] mmco: unref short failure
+[h264 @ 0x5555b61ccdc0] mmco: unref short failure
+[h264 @ 0x5555b65a42c0] mmco: unref short failure
+[h264 @ 0x5555b65a42c0] mmco: unref short failure
+[h264 @ 0x5555b65a42c0] mmco: unref short failure
+[h264 @ 0x5555b65a42c0] mmco: unref short failure
+T=64 N=169 n_kept=2704 cap_len=385 ret=0.2500 n_scene=0 ce=0.6235 cov=0.2509 dpp=0.0030 kd=0.0612 delta_ratio=0.1911 loss=0.0865 step=3840 kind=real sec=4.6800 mem_gb=31.7000
+[h264 @ 0x5555b5e51540] mmco: unref short failure
+[h264 @ 0x5555b5e51540] mmco: unref short failure
+[h264 @ 0x5555b5e51540] mmco: unref short failure
+[h264 @ 0x5555b5e51540] mmco: unref short failure
+[h264 @ 0x5555b65bbb00] mmco: unref short failure
+[h264 @ 0x5555b65bbb00] mmco: unref short failure
+T=16 N=1008 n_kept=4032 cap_len=247 ret=0.2500 n_scene=0 ce=1.0743 cov=0.2137 dpp=0.0000 kd=0.0087 delta_ratio=0.1269 loss=0.0301 step=3850 kind=real sec=12.5700 mem_gb=31.7000
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b64fd580] mmco: unref short failure
+[h264 @ 0x5555b64fd580] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+[h264 @ 0x5555b6dd1b00] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.0719 cov=0.2338 dpp=0.0002 kd=0.0110 delta_ratio=0.1149 loss=0.0344 step=3860 kind=real sec=6.3500 mem_gb=31.7000
+[h264 @ 0x5555b6a66f80] mmco: unref short failure
+T=20 N=798 n_kept=3990 cap_len=203 ret=0.2500 n_scene=0 ce=0.8439 cov=0.2026 dpp=0.0004 kd=0.0048 delta_ratio=0.1280 loss=0.0250 step=3870 kind=real sec=6.5000 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=366 ret=0.2500 n_scene=0 ce=1.1443 cov=0.2167 dpp=0.0000 kd=0.0180 delta_ratio=0.1201 loss=0.0396 step=3880 kind=real sec=6.1000 mem_gb=31.7000
+[h264 @ 0x5555b5d72840] mmco: unref short failure
+T=10 N=1590 n_kept=3975 cap_len=179 ret=0.2500 n_scene=0 ce=0.8039 cov=0.1911 dpp=0.0000 kd=0.0080 delta_ratio=0.1036 loss=0.0271 step=3890 kind=real sec=8.0100 mem_gb=31.7000
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+[h264 @ 0x5555b5aac980] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3829 cov=0.2471 dpp=0.0002 kd=0.0307 delta_ratio=0.1431 loss=0.0554 step=3900 kind=real sec=8.0100 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.1540 cov=0.2581 dpp=0.0006 kd=0.0127 delta_ratio=0.1345 loss=0.0385 step=3910 kind=real sec=7.7100 mem_gb=31.7000
+T=14 N=221 n_kept=773 cap_len=204 ret=0.2500 n_scene=0 ce=1.1687 cov=0.2315 dpp=0.0000 kd=0.0211 delta_ratio=0.1478 loss=0.0443 step=3920 kind=real sec=1.2600 mem_gb=31.7000
+[h264 @ 0x5555b6102d40] mmco: unref short failure
+[h264 @ 0x5555b6102d40] mmco: unref short failure
+T=17 N=943 n_kept=4007 cap_len=347 ret=0.2500 n_scene=0 ce=0.7966 cov=0.1946 dpp=0.0000 kd=0.0115 delta_ratio=0.1150 loss=0.0309 step=3930 kind=real sec=6.2000 mem_gb=31.7000
+[h264 @ 0x5555b6c5ca40] mmco: unref short failure
+[h264 @ 0x5555b6c5ca40] mmco: unref short failure
+[h264 @ 0x5555b6c5ca40] mmco: unref short failure
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3071 cov=0.2452 dpp=0.0004 kd=0.0281 delta_ratio=0.1367 loss=0.0526 step=3940 kind=real sec=6.4900 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=385 ret=0.2500 n_scene=0 ce=1.3666 cov=0.2382 dpp=0.0004 kd=0.0437 delta_ratio=0.1401 loss=0.0676 step=3950 kind=real sec=8.8600 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=204 ret=0.2500 n_scene=0 ce=1.3958 cov=0.2413 dpp=0.0023 kd=0.0108 delta_ratio=0.1383 loss=0.0350 step=3960 kind=real sec=6.6200 mem_gb=31.7000
+T=64 N=252 n_kept=4032 cap_len=215 ret=0.2500 n_scene=0 ce=1.1104 cov=0.2461 dpp=0.0000 kd=0.0207 delta_ratio=0.1274 loss=0.0454 step=3970 kind=real sec=7.2000 mem_gb=31.7000
+[h264 @ 0x5555b68edd40] mmco: unref short failure
+[h264 @ 0x5555b68edd40] mmco: unref short failure
+[h264 @ 0x5555b68edd40] mmco: unref short failure
+[h264 @ 0x5555b68edd40] mmco: unref short failure
+[h264 @ 0x5555b68edd40] mmco: unref short failure
+[h264 @ 0x5555b68edd40] mmco: unref short failure
+[h264 @ 0x5555b68edd40] mmco: unref short failure
+T=29 N=170 n_kept=1232 cap_len=242 ret=0.2500 n_scene=0 ce=1.1720 cov=0.2504 dpp=0.0001 kd=0.0461 delta_ratio=0.1419 loss=0.0712 step=3980 kind=real sec=1.8900 mem_gb=31.7000
+T=7 N=1196 n_kept=2093 cap_len=140 ret=0.2500 n_scene=0 ce=0.8804 cov=0.1842 dpp=0.0000 kd=0.0073 delta_ratio=0.1165 loss=0.0257 step=3990 kind=real sec=2.9500 mem_gb=31.7000
+T=64 N=234 n_kept=3744 cap_len=385 ret=0.2500 n_scene=0 ce=1.2385 cov=0.2352 dpp=0.0000 kd=0.0106 delta_ratio=0.1372 loss=0.0341 step=4000 kind=real sec=6.4300 mem_gb=31.7000
+[h264 @ 0x5555b69dac80] mmco: unref short failure
+[val] step=4000 real/ce_dense=1.2682 real/ce_rap=1.2826 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2945 real/erank_anchor=50.4631 real/erank_out=50.5152 real/gap_closed=0.6733 real/kl_rap=0.0169 real/kl_uniform=0.0371
+[h264 @ 0x5555b69dac80] mmco: unref short failure
+[val] step=4000 real/ce_dense=1.2682 real/ce_rap=1.2826 real/ce_uniform=1.3123 real/cos_anchor=0.3020 real/cos_out=0.2945 real/erank_anchor=50.4631 real/erank_out=50.5152 real/gap_closed=0.6733 real/kl_rap=0.0169 real/kl_uniform=0.0371
+[train_rap] done step=4000 -> outputs/rap_elastic/M3D-BD.pt
