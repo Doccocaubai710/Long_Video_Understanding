@@ -1,3 +1,6 @@
+> **Chuyển server / chạy tiếp hàng đợi RAP (queue6):** xem `PROMPT_AGENT_SERVER_MOI.md` (prompt dán cho agent)
+> và `SETUP_SERVER_MOI.txt` (hướng dẫn tải model, data, checkpoint). README bên dưới là của pipeline KTV gốc.
+
 # KTV
 
 Code for [KTV: Keyframes and Key Tokens Selection for Efficient Training-Free Video LLMs](https://ojs.aaai.org/index.php/AAAI/article/view/37862), accepted by AAAI 2026.
