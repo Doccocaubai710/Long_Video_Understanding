@@ -1,0 +1,108 @@
+KET QUA DOT HDS-MAP 3D (outputs/hds4) -- cap nhat 2026-10-29 09:48 UTC
+Video-MME 2.700 cau (short/medium/long), LVBench 1.549 cau (video ~1 gio), MLVU-Test 502 cau (3 phut - 2 gio).
+Qwen2.5-VL-7B, 128 frame. z = McNemar so cap tung cau, |z| > 1,96 la co y nghia. Muc chinh: giu 10% token.
+Tien do tung buoc: outputs/hds4/STATUS*.txt. Ke hoach: outputs/hds4/queue.sh (dau file).
+
+== Video-MME ==
+
+cau hinh                   n   short  medium    long  overall   so voi moc (diem chenh, z)
+F256_H4s1_r005          2700   71.22   59.89   52.33    61.15  uniform_r005 +3.56 (z=+4.23) | holitom_r005 +2.44 (z=+2.95) | RAP_r005 +1.15 (z=+1.45) | vidcom2_r005 +6.00 (z=+6.75) | ELA_r005 +1.93 (z=+2.40) | dense -4.00 (z=-5.02) | H5_r005 -0.48 (z=-0.64)
+                       -> H4 seed 1
+F256_H5_r005            2700   70.33   57.56   51.78    59.89  uniform_r005 +2.30 (z=+2.74) | holitom_r005 +1.19 (z=+1.41) | RAP_r005 -0.11 (z=-0.14) | vidcom2_r005 +4.74 (z=+5.25) | ELA_r005 +0.67 (z=+0.85) | dense -5.26 (z=-6.51) | H5_r005 -1.74 (z=-2.45)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+F256_uniform_r005       2700   67.11   55.00   50.67    57.59  uniform_r005 +0.00 (z=+0.00) | holitom_r005 -1.11 (z=-1.50) | RAP_r005 -2.41 (z=-3.11) | vidcom2_r005 +2.44 (z=+2.78) | ELA_r005 -1.63 (z=-2.07) | dense -7.56 (z=-8.76) | H5_r005 -4.04 (z=-4.87)
+                       -> Moc: Uniform (luoi linspace)
+H12_r010                2700   72.78   61.78   54.22    62.93  uniform_r010 +3.33 (z=+4.19) | holitom_r010 +1.59 (z=+2.17) | RAP_r010 +1.33 (z=+1.94) | vidcom2_r010 +3.00 (z=+3.81) | ELA_r010 +1.78 (z=+2.57) | dense -2.22 (z=-3.46) | H3_r010 +0.41 (z=+0.70) | H4_r010 -0.41 (z=-0.73) | H5_r010 +0.07 (z=+0.13)
+                       -> Chi giai doan 1: bo truot CB-STE co hoc, chon 100% token goc
+H3ce_r010               2700   74.00   62.22   54.33    63.52  uniform_r010 +3.93 (z=+4.89) | holitom_r010 +2.19 (z=+2.95) | RAP_r010 +1.93 (z=+2.75) | vidcom2_r010 +3.59 (z=+4.55) | ELA_r010 +2.37 (z=+3.41) | dense -1.63 (z=-2.56) | H3_r010 +1.00 (z=+1.78) | H4_r010 +0.19 (z=+0.32) | H5_r010 +0.67 (z=+1.13)
+                       -> HDS-MAP 3D day du: giai doan 1 + giai doan 2 (mo tu buoc 2000)
+H4ce_r010               2700   72.78   63.11   53.33    63.07  uniform_r010 +3.48 (z=+4.46) | holitom_r010 +1.74 (z=+2.41) | RAP_r010 +1.48 (z=+2.18) | vidcom2_r010 +3.15 (z=+3.97) | ELA_r010 +1.93 (z=+2.80) | dense -2.07 (z=-3.18) | H3_r010 +0.56 (z=+0.94) | H4_r010 -0.26 (z=-0.50) | H5_r010 +0.22 (z=+0.38)
+                       -> Ban tot nhat H1-H3, train them tren video dai ghep (3 clip 1-3 phut)
+
+== LVBench ==
+
+cau hinh                   n entity  event u key inf reasoni tempora summari  overall   so voi moc (diem chenh, z)
+F256_H4s1_r005          1549   37.14   35.74   45.41   38.78   30.77   32.73    37.44  uniform_r005 +0.52 (z=+0.44) | holitom_r005 -0.45 (z=-0.38)
+                       -> H4 seed 1
+F256_H5_r005            1549   40.00   36.31   41.84   42.86   23.08   34.55    38.35  uniform_r005 +1.42 (z=+1.19) | holitom_r005 +0.45 (z=+0.36)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+F256_uniform_r005       1549   40.18   34.98   39.29   42.18   33.85   29.09    37.83  uniform_r005 +0.90 (z=+0.93) | holitom_r005 -0.06 (z=-0.06)
+                       -> Moc: Uniform (luoi linspace)
+H12_r010                1549   38.04   38.40   45.92   42.18   35.38   34.55    39.32  uniform_r010 -0.58 (z=-0.56) | holitom_r010 -0.26 (z=-0.25) | R10E_r010 +0.26 (z=+0.26) | H4_r010 -0.19 (z=-0.23) | H5_r010 -0.39 (z=-0.47)
+                       -> Chi giai doan 1: bo truot CB-STE co hoc, chon 100% token goc
+H3ce_r010               1549   40.89   38.40   41.33   45.58   30.77   41.82    40.15  uniform_r010 +0.26 (z=+0.24) | holitom_r010 +0.58 (z=+0.57) | R10E_r010 +1.10 (z=+1.13) | H4_r010 +0.65 (z=+0.72) | H5_r010 +0.45 (z=+0.56)
+                       -> HDS-MAP 3D day du: giai doan 1 + giai doan 2 (mo tu buoc 2000)
+H3s1_r010               1549   40.36   39.35   43.88   44.22   33.85   40.00    40.54  uniform_r010 +0.65 (z=+0.62) | holitom_r010 +0.97 (z=+0.93) | R10E_r010 +1.48 (z=+1.51) | H4_r010 +1.03 (z=+1.18) | H5_r010 +0.84 (z=+0.97)
+                       -> H3 seed 1
+H4ce_r010               1549   41.79   39.16   44.90   44.22   35.38   38.18    41.12  uniform_r010 +1.23 (z=+1.17) | holitom_r010 +1.55 (z=+1.53) | R10E_r010 +2.07 (z=+2.15) | H4_r010 +1.61 (z=+1.87) | H5_r010 +1.42 (z=+1.69)
+                       -> Ban tot nhat H1-H3, train them tren video dai ghep (3 clip 1-3 phut)
+
+== MLVU-Test ==
+
+cau hinh                   n      TR      AO      AC     NQA      ER     PQA  overall   so voi moc (diem chenh, z)
+F256_H4s1_r005           502   82.42   34.29   20.00   51.67   32.08   54.00    46.02  uniform_r005 +2.19 (z=+1.14) | holitom_r005 +3.39 (z=+1.76)
+                       -> H4 seed 1
+F256_H5_r005             502   83.52   35.71   23.33   58.33   39.62   48.00    48.21  uniform_r005 +4.38 (z=+2.25) | holitom_r005 +5.58 (z=+2.75)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+F256_uniform_r005        502   89.01   27.14   11.67   51.67   56.60   44.00    46.41  uniform_r005 +2.59 (z=+1.59) | holitom_r005 +3.78 (z=+2.47)
+                       -> Moc: Uniform (luoi linspace)
+H12_r010                 502   89.01   35.71   21.67   56.67   43.40   58.00    49.80  uniform_r010 +3.39 (z=+2.08) | holitom_r010 +4.18 (z=+2.69) | R10E_r010 +0.60 (z=+0.38) | H4_r010 +0.80 (z=+0.59) | H5_r010 +1.99 (z=+1.51)
+                       -> Chi giai doan 1: bo truot CB-STE co hoc, chon 100% token goc
+H3ce_r010                502   89.01   30.00   26.67   56.67   45.28   62.00    50.80  uniform_r010 +4.38 (z=+2.49) | holitom_r010 +5.18 (z=+3.11) | R10E_r010 +1.59 (z=+0.97) | H4_r010 +1.79 (z=+1.26) | H5_r010 +2.99 (z=+2.47)
+                       -> HDS-MAP 3D day du: giai doan 1 + giai doan 2 (mo tu buoc 2000)
+H3s1_r010                502   84.62   38.57   20.00   60.00   50.94   54.00    49.80  uniform_r010 +3.39 (z=+2.02) | holitom_r010 +4.18 (z=+2.60) | R10E_r010 +0.60 (z=+0.40) | H4_r010 +0.80 (z=+0.54) | H5_r010 +1.99 (z=+1.58)
+                       -> H3 seed 1
+H4ce_r010                502   84.62   40.00   18.33   55.00   39.62   54.00    48.80  uniform_r010 +2.39 (z=+1.41) | holitom_r010 +3.19 (z=+2.07) | R10E_r010 -0.40 (z=-0.25) | H4_r010 -0.20 (z=-0.15) | H5_r010 +1.00 (z=+0.75)
+                       -> Ban tot nhat H1-H3, train them tren video dai ghep (3 clip 1-3 phut)
+
+== Train (dong val moi nhat trong *.metrics.jsonl) ==
+
+H12: buoc train 4000, val o buoc 4000: kl_rap=0.0367, kl_uniform=0.0863, gap_closed=0.7088, hop_rate=0.8961, move_t=0.8000, move_s=0.7651, raer=0.3431, ce_rap=1.1501, ce_dense=1.1255
+H3ce: buoc train 4000, val o buoc 4000: kl_rap=0.0405, kl_uniform=0.0940, gap_closed=0.8814, hop_rate=0.8843, move_t=0.7794, move_s=0.7505, raer=0.3392, ce_rap=1.2795, ce_dense=1.2682
+H4ce: buoc train 4000, val o buoc 4000: kl_rap=0.0417, kl_uniform=0.0887, gap_closed=0.9937, hop_rate=0.8624, move_t=0.7746, move_s=0.6966, raer=0.3431, ce_rap=1.1878, ce_dense=1.1873
+  (kl_rap < kl_uniform = ban nen gan ban xem du hon Uniform; hop_rate = ti le neo roi tam hop)
+
+== 20 dong cuoi STATUS_card1.txt ==
+
+2026-10-29 06:26:45 [vlm-paper-training-2gpu-0-1] XONG MLVU dev, chay lai queue card 1
+2026-10-29 06:26:47 [vlm-paper-training-2gpu-0-1] KEEPALIVE START (pid 3572019)
+2026-10-29 06:27:56 [vlm-paper-training-2gpu-0-1] QUEUE START card 1 (pid 3571994, NVIDIA A100-SXM4-40GB)
+2026-10-29 06:27:56 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/C40_25
+2026-10-29 06:28:03 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/base40_25
+2026-10-29 06:28:06 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/C40_25
+2026-10-29 06:28:08 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/base40_25
+2026-10-29 06:28:11 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H4ce
+2026-10-29 06:28:14 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/H4ce
+2026-10-29 06:28:16 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/H4ce
+2026-10-29 06:28:19 [vlm-paper-training-2gpu-0-1] START thu 256 frame (20 cau)
+2026-10-29 06:31:24 [vlm-paper-training-2gpu-0-1] OK thu 256 frame -> cham day du
+2026-10-29 06:31:24 [vlm-paper-training-2gpu-0-1] START eval videomme/F256 (lan 1)
+2026-10-29 07:36:11 [vlm-paper-training-2gpu-0-1] DONE eval videomme/F256
+2026-10-29 07:36:18 [vlm-paper-training-2gpu-0-1] START eval lvbench/F256 (lan 1)
+2026-10-29 08:08:25 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/F256
+2026-10-29 08:08:32 [vlm-paper-training-2gpu-0-1] START eval mlvu/F256 (lan 1)
+2026-10-29 08:42:13 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/F256
+2026-10-29 08:42:20 [vlm-paper-training-2gpu-0-1] QUEUE DONE card 1
+2026-10-29 08:47:13 [vlm-paper-training-2gpu-0-1] KEEPALIVE queue da xong het, dung keepalive
+
+== 20 dong cuoi STATUS_card2.txt ==
+
+2026-10-28 10:14:20 [vlm-paper-training-2gpu-0-1] KEEPALIVE START (pid 898407)
+2026-10-28 10:14:24 [vlm-paper-training-2gpu-0-1] QUEUE START card 2 (pid 898382, NVIDIA A100-SXM4-40GB)
+2026-10-28 11:10:26 [vlm-paper-training-2gpu-0-1] START train H12 (lan 1)
+2026-10-28 21:28:47 [vlm-paper-training-2gpu-0-1] START eval videomme/H12 (lan 1)
+2026-10-28 22:41:02 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H12
+2026-10-28 22:41:15 [vlm-paper-training-2gpu-0-1] START eval lvbench/H12 (lan 1)
+2026-10-28 23:11:28 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/H12
+2026-10-28 23:11:42 [vlm-paper-training-2gpu-0-1] START eval mlvu/H12 (lan 1)
+2026-10-28 23:39:40 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/H12
+2026-10-28 23:39:51 [vlm-paper-training-2gpu-0-1] START train H3ce (lan 1)
+2026-10-29 04:56:57 [vlm-paper-training-2gpu-0-1] START eval videomme/H3ce (lan 1)
+2026-10-29 06:07:52 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H3ce
+2026-10-29 06:08:08 [vlm-paper-training-2gpu-0-1] START eval lvbench/H3ce (lan 1)
+2026-10-29 06:40:11 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/H3ce
+2026-10-29 06:40:16 [vlm-paper-training-2gpu-0-1] START eval mlvu/H3ce (lan 1)
+2026-10-29 07:04:05 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/H3ce
+2026-10-29 07:04:11 [vlm-paper-training-2gpu-0-1] QUEUE DONE card 2
+2026-10-29 07:07:52 [vlm-paper-training-2gpu-0-1] KEEPALIVE queue da xong het, dung keepalive
+

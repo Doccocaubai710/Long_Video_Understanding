@@ -1,0 +1,9 @@
+C* = H3ce. Cao nhat: L2 (65.46); mac dinh H3ce = 65.25; nguong doi = +1.0 diem.
+
+L2    MLVU dev overall = 65.46  (seed: 65.46)  --w_ceg 1.0
+L1    MLVU dev overall = 65.32  (seed: 65.32)  --w_ceg 0.5
+H3ce  MLVU dev overall = 65.25  (seed: 65.46, 65.04)  --w_ceg 0.2
+W2    MLVU dev overall = 65.18  (seed: 65.18)  --w_ceg 0.2 --window 5
+L3    MLVU dev overall = 65.04  (seed: 65.04)  --w_ce 0.2 --w_ceg 0
+H3    MLVU dev overall = 64.51  (seed: 64.31, 64.72)  --w_ceg 0
+W1    MLVU dev overall = 63.85  (seed: 63.85)  --w_ceg 0.2 --window 1

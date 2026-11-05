@@ -1,0 +1,4 @@
+SG10: MLVU dev 62.60 (chi KL 64.43), TB VM+LVB 50.46 (chi KL 51.89) -> KHONG DAT: chuyen sang seed bang chinh + thi nghiem luong data
+BX10: MLVU dev 62.74 (chi KL 64.43), TB VM+LVB 51.82 (chi KL 51.89) -> KHONG DAT: chuyen sang seed bang chinh + thi nghiem luong data
+SM10: MLVU dev 64.72 (chi KL 64.43), TB VM+LVB 51.76 (chi KL 51.89) -> KHONG DAT: chuyen sang seed bang chinh + thi nghiem luong data
+SMg10: MLVU dev 65.27 (chi KL 64.43), TB VM+LVB 52.01 (chi KL 51.89) -> KHONG DAT: chuyen sang seed bang chinh + thi nghiem luong data

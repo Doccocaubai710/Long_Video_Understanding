@@ -19,30 +19,22 @@ lmms-lab/
 kitoke/
 *.part
 
-# outputs/: chi giu script hang doi, cong cu bao cao va file du doan cua cac moc (can cho ngat som / bao cao)
+# outputs/: chi giu script hang doi, cong cu bao cao, ket qua tong hop va file du doan Video-MME (can cho bao cao / so cap)
 !outputs/
 outputs/*
-!outputs/coco_train2017_recaptioned.jsonl
-!outputs/rap/
-outputs/rap/*
-!outputs/rap/compare.py
-!outputs/rap/pred_videomme_f128_rap_runE_r025.json
-!outputs/rap/pred_videomme_f128_rap_R10E_r010.json
-!outputs/kitoke_baseline/
-outputs/kitoke_baseline/*
-!outputs/kitoke_baseline/pred_videomme_f128_*.json
-!outputs/rap_vjepa/
-outputs/rap_vjepa/*
-!outputs/rap_vjepa/pred_videomme_f128_rap_V10E_r010.json
-!outputs/rap_vjepa25/
-outputs/rap_vjepa25/*
-!outputs/rap_vjepa25/pred_videomme_f128_rap_V25E_r025.json
-!outputs/rap_elastic/
-outputs/rap_elastic/*
-!outputs/rap_elastic/*.sh
-!outputs/rap_elastic/tools.py
-!outputs/rap_elastic/STATUS.txt
-!outputs/rap_elastic/KET_QUA.txt
-!outputs/rap_elastic/pred_videomme_f128_*.json
-!outputs/rap_elastic/*.train.log
-!outputs/rap_elastic/*.pt.metrics.jsonl
+!outputs/KET_QUA_TONG_HOP.md
+!outputs/preds/
+outputs/preds/*
+!outputs/preds/*.json
+!outputs/hds*/
+outputs/hds*/*
+!outputs/hds*/*.sh
+!outputs/hds*/*.py
+!outputs/hds*/PLAN.txt
+!outputs/hds*/KET_QUA.txt
+!outputs/hds*/*_gate.txt
+!outputs/hds*/CSTAR*.txt
+!outputs/hds*/LATENCY*.json
+
+# ban sao luu khi sua code (vd. hds_model.py.bak_20261105)
+*.bak_*

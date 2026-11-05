@@ -1,0 +1,160 @@
+KET QUA DOT HDS7 (plan 3 ngay 30/10 -> 2/11) -- cap nhat 05/11 14:06 gio VN
+Qwen2.5-VL-7B, 128 frame. MLVU dev 2.174 cau (dung de CHON cau hinh), VideoMME 2.700, LVBench 1.549 (chi bao cao).
+So trong ngoac = so cau da cham (chua xong). z = McNemar so cap tung cau tren MLVU dev, |z| > 1,96 la co y nghia.
+Nhieu giua cac seed o 10% ~1,2 diem -> chenh < 1 diem coi nhu hoa.
+
+C* (chon tu dong tren MLVU dev): H3ce  [--w_ceg 0.2]
+  C* = H3ce. Cao nhat: L2 (65.46); mac dinh H3ce = 65.25; nguong doi = +1.0 diem.
+  
+  L2    MLVU dev overall = 65.46  (seed: 65.46)  --w_ceg 1.0
+  L1    MLVU dev overall = 65.32  (seed: 65.32)  --w_ceg 0.5
+  H3ce  MLVU dev overall = 65.25  (seed: 65.46, 65.04)  --w_ceg 0.2
+  W2    MLVU dev overall = 65.18  (seed: 65.18)  --w_ceg 0.2 --window 5
+  L3    MLVU dev overall = 65.04  (seed: 65.04)  --w_ce 0.2 --w_ceg 0
+  H3    MLVU dev overall = 64.51  (seed: 64.31, 64.72)  --w_ceg 0
+  W1    MLVU dev overall = 63.85  (seed: 63.85)  --w_ceg 0.2 --window 1
+
+Tien do GPU0 (5 dong cuoi STATUS_gpu0.txt):
+  2026-11-05 04:53:26 (chuyen ablation sang 25% / 40% theo y kien; dung BOt 10% va cham PNe 10%)
+  2026-11-05 05:13:20 END eval videomme: K25s2=2700 K40s2=2700 /2700
+  2026-11-05 05:13:30 START eval lvbench: K25s2 K40s2 (lan 1)
+  2026-11-05 05:58:55 END eval lvbench: K25s2=1549 K40s2=1549 /1549
+  2026-11-05 05:59:06 START train PN0x25 (lan 1): r=0.25 --w_ceg 0 --lam_mode fixed --lambda_init 0
+Tien do GPU1 (5 dong cuoi STATUS_gpu1.txt):
+  2026-11-05 04:37:37 START train BOt (lan 1): r=0.10 --w_ceg 0 --box_shape t
+  2026-11-05 04:37:42 (chuyen sang ablation C/D theo yeu cau; dung K5s3 o buoc ~2100 / eval VideoMME K25s2 K40s2, se resume trong vong seed)
+  2026-11-05 04:53:21 ABLATION D (25% / 40%) START gpu1 (pid 4074851)
+  2026-11-05 04:53:21 START train BK2x40 (lan 1): r=0.40 --w_ceg 0 --box_k 2
+  2026-11-05 04:53:26 (chuyen ablation sang 25% / 40% theo y kien; dung BOt 10% va cham PNe 10%)
+
+== Moc 10% ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+dense         100% token (khong nen)                       68.08         65.15         44.48     54.81
+uniform_r010  Uniform                                      64.26         59.59         39.90     49.74
+holitom_r010  HoliTom                                      63.20         61.33         39.57     50.45
+
+== 1. Ablation loss (10%) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+H3            KL, seed 0                                   64.31         62.52         39.44     50.98   H3ce -1.15 (z=-1.84)
+H3s1          KL, seed 1                                   64.72         63.70         40.54     52.12   H3ce -0.74 (z=-1.14)
+H3s2          KL, seed 2                                   64.26         64.04         41.12     52.58   H3ce -1.20 (z=-1.94)
+H3ce          KL + CE-gate 0.2, seed 0 (mac dinh)          65.46         63.52         40.15     51.84
+L4            KL + CE-gate 0.2, seed 1                     65.04         63.07         38.67     50.87   H3ce -0.41 (z=-0.66)
+L1            KL + CE-gate 0.5                             65.32         63.41         39.90     51.65   H3ce -0.14 (z=-0.23)
+L2            KL + CE-gate 1.0                             65.46         62.85         40.03     51.44   H3ce +0.00 (z=+0.00)
+L3            KL + CE KHONG gate 0.2                       65.04         62.89         39.38     51.13   H3ce -0.41 (z=-0.65)
+CEo           Chi CE caption (bo KL)                       66.70         60.96         40.54     50.75   H3ce +1.24 (z=+1.53)
+Q1            chi KL + 50% mau hoi-dap (KL dap an)         63.39         63.11         39.77     51.44   H3ce -2.07 (z=-3.10)
+  KL (trung binh cac seed): | mlvu 64.43 +- 0.25 (n=3) | videomme 63.42 +- 0.80 (n=3) | lvbench 40.37 +- 0.85 (n=3)
+  KL + CE-gate 0.2 (trung binh cac seed): | mlvu 65.25 +- 0.29 (n=2) | videomme 63.30 +- 0.31 (n=2) | lvbench 39.41 +- 1.05 (n=2)
+
+== 2. Cua so thoi gian giai doan 2 (10%, CE-gate 0.2) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+W1            cua so +-1 (CE-gate 0.2)                     63.85         63.81         40.03     51.92   H3ce -1.61 (z=-2.56)
+H3ce          KL + CE-gate 0.2, seed 0 (mac dinh)          65.46         63.52         40.15     51.84
+W2            cua so +-5 (CE-gate 0.2)                     65.18         63.41         40.93     52.17   H3ce -0.28 (z=-0.45)
+
+== 3. Ablation thanh phan (10%, so voi H3 = KL) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+H3            KL, seed 0                                   64.31         62.52         39.44     50.98
+H12           H3 + ghep 6 clip (video dai)                     -         62.93         39.32     51.12
+H3noDF        H3 bo deform                                     -         63.22             -         -
+H3noSM        H3 bo self-mask                                  -         62.63             -         -
+H3noGate      H3 bo cong (1-r)                             65.36         63.30         39.12     51.21   H3 +1.06 (z=+1.66)
+
+== 3b. Bo cong tren C* (train tu dau, so voi H3ce) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+H3ce          KL + CE-gate 0.2, seed 0 (mac dinh)          65.46         63.52         40.15     51.84
+
+== 4. Luong / loai data (10%, cung 4000 buoc; 1x = 2.569 video) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+Dq            C*, 1/4 data (640 video)                     65.55         62.56         40.74     51.65   H3ce +0.09 (z=+0.15)
+Dh            C*, 1/2 data (1.280 video)                   65.41         63.93         39.83     51.88   H3ce -0.05 (z=-0.07)
+H3ce          KL + CE-gate 0.2, seed 0 (mac dinh)          65.46         63.52         40.15     51.84
+D2x           C*, 1,7x data (4.342 video)                  64.12         63.67         40.41     52.04   H3ce -1.33 (z=-2.08)
+D2x8k         C*, 1,7x data, 8000 buoc                     65.27         62.78         39.77     51.27   H3ce -0.18 (z=-0.28)
+H3cv          H3ce + 50% Vript (682 video dai)             64.44         62.85         38.93     50.89   H3ce -1.01 (z=-1.50)
+
+== 5. C* nhieu seed (10%) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+H3ce          KL + CE-gate 0.2, seed 0 (mac dinh)          65.46         63.52         40.15     51.84
+L4            KL + CE-gate 0.2, seed 1                     65.04         63.07         38.67     50.87   H3ce -0.41 (z=-0.66)
+S2            C*, seed khac (2)                            64.86         62.93         39.32     51.12   H3ce -0.60 (z=-0.91)
+S3            C*, seed khac (3)                            64.86         62.85         39.83     51.34   H3ce -0.60 (z=-0.96)
+  C* (trung binh cac seed): | mlvu 65.05 +- 0.28 (n=4) | videomme 63.09 +- 0.30 (n=4) | lvbench 39.49 +- 0.65 (n=4)
+
+== 6. Mot bo tham so cho moi muc nen (C* o 2/5/25/40%) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+uniform_r002  Uniform                                      59.25         53.41         34.54     43.97
+holitom_r002  HoliTom                                      57.50         55.37         34.60     44.99
+X2            C* o muc 2%                                  58.92         57.52         35.70     46.61   uniform_r002 -0.32 (z=-0.36)
+uniform_r005  Uniform                                      61.55         57.59         36.93     47.26
+holitom_r005  HoliTom                                      60.30         58.70         37.90     48.30
+X5            C* o muc 5%                                  63.34         62.11         37.31     49.71   uniform_r005 +1.79 (z=+2.09)
+uniform_r025  Uniform                                      65.96         63.07         41.70     52.39
+holitom_r025  HoliTom                                      66.10         63.85         42.35     53.10
+X25           C* o muc 25%                                 66.61         64.26         41.96     53.11   uniform_r025 +0.64 (z=+0.95)
+uniform_r040  Uniform                                      67.34         64.07         41.90     52.99
+holitom_r040  HoliTom                                      66.74         65.26         44.42     54.84
+X40           C* o muc 40%                                 66.74         64.96         43.06     54.01   uniform_r040 -0.60 (z=-0.99)
+
+== 7. Muc 40%: chi KL vs KL + CE-gate (cua so +-3, 2 seed moi loai) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+dense         100% token (khong nen)                       68.08         65.15         44.48     54.81
+uniform_r040  Uniform                                      67.34         64.07         41.90     52.99
+holitom_r040  HoliTom                                      66.74         65.26         44.42     54.84
+K40           chi KL o 40%, seed 0                         66.93         64.63         43.06     53.84   uniform_r040 -0.41 (z=-0.68)
+K40s1         chi KL o 40%, seed 1                         67.34         64.52         43.00     53.76   uniform_r040 +0.00 (z=+0.00)
+X40           C* o muc 40%                                 66.74         64.96         43.06     54.01   uniform_r040 -0.60 (z=-0.99)
+X40s1         C* o muc 40%, seed 1                         66.74         64.63         42.41     53.52   uniform_r040 -0.60 (z=-1.00)
+H10ce         KL + CE-gate 0.2 o 40%, cua so +-1 (         67.48         65.22         43.77     54.50   uniform_r040 +0.14 (z=+0.25)
+H10ce5        KL + CE-gate 0.5 o 40%, cua so +-1           67.39         64.48         43.45     53.96   uniform_r040 +0.05 (z=+0.08)
+  Chi KL 40%: | mlvu 67.13 +- 0.29 (n=2) | videomme 64.57 +- 0.08 (n=2) | lvbench 43.03 +- 0.05 (n=2)
+  KL + CE-gate 0.2 40% (C*): | mlvu 66.74 +- 0.00 (n=2) | videomme 64.80 +- 0.24 (n=2) | lvbench 42.74 +- 0.46 (n=2)
+
+== 8. Bang chinh CHI KL o moi muc nen (10% xem muc 1: H3, H3s1, H3s2) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+uniform_r002  Uniform                                      59.25         53.41         34.54     43.97
+holitom_r002  HoliTom                                      57.50         55.37         34.60     44.99
+H6            chi KL o 2%, seed 0                              -         58.74         36.15     47.45
+K2s1          chi KL o 2%, seed 1                          59.94         59.00         35.18     47.09   uniform_r002 +0.69 (z=+0.78)
+K2s2          chi KL o 2%, seed 2                          60.58         57.37         35.57     46.47   uniform_r002 +1.33 (z=+1.53)
+uniform_r005  Uniform                                      61.55         57.59         36.93     47.26
+holitom_r005  HoliTom                                      60.30         58.70         37.90     48.30
+K5            chi KL o 5%, seed 0                          63.06         62.67         40.28     51.48   uniform_r005 +1.52 (z=+1.81)
+K5s1          chi KL o 5%, seed 1                          62.05         61.48         38.48     49.98   uniform_r005 +0.51 (z=+0.60)
+K5s2          chi KL o 5%, seed 2                          61.68         60.89         37.90     49.39   uniform_r005 +0.14 (z=+0.16)
+uniform_r025  Uniform                                      65.96         63.07         41.70     52.39
+holitom_r025  HoliTom                                      66.10         63.85         42.35     53.10
+K25           chi KL o 25%, seed 0                         66.47         64.19         42.22     53.20   uniform_r025 +0.51 (z=+0.76)
+K25s1         chi KL o 25%, seed 1                         66.84         64.70         41.58     53.14   uniform_r025 +0.87 (z=+1.29)
+K25s2         chi KL o 25%, seed 2                         66.19         64.78         41.96     53.37   uniform_r025 +0.23 (z=+0.34)
+uniform_r040  Uniform                                      67.34         64.07         41.90     52.99
+holitom_r040  HoliTom                                      66.74         65.26         44.42     54.84
+K40           chi KL o 40%, seed 0                         66.93         64.63         43.06     53.84   uniform_r040 -0.41 (z=-0.68)
+K40s1         chi KL o 40%, seed 1                         67.34         64.52         43.00     53.76   uniform_r040 +0.00 (z=+0.00)
+K40s2         chi KL o 40%, seed 2                         66.24         64.63         43.58     54.10   uniform_r040 -1.10 (z=-1.80)
+
+== 9b. Phan bo thich ung o 5% (so voi Uniform 5%) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+uniform_r005  Uniform                                      61.55         57.59         36.93     47.26
+holitom_r005  HoliTom                                      60.30         58.70         37.90     48.30
+K5            chi KL o 5%, seed 0                          63.06         62.67         40.28     51.48   uniform_r005 +1.52 (z=+1.81)
+K5s1          chi KL o 5%, seed 1                          62.05         61.48         38.48     49.98   uniform_r005 +0.51 (z=+0.60)
+
+== 9. Phan bo token thich ung (10%, chi KL; so voi H3 = chi KL seed 0) ==
+cau hinh      mo ta                                     MLVU dev      VideoMME       LVBench TB VM+LVB   MLVU dev so voi
+H3            KL, seed 0                                   64.31         62.52         39.44     50.98
+H3s1          KL, seed 1                                   64.72         63.70         40.54     52.12   H3 +0.41 (z=+0.66)
+H3s2          KL, seed 2                                   64.26         64.04         41.12     52.58   H3 -0.05 (z=-0.07)
+BX10          chi KL + chon hop co hoc (cach 1)            62.74         62.96         40.67     51.82   H3 -1.56 (z=-2.17)
+SG10          chi KL + ngan sach theo doan (cach 2         62.60         62.00         38.93     50.46   H3 -1.70 (z=-2.34)
+D20           chi KL, chi 20 video                         64.72         61.85         39.83     50.84   H3 +0.41 (z=+0.58)
+D80           chi KL, chi 80 video                         64.21         62.44         39.70     51.07   H3 -0.09 (z=-0.13)
+SM10          chi KL, giai doan 1 xuoi soft + giam         64.72         63.63         39.90     51.76   H3 +0.41 (z=+0.62)
+SMg10         chi KL, giai doan 1 gop token soft (         65.27         63.22         40.80     52.01   H3 +0.97 (z=+1.44)
+  Chi KL (trung binh 3 seed): | mlvu 64.43 +- 0.25 (n=3) | videomme 63.42 +- 0.80 (n=3) | lvbench 40.37 +- 0.85 (n=3)
+
+Q1 (KL tren mau hoi-dap): Q1: MLVU dev 63.39 (chi KL 64.43), TB VM+LVB 51.44 (chi KL 51.89) -> KHONG DAT, bo huong nay
+
+Nguon: outputs/mlvu_dev/pred, outputs/hds*/videomme, outputs/hds*/lvbench, outputs/preds. Plan: outputs/hds7/PLAN.txt.

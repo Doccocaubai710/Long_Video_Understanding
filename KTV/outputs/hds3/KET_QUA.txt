@@ -1,0 +1,93 @@
+KET QUA DOT HDS-MAP 3D (outputs/hds3) -- cap nhat 2026-10-29 08:42 UTC
+Video-MME 2.700 cau (short/medium/long), LVBench 1.549 cau (video ~1 gio), MLVU-Test 502 cau (3 phut - 2 gio).
+Qwen2.5-VL-7B, 128 frame. z = McNemar so cap tung cau, |z| > 1,96 la co y nghia. Muc chinh: giu 10% token.
+Tien do tung buoc: outputs/hds3/STATUS*.txt. Ke hoach: outputs/hds3/queue.sh (dau file).
+
+== Video-MME ==
+
+cau hinh                   n   short  medium    long  overall   so voi moc (diem chenh, z)
+H10ce_r040              2700   76.22   64.89   54.56    65.22  uniform_r040 +1.15 (z=+1.98) | holitom_r040 -0.04 (z=-0.06) | RAP_r040 +0.89 (z=+1.71) | vidcom2_r040 -0.22 (z=-0.39) | ELA_r040 +0.63 (z=+1.22) | dense +0.07 (z=+0.16)
+                       -> H3 o 40%, KL + CE-gate (CE chi tren token thay doan dung)
+H6ce_r002               2700   63.33   58.11   52.11    57.85  uniform_r002 +4.44 (z=+5.08) | holitom_r002 +2.48 (z=+2.91) | RAP_r002 +1.74 (z=+2.10) | vidcom2_r002 +9.96 (z=+10.19) | ELA_r002 +1.67 (z=+2.07) | dense -7.30 (z=-8.55) | H5_r002 -0.30 (z=-0.43) | H6_r002 -0.89 (z=-1.30)
+                       -> H3 o 2%, KL + CE-gate
+H8ce_r005               2700   71.11   60.11   52.89    61.37  uniform_r005 +3.78 (z=+4.56) | holitom_r005 +2.67 (z=+3.32) | RAP_r005 +1.37 (z=+1.80) | vidcom2_r005 +6.22 (z=+7.01) | ELA_r005 +2.15 (z=+2.78) | dense -3.78 (z=-5.16) | H5_r005 -0.26 (z=-0.42)
+                       -> H3 o 5%, KL + CE-gate
+H9ce_r025               2700   73.89   64.11   53.89    63.96  uniform_r025 +0.89 (z=+1.29) | holitom_r025 +0.11 (z=+0.17) | RAP_r025 -0.22 (z=-0.37) | vidcom2_r025 +0.00 (z=+0.00) | ELA_r025 -0.22 (z=-0.37) | dense -1.19 (z=-2.17) | H5_r025 -0.07 (z=-0.13)
+                       -> H3 o 25%, KL + CE-gate
+
+== LVBench ==
+
+cau hinh                   n entity  event u key inf reasoni tempora summari  overall   so voi moc (diem chenh, z)
+H10ce_r040              1549   42.86   42.59   51.02   47.62   33.85   40.00    43.77  uniform_r040 +1.87 (z=+2.30) | holitom_r040 -0.65 (z=-0.84)
+                       -> H3 o 40%, KL + CE-gate (CE chi tren token thay doan dung)
+H6ce_r002               1549   37.32   36.69   42.86   42.86   38.46   32.73    38.22  uniform_r002 +3.68 (z=+3.32) | holitom_r002 +3.62 (z=+3.15) | R02E_r002 +2.19 (z=+2.03) | H5_r002 +2.58 (z=+2.67) | H6_r002 +2.07 (z=+2.12)
+                       -> H3 o 2%, KL + CE-gate
+H8ce_r005               1549   37.50   37.45   43.88   42.86   30.77   40.00    38.61  uniform_r005 +1.68 (z=+1.50) | holitom_r005 +0.71 (z=+0.64)
+                       -> H3 o 5%, KL + CE-gate
+H9ce_r025               1549   41.43   39.92   43.88   49.66   35.38   43.64    41.83  uniform_r025 +0.13 (z=+0.14) | holitom_r025 -0.52 (z=-0.55)
+                       -> H3 o 25%, KL + CE-gate
+
+== MLVU-Test ==
+
+cau hinh                   n      TR      AO      AC     NQA      ER     PQA  overall   so voi moc (diem chenh, z)
+H10ce_r040               502   87.91   44.29   18.33   65.00   54.72   58.00    53.39  uniform_r040 +0.80 (z=+0.71) | holitom_r040 +2.39 (z=+2.00)
+                       -> H3 o 40%, KL + CE-gate (CE chi tren token thay doan dung)
+H6ce_r002                502   84.62   27.14    8.33   45.00   41.51   50.00    43.43  uniform_r002 +1.20 (z=+0.68) | holitom_r002 +2.79 (z=+1.57) | R02E_r002 -0.40 (z=-0.22) | H5_r002 +2.39 (z=+1.48) | H6_r002 +0.80 (z=+0.52)
+                       -> H3 o 2%, KL + CE-gate
+H8ce_r005                502   84.62   40.00   20.00   53.33   49.06   52.00    49.60  uniform_r005 +5.78 (z=+3.07) | holitom_r005 +6.97 (z=+3.63)
+                       -> H3 o 5%, KL + CE-gate
+H9ce_r025                502   89.01   35.71   18.33   56.67   52.83   60.00    51.39  uniform_r025 +1.20 (z=+0.82) | holitom_r025 +1.79 (z=+1.24)
+                       -> H3 o 25%, KL + CE-gate
+
+== Train (dong val moi nhat trong *.metrics.jsonl) ==
+
+H10ce: buoc train 4000, val o buoc 4000: kl_rap=0.0109, kl_uniform=0.0186, gap_closed=1.3466, hop_rate=0.4905, move_t=0.3705, move_s=0.1200, raer=0.1686, ce_rap=1.2614, ce_dense=1.2682
+H6ce: buoc train 4000, val o buoc 4000: kl_rap=0.1164, kl_uniform=0.2106, gap_closed=0.6380, hop_rate=0.9646, move_t=1.5879, move_s=1.4024, raer=0.4184, ce_rap=1.3424, ce_dense=1.2682
+H8ce: buoc train 4000, val o buoc 4000: kl_rap=0.0757, kl_uniform=0.1557, gap_closed=0.7878, hop_rate=0.9569, move_t=1.5913, move_s=0.8121, raer=0.3950, ce_rap=1.2998, ce_dense=1.2682
+H9ce: buoc train 4000, val o buoc 4000: kl_rap=0.0190, kl_uniform=0.0371, gap_closed=1.2759, hop_rate=0.7680, move_t=0.7591, move_s=0.2472, raer=0.2383, ce_rap=1.2560, ce_dense=1.2682
+  (kl_rap < kl_uniform = ban nen gan ban xem du hon Uniform; hop_rate = ti le neo roi tam hop)
+
+== 20 dong cuoi STATUS_card1.txt ==
+
+2026-10-28 02:41:14 [vlm-paper-training-2gpu-0-1] KEEPALIVE START (pid 1824)
+2026-10-28 02:44:03 [vlm-paper-training-2gpu-0-1] QUEUE START card 1 (pid 1799, NVIDIA A100-SXM4-40GB)
+2026-10-28 02:44:04 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H10ce (65.22)
+2026-10-28 02:44:06 [vlm-paper-training-2gpu-0-1] CE-gate ON (H10ce = 65.22 >= ELA 40% 64,59): cac run sau dung --w_ceg 0.2
+2026-10-28 02:44:06 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H9ce (63.96)
+2026-10-28 02:44:08 [vlm-paper-training-2gpu-0-1] START train H8ce (lan 1)
+2026-10-28 07:02:50 [vlm-paper-training-2gpu-0-1] START eval videomme/H8ce (lan 1)
+2026-10-28 08:13:05 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H8ce (61.37)
+2026-10-28 08:13:06 [vlm-paper-training-2gpu-0-1] QUEUE DONE card 1
+2026-10-28 08:17:49 [vlm-paper-training-2gpu-0-1] KEEPALIVE queue da xong het, dung keepalive
+2026-10-28 09:05:35 [vlm-paper-training-2gpu-0-1] EVAL_LONG START card 1 (pid 690550)
+2026-10-28 09:05:35 [vlm-paper-training-2gpu-0-1] START eval lvbench/H8ce_r005 (lan 1)
+2026-10-28 09:38:00 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/H8ce_r005
+2026-10-28 09:38:01 [vlm-paper-training-2gpu-0-1] START eval mlvu/H8ce_r005 (lan 1)
+2026-10-28 10:07:50 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/H8ce_r005
+2026-10-28 10:08:00 [vlm-paper-training-2gpu-0-1] START eval lvbench/uniform_r005 (lan 1)
+2026-10-28 10:38:15 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/uniform_r005
+2026-10-28 10:38:26 [vlm-paper-training-2gpu-0-1] START eval mlvu/uniform_r005 (lan 1)
+2026-10-28 11:08:51 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/uniform_r005
+2026-10-28 11:09:05 [vlm-paper-training-2gpu-0-1] EVAL_LONG DONE card 1
+
+== 20 dong cuoi STATUS_card2.txt ==
+
+2026-10-28 02:41:16 [vlm-paper-training-2gpu-0-1] KEEPALIVE START (pid 1895)
+2026-10-28 02:44:03 [vlm-paper-training-2gpu-0-1] QUEUE START card 2 (pid 1870, NVIDIA A100-SXM4-40GB)
+2026-10-28 02:44:04 [vlm-paper-training-2gpu-0-1] CE-gate ON (H10ce = 65.22 >= ELA 40% 64,59): cac run sau dung --w_ceg 0.2
+2026-10-28 02:44:04 [vlm-paper-training-2gpu-0-1] START train H6ce (lan 1)
+2026-10-28 07:52:59 [vlm-paper-training-2gpu-0-1] START eval videomme/H6ce (lan 1)
+2026-10-28 09:02:24 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H6ce (57.85)
+2026-10-28 09:02:27 [vlm-paper-training-2gpu-0-1] QUEUE DONE card 2
+2026-10-28 09:03:05 [vlm-paper-training-2gpu-0-1] KEEPALIVE queue da xong het, dung keepalive
+2026-10-28 09:05:35 [vlm-paper-training-2gpu-0-1] EVAL_LONG START card 2 (pid 690551)
+2026-10-28 09:05:35 [vlm-paper-training-2gpu-0-1] START eval lvbench/H6ce_r002 (lan 1)
+2026-10-28 09:38:00 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/H6ce_r002
+2026-10-28 09:38:01 [vlm-paper-training-2gpu-0-1] START eval mlvu/H6ce_r002 (lan 1)
+2026-10-28 10:07:49 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/H6ce_r002
+2026-10-28 10:08:00 [vlm-paper-training-2gpu-0-1] START eval lvbench/holitom_r005 (lan 1)
+2026-10-28 10:38:15 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/holitom_r005
+2026-10-28 10:38:26 [vlm-paper-training-2gpu-0-1] START eval mlvu/holitom_r005 (lan 1)
+2026-10-28 11:08:51 [vlm-paper-training-2gpu-0-1] DONE eval mlvu/holitom_r005
+2026-10-28 11:09:05 [vlm-paper-training-2gpu-0-1] EVAL_LONG DONE card 2
+

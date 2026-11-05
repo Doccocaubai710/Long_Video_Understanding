@@ -1,0 +1,176 @@
+KET QUA DOT HDS-MAP 3D (outputs/hds) -- cap nhat 2026-10-29 23:24 UTC
+Video-MME 2.700 cau (short/medium/long), LVBench 1.549 cau (video ~1 gio), MLVU-Test 502 cau (3 phut - 2 gio).
+Qwen2.5-VL-7B, 128 frame. z = McNemar so cap tung cau, |z| > 1,96 la co y nghia. Muc chinh: giu 10% token.
+Tien do tung buoc: outputs/hds/STATUS*.txt. Ke hoach: outputs/hds/queue.sh (dau file).
+
+== Video-MME ==
+
+cau hinh                   n   short  medium    long  overall   so voi moc (diem chenh, z)
+H1_r010                 2700   71.44   61.33   52.00    61.59  uniform_r010 +2.00 (z=+2.76) | holitom_r010 +0.26 (z=+0.37) | RAP_r010 +0.00 (z=+0.00) | vidcom2_r010 +1.67 (z=+2.28) | ELA_r010 +0.44 (z=+0.61) | dense -3.56 (z=-4.95)
+                       -> Chi giai doan 1: bo truot CB-STE co hoc, chon 100% token goc
+H2_r010                 2700   72.44   60.56   53.67    62.22  uniform_r010 +2.63 (z=+4.01) | holitom_r010 +0.89 (z=+1.17) | RAP_r010 +0.63 (z=+1.73) | vidcom2_r010 +2.30 (z=+2.88) | ELA_r010 +1.07 (z=+2.53) | dense -2.93 (z=-4.17)
+                       -> Chi giai doan 2 (M3D-BD+): neo Uniform + M3D-BD + che token neo + cong (1-r)
+H3_r010                 2700   72.33   62.22   53.00    62.52  uniform_r010 +2.93 (z=+3.71) | holitom_r010 +1.19 (z=+1.60) | RAP_r010 +0.93 (z=+1.31) | vidcom2_r010 +2.59 (z=+3.21) | ELA_r010 +1.37 (z=+1.93) | dense -2.63 (z=-4.08)
+                       -> HDS-MAP 3D day du: giai doan 1 + giai doan 2 (mo tu buoc 2000)
+H4_r010                 2700   72.89   63.44   53.67    63.33  uniform_r010 +3.74 (z=+4.66) | holitom_r010 +2.00 (z=+2.71) | RAP_r010 +1.74 (z=+2.49) | vidcom2_r010 +3.41 (z=+4.30) | ELA_r010 +2.19 (z=+3.11) | dense -1.81 (z=-2.78)
+                       -> Ban tot nhat H1-H3, train them tren video dai ghep (3 clip 1-3 phut)
+H5_r002                 2700   66.22   56.22   52.00    58.15  uniform_r002 +4.74 (z=+5.43) | holitom_r002 +2.78 (z=+3.21) | RAP_r002 +2.04 (z=+2.45) | vidcom2_r002 +10.26 (z=+10.63) | ELA_r002 +1.96 (z=+2.36) | dense -7.00 (z=-8.07)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H5_r005                 2700   71.33   61.11   52.44    61.63  uniform_r005 +4.04 (z=+4.85) | holitom_r005 +2.93 (z=+3.60) | RAP_r005 +1.63 (z=+2.15) | vidcom2_r005 +6.48 (z=+7.38) | ELA_r005 +2.41 (z=+3.15) | dense -3.52 (z=-4.83)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H5_r010                 2700   73.22   61.78   53.56    62.85  uniform_r010 +3.26 (z=+4.10) | holitom_r010 +1.52 (z=+2.06) | RAP_r010 +1.26 (z=+1.81) | vidcom2_r010 +2.93 (z=+3.71) | ELA_r010 +1.70 (z=+2.40) | dense -2.30 (z=-3.52)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H5_r025                 2700   74.33   63.78   54.00    64.04  uniform_r025 +0.96 (z=+1.43) | holitom_r025 +0.19 (z=+0.28) | RAP_r025 -0.15 (z=-0.25) | vidcom2_r025 +0.07 (z=+0.11) | ELA_r025 -0.15 (z=-0.25) | dense -1.11 (z=-2.11)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H6_r002                 2700   66.89   57.33   52.00    58.74  uniform_r002 +5.33 (z=+6.07) | holitom_r002 +3.37 (z=+3.88) | RAP_r002 +2.63 (z=+3.17) | vidcom2_r002 +10.85 (z=+11.11) | ELA_r002 +2.56 (z=+3.16) | dense -6.41 (z=-7.81)
+                       -> Ban tot nhat H1-H3, train rieng o muc 2%
+P0_center_r002          2700   59.44   50.67   46.67    52.26  uniform_r002 -1.15 (z=-1.54) | holitom_r002 -3.11 (z=-3.80) | RAP_r002 -3.85 (z=-4.61) | vidcom2_r002 +4.37 (z=+4.70) | ELA_r002 -3.93 (z=-4.66) | dense -12.89 (z=-13.46)
+                       -> Pha 0: tam hop 3D (khong train)
+P0_center_r010          2700   65.78   56.56   49.56    57.30  uniform_r010 -2.30 (z=-3.11) | holitom_r010 -4.04 (z=-5.09) | RAP_r010 -4.30 (z=-5.46) | vidcom2_r010 -2.63 (z=-3.22) | ELA_r010 -3.85 (z=-4.92) | dense -7.85 (z=-9.41)
+                       -> Pha 0: tam hop 3D (khong train)
+P0_medoid_r002          2700   57.67   49.56   43.67    50.30  uniform_r002 -3.11 (z=-4.23) | holitom_r002 -5.07 (z=-6.16) | RAP_r002 -5.81 (z=-6.93) | vidcom2_r002 +2.41 (z=+2.63) | ELA_r002 -5.89 (z=-7.03) | dense -14.85 (z=-14.81)
+                       -> Pha 0: medoid cua hop (tong cosine lon nhat)
+P0_medoid_r010          2700   69.56   55.78   50.33    58.56  uniform_r010 -1.04 (z=-1.49) | holitom_r010 -2.78 (z=-3.65) | RAP_r010 -3.04 (z=-3.96) | vidcom2_r010 -1.37 (z=-1.64) | ELA_r010 -2.59 (z=-3.42) | dense -6.59 (z=-7.94)
+                       -> Pha 0: medoid cua hop (tong cosine lon nhat)
+P0_norm_r002            2700   55.11   49.67   43.22    49.33  uniform_r002 -4.07 (z=-5.05) | holitom_r002 -6.04 (z=-7.13) | RAP_r002 -6.78 (z=-7.49) | vidcom2_r002 +1.44 (z=+1.55) | ELA_r002 -6.85 (z=-7.56) | dense -15.81 (z=-15.26)
+                       -> Pha 0: token co chuan lon nhat trong hop
+P0_norm_r010            2700   67.44   53.11   47.78    56.11  uniform_r010 -3.48 (z=-4.67) | holitom_r010 -5.22 (z=-6.40) | RAP_r010 -5.48 (z=-6.67) | vidcom2_r010 -3.81 (z=-4.24) | ELA_r010 -5.04 (z=-6.12) | dense -9.04 (z=-10.17)
+                       -> Pha 0: token co chuan lon nhat trong hop
+P0_var_r002             2700   56.78   50.44   45.44    50.89  uniform_r002 -2.52 (z=-3.29) | holitom_r002 -4.48 (z=-5.37) | RAP_r002 -5.22 (z=-5.88) | vidcom2_r002 +3.00 (z=+3.21) | ELA_r002 -5.30 (z=-6.05) | dense -14.26 (z=-14.26)
+                       -> Pha 0: token bien doi 3D lon nhat trong hop
+P0_var_r010             2700   67.67   55.11   48.67    57.15  uniform_r010 -2.44 (z=-3.38) | holitom_r010 -4.19 (z=-5.30) | RAP_r010 -4.44 (z=-5.58) | vidcom2_r010 -2.78 (z=-3.20) | ELA_r010 -4.00 (z=-5.05) | dense -8.00 (z=-9.16)
+                       -> Pha 0: token bien doi 3D lon nhat trong hop
+
+== LVBench ==
+
+cau hinh                   n entity  event u key inf reasoni tempora summari  overall   so voi moc (diem chenh, z)
+H1_r010                 1549   40.71   36.50   45.41   44.90   33.85   30.91    39.64  uniform_r010 -0.26 (z=-0.26) | holitom_r010 +0.06 (z=+0.07)
+                       -> Chi giai doan 1: bo truot CB-STE co hoc, chon 100% token goc
+H2_r010                 1549   40.71   37.83   43.88   43.54   30.77   41.82    40.03  uniform_r010 +0.13 (z=+0.15) | holitom_r010 +0.45 (z=+0.43)
+                       -> Chi giai doan 2 (M3D-BD+): neo Uniform + M3D-BD + che token neo + cong (1-r)
+H3_r010                 1549   40.36   36.69   42.35   44.22   32.31   41.82    39.44  uniform_r010 -0.45 (z=-0.43) | holitom_r010 -0.13 (z=-0.12)
+                       -> HDS-MAP 3D day du: giai doan 1 + giai doan 2 (mo tu buoc 2000)
+H4_r010                 1549   38.21   38.02   43.37   47.62   33.85   38.18    39.51  uniform_r010 -0.39 (z=-0.37) | holitom_r010 -0.06 (z=-0.06)
+                       -> Ban tot nhat H1-H3, train them tren video dai ghep (3 clip 1-3 phut)
+H5_r002                 1549   33.39   35.36   43.88   38.10   29.23   32.73    35.64  uniform_r002 +1.10 (z=+0.98) | holitom_r002 +1.03 (z=+0.88)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H5_r010                 1549   39.29   38.97   46.94   41.50   24.62   38.18    39.70  uniform_r010 -0.19 (z=-0.18) | holitom_r010 +0.13 (z=+0.13)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H6_r002                 1549   32.86   36.50   41.84   42.86   33.85   30.91    36.15  uniform_r002 +1.61 (z=+1.44) | holitom_r002 +1.55 (z=+1.35)
+                       -> Ban tot nhat H1-H3, train rieng o muc 2%
+R02E_r002               1549   35.18   34.98   39.29   42.18   30.77   32.73    36.02  uniform_r002 +1.48 (z=+1.61) | holitom_r002 +1.42 (z=+1.21)
+                       -> Moc: RAP R02E (2%)
+R10E_r010               1549   38.57   38.21   42.35   42.18   29.23   43.64    39.06  uniform_r010 -0.84 (z=-0.91) | holitom_r010 -0.52 (z=-0.49)
+                       -> Moc: RAP R10E (10%)
+dense                   1549   43.21   45.06   50.51   46.26   30.77   41.82    44.48  
+                       -> Moc: 100% token
+dycoke_r025             1549   39.29   37.07   38.78   43.54   35.38   40.00    38.73  uniform_r025 -2.97 (z=-2.77) | holitom_r025 -3.62 (z=-3.24)
+dycoke_r040             1549   42.14   41.44   47.96   42.86   32.31   40.00    42.22  uniform_r040 +0.32 (z=+0.42) | holitom_r040 -2.19 (z=-2.62)
+fastvid_r002            1549   35.71   30.42   32.65   41.50   38.46   29.09    33.96  uniform_r002 -0.58 (z=-0.59) | holitom_r002 -0.65 (z=-0.61)
+fastvid_r005            1549   37.32   34.03   41.33   43.54   32.31   30.91    36.86  uniform_r005 -0.06 (z=-0.06) | holitom_r005 -1.03 (z=-1.06)
+fastvid_r010            1549   38.93   35.55   43.37   43.54   33.85   30.91    38.28  uniform_r010 -1.61 (z=-1.71) | holitom_r010 -1.29 (z=-1.39)
+fastvid_r025            1549   40.71   38.59   46.43   43.54   38.46   38.18    40.80  uniform_r025 -0.90 (z=-0.95) | holitom_r025 -1.55 (z=-1.73)
+fastvid_r040            1549   42.14   40.68   46.43   40.82   35.38   40.00    41.70  uniform_r040 -0.19 (z=-0.23) | holitom_r040 -2.71 (z=-3.50)
+holitom_r002            1549   35.36   30.99   37.24   40.14   35.38   36.36    34.60  uniform_r002 +0.06 (z=+0.06)
+                       -> Moc: HoliTom w/o M
+holitom_r005            1549   38.21   35.36   42.35   42.18   38.46   30.91    37.90  uniform_r005 +0.97 (z=+0.90)
+                       -> Moc: HoliTom w/o M
+holitom_r010            1549   40.71   36.50   43.88   44.90   33.85   34.55    39.57  uniform_r010 -0.32 (z=-0.35)
+                       -> Moc: HoliTom w/o M
+holitom_r025            1549   41.79   40.87   49.49   44.90   32.31   41.82    42.35  uniform_r025 +0.65 (z=+0.73)
+                       -> Moc: HoliTom w/o M
+holitom_r040            1549   44.11   42.40   53.57   45.58   33.85   43.64    44.42  uniform_r040 +2.52 (z=+3.15)
+                       -> Moc: HoliTom w/o M
+uniform_r002            1549   33.93   32.51   38.78   38.10   36.92   32.73    34.54  holitom_r002 -0.06 (z=-0.06)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r005            1549   36.25   33.46   44.90   40.82   36.92   38.18    36.93  holitom_r005 -0.97 (z=-0.90)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r010            1549   41.07   36.31   45.92   43.54   36.92   34.55    39.90  holitom_r010 +0.32 (z=+0.35)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r025            1549   42.86   40.49   42.35   44.22   38.46   36.36    41.70  holitom_r025 -0.65 (z=-0.73)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r040            1549   43.21   39.73   46.94   44.90   32.31   34.55    41.90  holitom_r040 -2.52 (z=-3.15)
+                       -> Moc: Uniform (luoi linspace)
+vidcom2_r002            1549   30.18   28.14   35.20   33.33   35.38   29.09    30.60  uniform_r002 -3.94 (z=-3.29) | holitom_r002 -4.00 (z=-3.31)
+vidcom2_r005            1549   36.43   35.74   46.43   43.54   36.92   25.45    37.77  uniform_r005 +0.84 (z=+0.71) | holitom_r005 -0.13 (z=-0.12)
+vidcom2_r010            1549   39.11   39.73   48.98   42.86   36.92   29.09    40.48  uniform_r010 +0.58 (z=+0.55) | holitom_r010 +0.90 (z=+0.87)
+vidcom2_r025            1549   43.39   40.30   52.04   45.58   35.38   36.36    43.06  uniform_r025 +1.36 (z=+1.38) | holitom_r025 +0.71 (z=+0.81)
+vidcom2_r040            1549   43.39   42.02   52.55   45.58   30.77   40.00    43.64  uniform_r040 +1.74 (z=+2.17) | holitom_r040 -0.77 (z=-1.06)
+
+== MLVU-Test ==
+
+cau hinh                   n      TR      AO      AC     NQA      ER     PQA  overall   so voi moc (diem chenh, z)
+H1_r010                  502   86.81   30.00   11.67   55.00   47.17   54.00    47.81  uniform_r010 +1.39 (z=+0.98) | holitom_r010 +2.19 (z=+1.46)
+                       -> Chi giai doan 1: bo truot CB-STE co hoc, chon 100% token goc
+H2_r010                  502   84.62   34.29   25.00   51.67   47.17   52.00    48.61  uniform_r010 +2.19 (z=+1.46) | holitom_r010 +2.99 (z=+1.83)
+                       -> Chi giai doan 2 (M3D-BD+): neo Uniform + M3D-BD + che token neo + cong (1-r)
+H3_r010                  502   85.71   37.14   21.67   53.33   43.40   56.00    48.41  uniform_r010 +1.99 (z=+1.13) | holitom_r010 +2.79 (z=+1.63)
+                       -> HDS-MAP 3D day du: giai doan 1 + giai doan 2 (mo tu buoc 2000)
+H4_r010                  502   86.81   37.14   20.00   51.67   45.28   52.00    49.00  uniform_r010 +2.59 (z=+1.54) | holitom_r010 +3.39 (z=+2.08)
+                       -> Ban tot nhat H1-H3, train them tren video dai ghep (3 clip 1-3 phut)
+H5_r002                  502   81.32   31.43   15.00   41.67   35.85   46.00    41.04  uniform_r002 -1.20 (z=-0.65) | holitom_r002 +0.40 (z=+0.22)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H5_r010                  502   85.71   31.43   23.33   53.33   43.40   54.00    47.81  uniform_r010 +1.39 (z=+0.82) | holitom_r010 +2.19 (z=+1.39)
+                       -> Ban tot nhat H1-H3, Elastic: 1 checkpoint cho 2/5/10/25%
+H6_r002                  502   81.32   31.43   13.33   40.00   43.40   48.00    42.63  uniform_r002 +0.40 (z=+0.23) | holitom_r002 +1.99 (z=+1.08)
+                       -> Ban tot nhat H1-H3, train rieng o muc 2%
+R02E_r002                502   86.81   27.14   20.00   43.33   35.85   44.00    43.82  uniform_r002 +1.59 (z=+0.98) | holitom_r002 +3.19 (z=+1.69)
+                       -> Moc: RAP R02E (2%)
+R10E_r010                502   86.81   35.71   23.33   53.33   49.06   54.00    49.20  uniform_r010 +2.79 (z=+1.87) | holitom_r010 +3.59 (z=+2.15)
+                       -> Moc: RAP R10E (10%)
+dense                    502   86.81   41.43   21.67   61.67   49.06   52.00    51.99  
+                       -> Moc: 100% token
+holitom_r002             502   85.71   27.14    6.67   40.00   37.74   42.00    40.64  uniform_r002 -1.59 (z=-1.03)
+                       -> Moc: HoliTom w/o M
+holitom_r005             502   85.71   22.86   11.67   48.33   47.17   42.00    42.63  uniform_r005 -1.20 (z=-0.80)
+                       -> Moc: HoliTom w/o M
+holitom_r010             502   84.62   28.57   11.67   53.33   47.17   56.00    45.62  uniform_r010 -0.80 (z=-0.54)
+                       -> Moc: HoliTom w/o M
+holitom_r025             502   85.71   37.14   20.00   53.33   45.28   56.00    49.60  uniform_r025 -0.60 (z=-0.46)
+                       -> Moc: HoliTom w/o M
+holitom_r040             502   85.71   41.43   20.00   53.33   49.06   56.00    51.00  uniform_r040 -1.59 (z=-1.33)
+                       -> Moc: HoliTom w/o M
+uniform_r002             502   86.81   24.29   11.67   40.00   47.17   38.00    42.23  holitom_r002 +1.59 (z=+1.03)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r005             502   84.62   24.29   11.67   46.67   50.94   44.00    43.82  holitom_r005 +1.20 (z=+0.80)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r010             502   87.91   30.00   11.67   46.67   52.83   50.00    46.41  holitom_r010 +0.80 (z=+0.54)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r025             502   86.81   37.14   15.00   55.00   52.83   54.00    50.20  holitom_r025 +0.60 (z=+0.46)
+                       -> Moc: Uniform (luoi linspace)
+uniform_r040             502   86.81   38.57   21.67   60.00   54.72   54.00    52.59  holitom_r040 +1.59 (z=+1.33)
+                       -> Moc: Uniform (luoi linspace)
+
+== Train (dong val moi nhat trong *.metrics.jsonl) ==
+
+H1: buoc train 4000, val o buoc 4000: kl_rap=0.0689, kl_uniform=0.0940, gap_closed=0.4170, hop_rate=0.8871, move_t=0.8006, move_s=0.7421, ce_rap=1.3237, ce_dense=1.2682
+H2: buoc train 4000, val o buoc 4000: kl_rap=0.0376, kl_uniform=0.0940, gap_closed=0.6811, hop_rate=0.0000, raer=0.2111, ce_rap=1.2986, ce_dense=1.2682
+H3: buoc train 4000, val o buoc 4000: kl_rap=0.0403, kl_uniform=0.0940, gap_closed=0.7126, hop_rate=0.8830, move_t=0.7944, move_s=0.7418, raer=0.3358, ce_rap=1.2956, ce_dense=1.2682
+H4: buoc train 4000, val o buoc 4000: kl_rap=0.0370, kl_uniform=0.0887, gap_closed=0.8444, hop_rate=0.8814, move_t=0.7997, move_s=0.7508, raer=0.3300, ce_rap=1.2008, ce_dense=1.1873
+H5: buoc train 4000, val o buoc 4000: kl_rap=0.0418, kl_uniform=0.0940, gap_closed=0.8467, hop_rate=0.8562, move_t=0.7678, move_s=0.7005, raer=0.3187, ce_rap=1.2828, ce_dense=1.2682
+H6: buoc train 4000, val o buoc 4000: kl_rap=0.1120, kl_uniform=0.2106, gap_closed=0.6416, hop_rate=0.9580, move_t=1.4304, move_s=1.4462, raer=0.4214, ce_rap=1.3417, ce_dense=1.2682
+  (kl_rap < kl_uniform = ban nen gan ban xem du hon Uniform; hop_rate = ti le neo roi tam hop)
+
+== 20 dong cuoi STATUS.txt ==
+
+2026-10-24 09:04:24 BEST H1-H3 = H3 (--hds 1 --slider 1 --stage2 1 --bias3d 1 --deform 1 --window 3 --self_mask 1 --gate 1 --s2_start 2000 --s1_lr_after 0.1 --w_cov 0)
+2026-10-24 09:04:24 START train H4 (lan 1)
+2026-10-24 18:31:48 START eval videomme/H4 (lan 1)
+2026-10-24 20:22:11 DONE eval videomme/H4
+2026-10-24 20:22:14 START train H5 (lan 1)
+2026-10-25 02:02:31 START eval videomme/H5 (lan 1)
+2026-10-25 03:34:27 DONE eval videomme/H5
+2026-10-25 03:34:29 START eval lvbench/B (lan 1)
+2026-10-25 04:07:17 DONE eval lvbench/B
+2026-10-25 04:07:18 START eval mlvu/B (lan 1)
+2026-10-25 04:32:33 DONE eval mlvu/B
+2026-10-25 04:32:34 START train H6 (lan 1)
+2026-10-25 09:20:59 START eval videomme/H6 (lan 1)
+2026-10-25 10:24:34 DONE eval videomme/H6
+2026-10-25 10:24:36 START eval lvbench/C (lan 1)
+2026-10-25 10:54:00 DONE eval lvbench/C
+2026-10-25 10:54:02 START eval mlvu/C (lan 1)
+2026-10-25 11:18:18 DONE eval mlvu/C
+2026-10-25 11:18:20 QUEUE DONE
+2026-10-25 11:22:28 KEEPALIVE queue da xong het, dung keepalive
+

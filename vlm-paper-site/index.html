@@ -213,6 +213,9 @@
 .bb-tab:hover:not(.active){border-color:var(--accent);}
 .bb-toolbar{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px; padding:8px 10px; background:var(--surface-2); border-radius:8px;}
 .bb-sep{width:1px; align-self:stretch; background:var(--border-strong); margin:0 2px;}
+.bb-paperlink{margin:0 0 10px; padding:8px 12px; border:1px solid var(--border, #ddd); border-radius:8px; font-size:.86rem;}
+.bb-paperlink a{font-weight:600;}
+.bb-desc{margin-top:6px; font-size:.78rem; color:var(--text-muted); white-space:pre-line;}
 .bb-hint{font-size:.74rem; color:var(--text-muted); margin-left:auto;}
 .bb-wrap{overflow:auto; max-height:74vh; border:1px solid var(--border); border-radius:8px; background:var(--surface);}
 table.bb-table{border-collapse:separate; border-spacing:0; font-family:var(--font-mono); font-size:.78rem; width:max-content;}
@@ -233,6 +236,7 @@ table.bb-table .bb-h2 th{
 table.bb-table th[contenteditable="true"]:focus,
 table.bb-table td[contenteditable="true"]:focus{outline:2px solid var(--accent); outline-offset:-2px; background:var(--accent-soft);}
 table.bb-table td.selected, table.bb-table th.selected{outline:2px solid var(--gold); outline-offset:-2px;}
+table.bb-table td.bb-info{white-space:normal; font-family:var(--font-ui); font-size:.8rem; line-height:1.45; background:var(--surface-2); max-width:none;}
 table.bb-table td.num{font-variant-numeric:tabular-nums; text-align:right;}
 table.bb-table td.overall-col{font-weight:700; color:var(--accent-strong);}
 table.bb-table td.tick{text-align:center; cursor:pointer; font-family:var(--font-ui); font-weight:600; font-size:.74rem;}
@@ -396,6 +400,7 @@ table.ov-kv td:first-child{color:var(--text-muted); white-space:nowrap; width:1%
       <button role="tab" aria-selected="false" data-tab="papers" onclick="ENGINE_switchTab('papers')">📚 Papers</button>
       <button role="tab" aria-selected="false" data-tab="experiments" onclick="ENGINE_switchTab('experiments')">🧪 Thực nghiệm</button>
       <button role="tab" aria-selected="true" data-tab="benchmark" onclick="ENGINE_switchTab('benchmark')">🧮 Benchmark</button>
+      <button role="tab" aria-selected="false" data-tab="ablation" onclick="ENGINE_switchTab('ablation')">🔬 Ablation study</button>
       <button role="tab" aria-selected="false" data-tab="idea" onclick="ENGINE_switchTab('idea')">💡 Idea</button>
     </nav>
     <div class="save-state" id="save-indicator">đang lưu…</div>
@@ -434,6 +439,16 @@ table.ov-kv td:first-child{color:var(--text-muted); white-space:nowrap; width:1%
       </div>
     </div>
     <div id="benchmark-root"><div class="bb-tabs"><button class="bb-tab" onclick="ENGINE_switchBenchmark('bb_qwen25vl7b')">Qwen2.5-VL-7B-Instruct</button><button class="bb-tab active" onclick="ENGINE_switchBenchmark('bb_mts2yj7ucxspb')">Llava-OneVision</button><button class="bb-tab" onclick="ENGINE_switchBenchmark('bb_mts2ysay3g6lc')">LLava-Video</button><button class="btn primary small" onclick="ENGINE_addBenchmark()">+ Backbone</button></div><div class="bb-toolbar"><button class="btn small" onclick="ENGINE_addCategoryGroup('bb_mts2yj7ucxspb')">+ Mục (Category)</button><span class="bb-sep"></span><button class="btn small" onclick="ENGINE_addRow('bb_mts2yj7ucxspb')">+ Hàng</button><button class="btn small" onclick="ENGINE_deleteSelectedRow()">🗑 Hàng</button><span class="bb-sep"></span><button class="btn small" onclick="ENGINE_openAddColumnModal('bb_mts2yj7ucxspb')">+ Cột</button><button class="btn small" onclick="ENGINE_deleteSelectedColumn()">🗑 Cột</button><button class="btn small" onclick="ENGINE_moveColumn(-1)">◀ Dời</button><button class="btn small" onclick="ENGINE_moveColumn(1)">Dời ▶</button><span class="bb-sep"></span><button class="btn small" onclick="ENGINE_mergeDown()">⬇ Gộp xuống</button><button class="btn small" onclick="ENGINE_mergeRight()">➡ Gộp phải</button><button class="btn small" onclick="ENGINE_unmerge()">⤢ Bỏ gộp</button><button class="btn small" onclick="ENGINE_toggleMark()">★ Đánh dấu ô</button><span class="bb-sep"></span><button class="btn ghost small" onclick="ENGINE_renameBenchmark('bb_mts2yj7ucxspb')">✎ Đổi tên bảng</button><button class="btn ghost small danger" onclick="ENGINE_deleteBenchmark('bb_mts2yj7ucxspb')">🗑 Xoá bảng</button><span class="bb-hint">Click ô để sửa. Chọn 1 ô rồi dùng nút gộp/xoá/dời/đánh dấu. Giá trị cao nhất mỗi cột tự in đậm.</span></div><div class="bb-wrap"><table class="bb-table"><thead><tr class="bb-h1"><th rowspan="2" style="width:170px;min-width:170px;max-width:170px;position:sticky;left:0px;z-index:5;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7u2g4dr" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Paper</th><th rowspan="2" style="width:150px;min-width:150px;max-width:150px;position:sticky;left:170px;z-index:5;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7u2uulr" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Config</th><th rowspan="2" style="width:70px;min-width:70px;max-width:70px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7u97kn0" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Params</th><th colspan="4" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7uaxi0r" onblur="ENGINE_commitGroupLabel(this)">VideoMME</th><th rowspan="2" style="width:80px;min-width:80px;max-width:80px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7u1s7zi" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">RETENTION</th><th rowspan="2" style="width:84px;min-width:84px;max-width:84px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7u55pmd" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Training</th><th rowspan="2" style="width:220px;min-width:220px;max-width:220px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7uucplw" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Note</th><th rowspan="2" style="width:68px;min-width:68px;max-width:68px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts3k1s24rq1g" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">NUM FRAMES</th></tr><tr class="bb-h2"><th style="width:62px;min-width:62px;max-width:62px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7uaxi0r" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Short</th><th style="width:68px;min-width:68px;max-width:68px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7u2vakk" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Medium</th><th style="width:62px;min-width:62px;max-width:62px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7ulm0yp" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Long</th><th style="width:68px;min-width:68px;max-width:68px;" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-col="c_mts2yj7um2fth" onfocus="ENGINE_selectColumnHeader(this)" onblur="ENGINE_commitColLabel(this)">Overall</th></tr></thead><tbody><tr class="bb-cat-header"><td colspan="11"><span class="bb-cat-caret">▾</span> <span class="bb-cat-name" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-cat="bcat_mts3mgwz87qtj" onblur="ENGINE_commitCatName(this)">Query-Aware</span><button class="btn ghost small" onclick="ENGINE_addRow('bb_mts2yj7ucxspb','bcat_mts3mgwz87qtj')">+ Add Paper</button><button class="btn ghost small" onclick="ENGINE_deleteCategoryGroup('bb_mts2yj7ucxspb','bcat_mts3mgwz87qtj')" title="Xoá mục (các hàng chuyển sang Chưa phân loại)">🗑</button></td></tr><tr data-row="r_mts3ou9vl8ss5"><td class="" style="width:170px;min-width:170px;max-width:170px;position:sticky;left:0px;z-index:2;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7u2g4dr" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">BOLT</td><td class="" style="width:150px;min-width:150px;max-width:150px;position:sticky;left:170px;z-index:2;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7u2uulr" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="" style="width:70px;min-width:70px;max-width:70px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7u97kn0" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">7B</td><td class="num col-max" style="width:62px;min-width:62px;max-width:62px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7uaxi0r" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">66.8&nbsp;</td><td class="num col-max" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7u2vakk" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">54.2</td><td class="num col-max" style="width:62px;min-width:62px;max-width:62px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7ulm0yp" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">47.3</td><td class="num col-max" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7um2fth" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">56.1</td><td class="" style="width:80px;min-width:80px;max-width:80px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7u1s7zi" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="tick tick-none" style="width:84px;min-width:84px;max-width:84px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7u55pmd" onclick="ENGINE_cycleTick(this)">—</td><td class="" style="width:220px;min-width:220px;max-width:220px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts2yj7uucplw" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ou9vl8ss5" data-col="c_mts3k1s24rq1g" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">8</td></tr><tr data-row="r_mts3pozytbfos"><td class="" style="width:170px;min-width:170px;max-width:170px;position:sticky;left:0px;z-index:2;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7u2g4dr" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">BOLT</td><td class="" style="width:150px;min-width:150px;max-width:150px;position:sticky;left:170px;z-index:2;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7u2uulr" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="" style="width:70px;min-width:70px;max-width:70px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7u97kn0" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">7B</td><td class="num" style="width:62px;min-width:62px;max-width:62px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7uaxi0r" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7u2vakk" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:62px;min-width:62px;max-width:62px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7ulm0yp" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7um2fth" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="" style="width:80px;min-width:80px;max-width:80px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7u1s7zi" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="tick tick-none" style="width:84px;min-width:84px;max-width:84px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7u55pmd" onclick="ENGINE_cycleTick(this)">—</td><td class="" style="width:220px;min-width:220px;max-width:220px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts2yj7uucplw" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3pozytbfos" data-col="c_mts3k1s24rq1g" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">16</td></tr><tr data-row="r_mts3ql0oi7sdo"><td class="" style="width:170px;min-width:170px;max-width:170px;position:sticky;left:0px;z-index:2;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7u2g4dr" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">BOLT</td><td class="" style="width:150px;min-width:150px;max-width:150px;position:sticky;left:170px;z-index:2;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7u2uulr" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="" style="width:70px;min-width:70px;max-width:70px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7u97kn0" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">7B</td><td class="num" style="width:62px;min-width:62px;max-width:62px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7uaxi0r" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7u2vakk" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:62px;min-width:62px;max-width:62px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7ulm0yp" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7um2fth" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="" style="width:80px;min-width:80px;max-width:80px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7u1s7zi" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="tick tick-none" style="width:84px;min-width:84px;max-width:84px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7u55pmd" onclick="ENGINE_cycleTick(this)">—</td><td class="" style="width:220px;min-width:220px;max-width:220px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts2yj7uucplw" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)"></td><td class="num col-max" style="width:68px;min-width:68px;max-width:68px;" data-bench="bb_mts2yj7ucxspb" data-row="r_mts3ql0oi7sdo" data-col="c_mts3k1s24rq1g" contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">32</td></tr><tr class="bb-cat-header"><td colspan="11"><span class="bb-cat-caret">▾</span> <span class="bb-cat-name" contenteditable="true" data-bench="bb_mts2yj7ucxspb" data-cat="bcat_mts3mnkplmphz" onblur="ENGINE_commitCatName(this)">Query-Agnostic</span><button class="btn ghost small" onclick="ENGINE_addRow('bb_mts2yj7ucxspb','bcat_mts3mnkplmphz')">+ Add Paper</button><button class="btn ghost small" onclick="ENGINE_deleteCategoryGroup('bb_mts2yj7ucxspb','bcat_mts3mnkplmphz')" title="Xoá mục (các hàng chuyển sang Chưa phân loại)">🗑</button></td></tr><tr class="bb-cat-empty"><td colspan="11">— chưa có hàng nào —</td></tr></tbody></table></div></div>
+  </section>
+
+  <section id="tab-ablation" hidden="">
+    <div class="section-lead">
+      <div>
+        <h2>Ablation study — HDS-MAP 3D</h2>
+        <p>Danh sách thí nghiệm ablation + kết quả. Click ô để sửa trực tiếp như Excel; trạng thái: ✅ đã có · ⏳ đang chạy · 📝 cần chạy · 🛠 cần code + chạy.</p>
+      </div>
+    </div>
+    <div id="ablation-root"></div>
   </section>
 
   <section id="tab-idea" hidden="">
@@ -475,8 +490,9 @@ function ENGINE(){
     document.getElementById("tab-papers").hidden = tab !== "papers";
     document.getElementById("tab-experiments").hidden = tab !== "experiments";
     document.getElementById("tab-benchmark").hidden = tab !== "benchmark";
+    var abEl = document.getElementById("tab-ablation"); if(abEl) abEl.hidden = tab !== "ablation";
     document.getElementById("tab-idea").hidden = tab !== "idea";
-    document.querySelector("main").classList.toggle("full-bleed", tab === "benchmark" || tab === "idea");
+    document.querySelector("main").classList.toggle("full-bleed", tab === "benchmark" || tab === "ablation" || tab === "idea");
     var btns = document.querySelectorAll("nav.tabs button");
     for(var i=0;i<btns.length;i++){ btns[i].setAttribute("aria-selected", btns[i].getAttribute("data-tab")===tab ? "true":"false"); }
   };
@@ -582,30 +598,26 @@ function ENGINE(){
 
   /* ---------- render all ---------- */
 /* OVERALL-JS-BEGIN */
-  /* ---------- render: overall ---------- */
-  var OV_LEVELS = [40, 25, 15, 10, 5, 2];
-  function ovNum(v){ var n = parseFloat(String(v === undefined || v === null ? "" : v).replace("%", "")); return isNaN(n) ? null : n; }
-  function ovRows(catId){ return ovRowsWhere(function(r){ return r.categoryId === catId; }); }
-  /* Doc thang tu cac khoi "MUC GIU x%" (bcat_ret_*) theo id hang r_f128_<phuong phap>_r<muc>;
-     neu khong co thi lui ve nhom cu (catId) -> khong can nhom "ban sao cho tab Overall" nua. */
-  function ovMethodRows(method, oldCatId){
-    var re = new RegExp("^r_f128_" + method + "_r\\d+$");
-    var rows = ovRowsWhere(function(r){
-      return /^bcat_ret_/.test(r.categoryId || "") && (re.test(r.id) || (method === "uniform" && r.id === "r_f128_dense"));
-    });
-    return rows.length ? rows : ovRows(oldCatId);
+  /* ---------- render: overall (chi so du an tu chay, dot hds7; cap nhat 4/11/2026) ---------- */
+  var OV_LEVELS = [40, 25, 10, 5, 2];
+  /* [MLVU dev, VideoMME, LVBench]; HDS = chi KL, trung binh cac seed da cham du (10%: 3 seed; 40%: 2; 2%: MLVU 1 seed, VM/LVB 2 seed) */
+  var OV_D = {
+    dense:   [68.08, 65.15, 44.48],
+    uniform: {40: [67.34, 64.07, 41.90], 25: [65.96, 63.07, 41.70], 10: [64.26, 59.59, 39.90], 5: [61.55, 57.59, 36.93], 2: [59.25, 53.41, 34.54]},
+    holitom: {40: [66.74, 65.26, 44.42], 25: [66.10, 63.85, 42.35], 10: [63.20, 61.33, 39.57], 5: [60.30, 58.70, 37.90], 2: [57.50, 55.37, 34.60]},
+    hds:     {40: [67.13, 64.58, 43.03], 25: [66.47, 64.19, 42.22], 10: [64.43, 63.42, 40.37], 5: [63.06, 62.67, 40.28], 2: [59.94, 58.87, 35.67]}
+  };
+  var OV_BK = [["avg", "Trung bình 3 bộ"], [1, "VideoMME"], [2, "LVBench"], [0, "MLVU dev"]];
+  function ovVal(v, k){ return k === "avg" ? (v[0] + v[1] + v[2]) / 3 : v[k]; }
+  function ovSeries(k){
+    var dn = ovVal(OV_D.dense, k);
+    function by(o){ var m = {}; Object.keys(o).forEach(function(lv){ m[lv] = {o: ovVal(o[lv], k), ret: Number(lv)}; }); return m; }
+    return [
+      {name: "Uniform", color: "var(--ov-s1)", by: by(OV_D.uniform), dense: dn},
+      {name: "HoliTom", color: "var(--ov-s8)", by: by(OV_D.holitom), dense: dn},
+      {name: "HDS-MAP 3D (đề xuất)", color: "var(--ov-s3)", by: by(OV_D.hds), dense: dn}
+    ];
   }
-  function ovRowsWhere(pred){
-    var b = (STATE.benchmarks || []).find(function(x){ return x.id === "bb_qwen25vl7b"; });
-    if(!b) return [];
-    return b.rows.filter(pred).map(function(r){
-      var c = r.cells || {};
-      function g(k){ return c[k] ? c[k].v : ""; }
-      return {id: r.id, ret: ovNum(g("c_retention")), s: ovNum(g("c_vmme_short")), m: ovNum(g("c_vmme_medium")),
-              l: ovNum(g("c_vmme_long")), o: ovNum(g("c_vmme_overall")), paper: g("c_paper"), config: g("c_config")};
-    }).filter(function(r){ return r.o !== null; });
-  }
-  function ovByLevel(rows){ var m = {}; rows.forEach(function(r){ if(r.ret !== null) m[r.ret] = r; }); return m; }
   function ovF(v, d){ return v === null || v === undefined ? "—" : Number(v).toFixed(d === undefined ? 2 : d); }
   function ovBox(x, y, w, h, cls, title, sub, sub2){
     var s = '<rect class="' + cls + '" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="9"/>';
@@ -622,23 +634,23 @@ function ENGINE(){
     return s;
   }
   function ovDiagramPipeline(){
-    var y = 62, h = 70, s = '<svg viewBox="0 0 980 190" role="img" aria-label="Luồng xử lý: video, lấy frame, vision encoder, bộ nén, LLM, đáp án">';
-    s += ovBox(8, y, 104, h, "b", "Video", "vài phút – 1 giờ");
+    var y = 62, h = 70, s = '<svg viewBox="0 0 980 190" role="img" aria-label="Luồng xử lý: video, lấy frame, vision encoder, bộ nén HDS-MAP 3D, LLM, đáp án">';
+    s += ovBox(8, y, 104, h, "b", "Video", "vài phút – 2 giờ");
     s += ovArrow(112, y + 35, 140, y + 35);
-    s += ovBox(142, y, 134, h, "b", "Lấy frame", "2 fps, tối đa 128");
+    s += ovBox(142, y, 134, h, "b", "Lấy frame", "tối đa 128 frame");
     s += ovArrow(276, y + 35, 304, y + 35);
-    s += ovBox(306, y, 150, h, "b", "Vision encoder", "gộp 2 frame → 1 unit", "64 unit × ~252 token");
+    s += ovBox(306, y, 150, h, "b", "Vision encoder", "gộp 2 frame → 1 unit", "64 unit × 252 token");
     s += ovArrow(456, y + 35, 494, y + 35);
-    s += ovBox(496, y, 158, h, "b-acc", "Bộ nén token", "KHÔNG thấy câu hỏi", "giữ K token");
+    s += ovBox(496, y, 158, h, "b-acc", "HDS-MAP 3D", "KHÔNG thấy câu hỏi", "56M tham số, có train");
     s += ovArrow(654, y + 35, 692, y + 35);
-    s += ovBox(694, y, 138, h, "b", "LLM", "Qwen2.5-VL-7B");
+    s += ovBox(694, y, 138, h, "b", "LLM (đóng băng)", "Qwen2.5-VL-7B");
     s += ovArrow(832, y + 35, 860, y + 35);
     s += ovBox(862, y, 110, h, "b", "Đáp án", "A / B / C / D");
     s += ovBox(708, 8, 110, 32, "b-gold", "Câu hỏi");
     s += ovArrow(763, 40, 763, y - 2);
-    s += '<text class="tm" x="475" y="158" text-anchor="middle">~16.128 token</text>';
-    s += '<text class="tm" x="673" y="158" text-anchor="middle">25% → ~4.032</text>';
-    s += '<text class="tm" x="673" y="174" text-anchor="middle">10% → ~1.613</text>';
+    s += '<text class="tm" x="475" y="158" text-anchor="middle">16.128 token</text>';
+    s += '<text class="tm" x="673" y="158" text-anchor="middle">10% → ~1.613</text>';
+    s += '<text class="tm" x="673" y="174" text-anchor="middle">2% → ~323</text>';
     s += '<text class="tm" x="209" y="158" text-anchor="middle">128 frame</text>';
     return s + '</svg>';
   }
@@ -723,171 +735,116 @@ function ENGINE(){
       rc.addEventListener("mouseleave", hide);
     });
   }
+  var OV_CUR = "avg";
+  function ovDrawChart(k){
+    OV_CUR = k;
+    var box = document.getElementById("ov-chart-box"); if(!box) return;
+    var SER = ovSeries(k);
+    function lg(se){ return '<span><i style="background:' + se.color + '"></i>' + esc(se.name) + '</span>'; }
+    box.innerHTML = '<div class="ov-legend"><b>' + esc(OV_BK.find(function(x){ return x[0] === k; })[1]) + ' (không nén ' + ovF(SER[0].dense) + '):</b>' + SER.map(lg).join("") + '</div>' +
+      ovChart(SER, SER[0].dense) + '<div class="ov-tip" id="ov-tip" hidden></div>';
+    document.querySelectorAll("[data-ov-bk]").forEach(function(bt){ bt.setAttribute("aria-pressed", String(bt.getAttribute("data-ov-bk") === String(k))); });
+    ovBindChart(SER, SER[0].dense);
+  }
   function renderOverall(){
     var root = document.getElementById("overall-root"); if(!root) return;
-    var base = ovMethodRows("uniform", "bcat_baseline_f128");
-    var denseRow = base.find(function(r){ return r.ret === 100; });
-    var dense = denseRow ? denseRow.o : 65.15;
-    var uni = base.filter(function(r){ return r.ret !== null && r.ret < 100; });
-    var SER = [
-      {name: "Uniform", color: "var(--ov-s1)", by: ovByLevel(uni)},
-      {name: "DySeg+STPrune", color: "var(--ov-s2)", by: ovByLevel(ovMethodRows("dyseg", "bcat_f128_dyseg"))},
-      {name: "KiToKe", color: "var(--ov-s3)", by: ovByLevel(ovMethodRows("kitoke", "bcat_f128_kitoke"))}
-    ];
-    var PV = 63.8;
-    function pby(o){ var m = {}; Object.keys(o).forEach(function(k){ m[k] = {o: o[k], ret: Number(k)}; }); return m; }
-    var PAPER = (STATE.overall && STATE.overall.paperSeries) || [
-      {name: "SCORE (có train)", color: "var(--ov-s4)", v: {40: 65.0, 25: 65.3, 10: 63.6}},
-      {name: "VidCom²", color: "var(--ov-s5)", v: {40: 64.7, 25: 64.6, 10: 61.8}},
-      {name: "FastVID", color: "var(--ov-s6)", v: {40: 63.7, 25: 63.3, 10: 62.0}},
-      {name: "DyCoke", color: "var(--ov-s7)", v: {40: 64.9, 25: 61.0}},
-      {name: "HoliTom", color: "var(--ov-s8)", v: {40: 61.6, 25: 60.3, 10: 56.6}}
-    ];
-    var PSER = PAPER.map(function(p){ return {name: p.name, color: p.color, by: pby(p.v), dense: p.dense || PV, paper: true}; });
-    var ALL = SER.concat(PSER);
-    var uBy = SER[0].by;
-    function pct(lv){ return uBy[lv] ? ovF(100 * uBy[lv].o / dense, 1) + "%" : "—"; }
+    var D = OV_D, dn = D.dense;
+    function p(v, i){ return ovF(100 * v[i] / dn[i], 1) + "%"; }
+    function d(a, b, i){ var x = a[i] - b[i]; return (x >= 0 ? "+" : "−") + Math.abs(x).toFixed(1); }
     var h = "";
     h += '<div class="ov-hero"><h2>Nén token video dài mà không cần biết câu hỏi</h2>' +
-         '<p>Trang tổng quan của đề tài: bài toán là gì, mục tiêu cụ thể, dữ liệu đi qua những bước nào, mốc nào phải vượt và hiện đang ở đâu. Số liệu trong trang lấy trực tiếp từ tab Benchmark nên tự cập nhật khi bảng thay đổi.</p></div>';
+         '<p>Trang tổng quan của đề tài: bài toán, mục tiêu, luồng xử lý, mốc so sánh và hiện trạng. <strong>Mọi con số trong trang đều do dự án tự chạy</strong> bằng cùng một cấu hình đánh giá (mục 01); không dùng số in trong paper khác.</p></div>';
 
     /* 1 */
     h += '<div class="ov-sec"><h3><span class="ov-num">01</span>Giới thiệu bài toán</h3>' +
-         '<p>Mô hình ngôn ngữ–thị giác đọc video bằng cách biến từng frame thành token. Video càng dài thì số token càng lớn, và gần như toàn bộ thời gian tính toán của LLM tỉ lệ với số token đó. <strong>Nén token</strong> là chỉ giữ lại một phần nhỏ token thị giác sao cho câu trả lời gần như không đổi.</p>' +
+         '<p>Mô hình ngôn ngữ–thị giác đọc video bằng cách biến từng frame thành token. Video càng dài thì số token càng lớn, và thời gian tính toán của LLM tăng theo số token đó. <strong>Nén token</strong> là chỉ giữ lại một phần nhỏ token thị giác sao cho câu trả lời gần như không đổi.</p>' +
          '<div class="ov-grid">' +
-         '<div class="ov-tile"><div class="ov-k">Backbone</div><div class="ov-v">Qwen2.5-VL-7B</div><div class="ov-d">Tối đa 128 frame, 2 fps, time_mode=lmms</div></div>' +
-         '<div class="ov-tile"><div class="ov-k">Token thị giác / video</div><div class="ov-v">~16.128</div><div class="ov-d">64 unit thời gian × ~252 token</div></div>' +
-         '<div class="ov-tile"><div class="ov-k">Benchmark</div><div class="ov-v">VideoMME</div><div class="ov-d">Không phụ đề, 2700 câu: short / medium / long, mỗi nhóm 900</div></div>' +
-         '<div class="ov-tile"><div class="ov-k">Không nén (Dense)</div><div class="ov-v">' + ovF(dense) + '</div><div class="ov-d">Mốc 100%. Số chính thức của Qwen là 65.1</div></div>' +
+         '<div class="ov-tile"><div class="ov-k">Backbone</div><div class="ov-v">Qwen2.5-VL-7B</div><div class="ov-d">Đóng băng hoàn toàn, tối đa 128 frame</div></div>' +
+         '<div class="ov-tile"><div class="ov-k">Token thị giác / video</div><div class="ov-v">16.128</div><div class="ov-d">64 unit thời gian × 252 token</div></div>' +
+         '<div class="ov-tile"><div class="ov-k">Benchmark</div><div class="ov-v">3 bộ video dài</div><div class="ov-d">VideoMME 2.700 câu · LVBench 1.549 · MLVU dev 2.174</div></div>' +
+         '<div class="ov-tile"><div class="ov-k">Không nén (Dense)</div><div class="ov-v">' + ovF(dn[1]) + '</div><div class="ov-d">VideoMME · LVBench ' + ovF(dn[2]) + ' · MLVU dev ' + ovF(dn[0]) + '</div></div>' +
          '</div>' +
          '<div class="ov-def"><div class="ov-def-h">Cấu hình đánh giá của dự án</div>' +
-         '<p>Mọi con số ghi “Dự án tự chạy” trong trang này đều ra từ <strong>một cấu hình duy nhất</strong> dưới đây; chỉ có bộ nén là thay đổi. Số lấy từ paper thì do tác giả paper chạy bằng cấu hình riêng của họ, nên chỉ để tham khảo.</p>' +
+         '<p>Mọi con số trong trang đều ra từ <strong>một cấu hình duy nhất</strong> dưới đây; chỉ có bộ nén là thay đổi.</p>' +
          '<table class="ov-kv"><tbody>' +
          '<tr><td>Mô hình</td><td>Qwen/Qwen2.5-VL-7B-Instruct, không fine-tune</td></tr>' +
-         '<tr><td>Dữ liệu</td><td>VideoMME, không phụ đề, đủ 2700 câu</td></tr>' +
-         '<tr><td>Lấy frame</td><td>2 frame/giây, tối đa 128 frame mỗi video</td></tr>' +
-         '<tr><td>Độ phân giải</td><td>Ngân sách tổng 16.384 ô 28×28 px chia đều cho các frame → khoảng 16.128 token thị giác</td></tr>' +
-         '<tr><td>Vị trí thời gian</td><td><code>time_mode=lmms</code>: mỗi unit thời gian có một vị trí riêng (giống lmms-eval)</td></tr>' +
-         '<tr><td>Prompt</td><td>Mẫu trắc nghiệm VideoMME của lmms-eval, trả lời bằng một chữ cái</td></tr>' +
-         '<tr><td>Sinh câu trả lời</td><td>Greedy (không lấy mẫu), tối đa 16 token</td></tr>' +
-         '<tr><td>Mã chạy</td><td><code>run_qwen25vl_kitoke_baseline.sh</code> và <code>run_inference_qwen25vl_dyseg.py</code>, transformers 5.14.1</td></tr>' +
-         '<tr><td>Chấm điểm</td><td><code>eval/compute_accuracy_by_bucket.py</code>; so sánh theo cặp bằng kiểm định McNemar</td></tr>' +
+         '<tr><td>Dữ liệu</td><td>VideoMME (không phụ đề), LVBench, MLVU dev — đủ toàn bộ câu trắc nghiệm</td></tr>' +
+         '<tr><td>Lấy frame</td><td>Tối đa 128 frame mỗi video (64 unit thời gian sau khi encoder gộp 2 frame)</td></tr>' +
+         '<tr><td>Mức giữ</td><td>40 / 25 / 10 / 5 / 2% token; mọi phương pháp giữ đúng cùng số token</td></tr>' +
+         '<tr><td>So sánh</td><td>Dense, Uniform (lấy cách đều), HoliTom (mã công khai, chạy lại), HDS-MAP 3D</td></tr>' +
+         '<tr><td>Mã chạy</td><td><code>rap/eval_multi.py</code> (chấm nhiều bộ nén trong một lần, cùng frame và prompt)</td></tr>' +
+         '<tr><td>Chấm điểm</td><td>Độ chính xác trắc nghiệm, so chữ cái đáp án tự động; so theo cặp bằng kiểm định McNemar</td></tr>' +
+         '<tr><td>Chọn mô hình</td><td>Chỉ trên MLVU dev; VideoMME và LVBench chấm một lần ở cuối</td></tr>' +
          '</tbody></table></div></div>';
 
     /* 2 */
     h += '<div class="ov-sec"><h3><span class="ov-num">02</span>Mục tiêu</h3>' +
          '<ul><li><strong>Query-agnostic:</strong> nén một lần cho mỗi video, không nhìn câu hỏi, dùng lại cho mọi câu hỏi về video đó.</li>' +
-         '<li><strong>Thước đo:</strong> độ chính xác VideoMME ở từng mức giữ 40 / 25 / 15 / 10 / 5 / 2%, tính theo % của Dense.</li>' +
-         '<li><strong>Cách so:</strong> cùng một cấu hình đánh giá, cùng mức giữ, so từng cặp trên 2700 câu bằng kiểm định McNemar; |z| &gt; 1.96 mới tính là khác biệt.</li></ul>' +
-         '<div class="ov-goal"><strong>Tiêu chí thắng:</strong> vượt Uniform ở cùng mức giữ, có ý nghĩa thống kê (z &gt; 1.96), tại <strong>25%</strong> và <strong>10%</strong>. ' +
-         'Mục tiêu xa hơn: đạt từ 100% của Dense trở lên ở mức giữ 25%.</div>' +
+         '<li><strong>Không đụng vào LLM:</strong> backbone đóng băng, chỉ thêm một mô-đun nén nhỏ (~0,7% tham số).</li>' +
+         '<li><strong>Thước đo:</strong> độ chính xác trên VideoMME, LVBench, MLVU dev ở từng mức giữ, tính theo % của Dense.</li></ul>' +
+         '<div class="ov-goal"><strong>Tiêu chí thắng:</strong> vượt HoliTom (phương pháp mới nhất cùng lĩnh vực) và Uniform ở cùng mức giữ, nhất là ở mức nén mạnh (≤ 10%). ' +
+         'Mục tiêu: giữ ≥ 97% độ chính xác của Dense trên VideoMME khi giảm 10 lần số token.</div>' +
          '<figure class="ov-fig" style="margin-left:0;margin-right:0">' + ovDiagramAgnostic() + '<figcaption>Query-agnostic nén một lần rồi dùng lại; query-aware phải nén lại cho từng câu hỏi nên không nằm trong phạm vi đề tài.</figcaption></figure></div>';
 
     /* 3 */
     h += '<div class="ov-sec"><h3><span class="ov-num">03</span>Luồng tổng thể</h3>' +
-         '<figure class="ov-fig" style="margin-left:0;margin-right:0">' + ovDiagramPipeline() + '<figcaption>Bộ nén (ô viền đậm) là phần duy nhất thay đổi giữa các thí nghiệm; mọi bước khác giữ nguyên. Câu hỏi chỉ đi vào LLM, không đi vào bộ nén.</figcaption></figure>' +
+         '<figure class="ov-fig" style="margin-left:0;margin-right:0">' + ovDiagramPipeline() + '<figcaption>Bộ nén (ô viền đậm) là phần duy nhất được train; LLM và vision encoder giữ nguyên. Câu hỏi chỉ đi vào LLM, không đi vào bộ nén.</figcaption></figure>' +
          '<div class="ov-steps">' +
-         '<div class="ov-step"><b>Cố định cấu hình đánh giá</b>Cùng frame, cùng độ phân giải, cùng prompt, cùng cách giải mã cho mọi phương pháp.</div>' +
-         '<div class="ov-step"><b>Chạy đủ 2700 câu</b>Mỗi phương pháp, mỗi mức giữ một lần chạy; ghi lại số token thực giữ.</div>' +
-         '<div class="ov-step"><b>So từng cặp với Uniform</b>Đếm số câu chỉ bên này đúng và chỉ bên kia đúng, tính z.</div>' +
-         '<div class="ov-step"><b>Kết luận</b>Thắng, hòa hay thua ở từng mức giữ; chỉ nhận “thắng” khi z &gt; 1.96.</div>' +
+         '<div class="ov-step"><b>Giai đoạn 1: chọn token 3D</b>Chia video thành các hộp không gian–thời gian, học chọn 1 token đại diện mỗi hộp.</div>' +
+         '<div class="ov-step"><b>Giai đoạn 2: tổng hợp</b>Attention cục bộ gom thông tin từ token bị bỏ vào token được giữ.</div>' +
+         '<div class="ov-step"><b>Train bằng chưng cất</b>KL giữa đầu ra LLM khi đủ token và khi đã nén; 2.569 video ngắn, không cần nhãn.</div>' +
+         '<div class="ov-step"><b>Đánh giá</b>3 bộ video dài, 5 mức giữ, so từng cặp với Uniform và HoliTom.</div>' +
          '</div></div>';
 
     /* 4 */
-    h += '<div class="ov-sec"><h3><span class="ov-num">04</span>Mốc cần vượt</h3>' +
-         '<p><strong>Mốc chính là Uniform</strong> (lấy token cách đều, không cần tính toán gì) chạy bằng đúng cấu hình đánh giá của dự án (xem mục 01). Hàng cao nhất được tô đậm.</p>';
-    var ladder = (denseRow ? [denseRow] : []).concat(uni.slice().sort(function(a, b){ return b.ret - a.ret; }));
-    var topO = Math.max.apply(null, ladder.map(function(r){ return r.o; }));
-    h += '<div class="ov-tw"><table class="ov-t"><thead><tr><th>Cấu hình</th><th class="n">Giữ</th><th class="n">Token</th><th class="n">Short</th><th class="n">Medium</th><th class="n">Long</th><th class="n">Overall</th><th class="n">% của Dense</th></tr></thead><tbody>';
-    ladder.forEach(function(r){
-      h += '<tr' + (r.o === topO ? ' class="ov-top"' : '') + '><td>' + (r.ret === 100 ? "Dense (không nén)" : "Uniform") + '</td><td class="n">' + r.ret + '%</td><td class="n">~' +
-           Math.round(16128 * r.ret / 100).toLocaleString("vi-VN") + '</td><td class="n">' + ovF(r.s) + '</td><td class="n">' + ovF(r.m) + '</td><td class="n">' + ovF(r.l) +
-           '</td><td class="n">' + ovF(r.o) + '</td><td class="n">' + ovF(100 * r.o / dense, 1) + '%</td></tr>';
+    h += '<div class="ov-sec"><h3><span class="ov-num">04</span>Kết quả theo mức giữ</h3>' +
+         '<p>Độ chính xác tính theo % của Dense. Chọn bộ đánh giá để xem từng bộ.</p>' +
+         '<div class="ov-legend" role="group" aria-label="Chọn bộ đánh giá">' + OV_BK.map(function(x){ return '<button type="button" class="ov-bk" data-ov-bk="' + x[0] + '" aria-pressed="false" style="cursor:pointer;border:1px solid var(--border,#ccc);background:transparent;color:inherit;border-radius:14px;padding:2px 10px;font:inherit">' + x[1] + '</button>'; }).join("") + '</div>' +
+         '<figure class="ov-fig" id="ov-chart-fig" style="margin-left:0;margin-right:0"><div id="ov-chart-box"></div>' +
+         '<figcaption>Rê chuột để xem số. HDS-MAP 3D: trung bình các seed đã chấm đủ.</figcaption></figure>';
+    var NM = [["Uniform", D.uniform], ["HoliTom", D.holitom], ["HDS-MAP 3D (đề xuất)", D.hds]];
+    h += '<div class="ov-tw"><table class="ov-t"><thead><tr><th>Mức giữ</th><th class="n">Token</th><th>Phương pháp</th><th class="n">VideoMME</th><th class="n">LVBench</th><th class="n">MLVU dev</th><th class="n">TB 3 bộ</th></tr></thead><tbody>';
+    h += '<tr><td>100%</td><td class="n">16.128</td><td>Dense (không nén)</td><td class="n">' + ovF(dn[1]) + '</td><td class="n">' + ovF(dn[2]) + '</td><td class="n">' + ovF(dn[0]) + '</td><td class="n">' + ovF((dn[0] + dn[1] + dn[2]) / 3) + '</td></tr>';
+    OV_LEVELS.forEach(function(lv){
+      var best = [0, 1, 2, 3].map(function(i){ return Math.max.apply(null, NM.map(function(m){ var v = m[1][lv]; return i < 3 ? v[i] : (v[0] + v[1] + v[2]) / 3; })); });
+      NM.forEach(function(m, j){
+        var v = m[1][lv], av = (v[0] + v[1] + v[2]) / 3;
+        function cc(x, i){ return '<td class="n' + (Math.abs(x - best[i]) < 1e-9 ? ' best' : '') + '">' + ovF(x) + '</td>'; }
+        h += '<tr' + (j === 0 ? ' class="ov-sep"' : '') + '><td>' + (j === 0 ? lv + '%' : '') + '</td><td class="n">' + (j === 0 ? '~' + Math.round(16128 * lv / 100).toLocaleString("vi-VN") : '') + '</td><td>' + m[0] + '</td>' +
+             cc(v[1], 1) + cc(v[2], 2) + cc(v[0], 0) + cc(av, 3) + '</tr>';
+      });
     });
-    h += '</tbody></table></div>';
-
-    h += '<p style="margin-top:22px"><strong>Các phương pháp đã chạy, so với Uniform ở từng mức giữ</strong> và so với các phương pháp trong paper SCORE ở 128 frame.</p>';
-    function lg(se){ return '<span><i class="' + (se.paper ? 'dash' : '') + '" style="' + (se.paper ? 'border-color:' : 'background:') + se.color + '"></i>' + esc(se.name) + '</span>'; }
-    h += '<figure class="ov-fig" id="ov-chart-fig" style="margin-left:0;margin-right:0">' +
-         '<div class="ov-legend"><b>Dự án tự chạy (không nén ' + ovF(dense) + '):</b>' + SER.map(lg).join("") + '</div>' +
-         '<div class="ov-legend"><b>Bảng 1 của paper SCORE (không nén ' + PV + '):</b>' + PSER.map(lg).join("") + '</div>' +
-         ovChart(ALL, dense) + '<div class="ov-tip" id="ov-tip" hidden></div><figcaption>Trục dọc: % so với bản không nén của chính nguồn đó, nên hai nhóm đường không cùng mốc. Nét liền là số dự án tự chạy bằng cấu hình đánh giá ở mục 01; nét đứt là số in trong paper SCORE (128 frame, chỉ có ở 40 / 25 / 10%). Rê chuột để xem số.</figcaption></figure>';
-    var abl = ovRows("bcat_f128_dyseg_abl").sort(function(a, b){ return b.o - a.o; })[0];
-    var dsta = ovRows("bcat_f128_dsta").find(function(r){ return r.id === "r_f128_dsta_v2_r025"; });
-    var ceil = ovRows("bcat_f128_ceiling")[0];
-    var MAT = SER.map(function(se){ return {name: se.name, by: se.by, src: "Dự án tự chạy", dense: dense}; });
-    if(abl) MAT.push({name: "Biến thể DySeg tốt nhất (" + abl.paper + ")", by: ovByLevel([abl]), src: "Dự án tự chạy", dense: dense});
-    if(dsta) MAT.push({name: "DSTA-Scorer v2 (có train)", by: ovByLevel([dsta]), src: "Dự án tự chạy", dense: dense});
-    if(ceil) MAT.push({name: "Trần: Attention không thấy câu hỏi", by: ovByLevel([ceil]), src: "Dự án tự chạy", dense: dense});
-    var nOwn = MAT.length;
-    PSER.forEach(function(se){ MAT.push({name: se.name, by: se.by, src: "Paper SCORE", dense: se.dense, paper: true}); });
-    var colMax = {};
-    OV_LEVELS.forEach(function(lv){ colMax[lv] = Math.max.apply(null, MAT.map(function(m){ return m.by[lv] ? 100 * m.by[lv].o / m.dense : -1; })); });
-    function mcell(m, lv){
-      var r = m.by[lv]; if(!r) return '<td class="n mut">—</td>';
-      var p = 100 * r.o / m.dense;
-      return '<td class="n' + (p === colMax[lv] ? ' best' : '') + '">' + ovF(r.o, m.paper ? 1 : 2) + '<span class="ov-sub">' + ovF(p, 1) + '%</span></td>';
-    }
-    h += '<div class="ov-tw"><table class="ov-t"><thead><tr><th>Phương pháp</th><th>Nguồn con số</th><th class="n">Không nén</th>' + OV_LEVELS.map(function(lv){ return '<th class="n">' + lv + '%</th>'; }).join("") + '</tr></thead><tbody>';
-    MAT.forEach(function(m, i){
-      h += '<tr' + (i === nOwn ? ' class="ov-sep"' : '') + '><td>' + esc(m.name) + '</td><td class="mut">' + m.src + '</td><td class="n">' + ovF(m.dense, m.paper ? 1 : 2) + '</td>' +
-           OV_LEVELS.map(function(lv){ return mcell(m, lv); }).join("") + '</tr>';
-    });
-    h += '</tbody></table></div><div class="ov-note">Mỗi ô: điểm VideoMME overall, dòng dưới là % so với bản không nén của chính nguồn đó. Ô đậm là % cao nhất của cột. “—” là không có số ở mức đó. ' +
-         'Các hàng “Paper SCORE” là số in trong bảng 1 của paper SCORE (Qwen2.5-VL-7B, 128 frame), do nhóm SCORE chạy bằng cấu hình đánh giá riêng của họ (mã chưa công bố); đã đối chiếu với PDF. ' +
-         'FlashVID không có số ở 128 frame trên Qwen2.5-VL-7B trong các paper đã đọc nên chưa có hàng. ' +
-         'Trong các số dự án tự chạy ở 25%, 63.15 và 63.07 là hòa (z = +0.12).</div>';
-
-    var u25 = uBy[25] ? uBy[25].o : null, u10 = uBy[10] ? uBy[10].o : null;
-    var LIT = [
-      ["Bảng của SCORE", "SCORE (có train)", "128", 63.8, 65.3, 63.6],
-      ["Bảng của SCORE", "VidCom²", "128", 63.8, 64.6, 61.8],
-      ["Bảng của SCORE", "FastVID", "128", 63.8, 63.3, 62.0],
-      ["Bảng của SCORE", "HoliTom", "128", 63.8, 60.3, 56.6],
-      ["Paper FastVID", "FastVID", "≤768", 67.3, 62.8, null],
-      ["Bảng của OTT-Vid", "OTT-Vid", "32", 62.1, 60.4, 58.7],
-      ["Bảng của OTT-Vid", "UniComp", "32", 62.1, 60.6, 58.2],
-      ["Bảng của OTT-Vid", "HoliTom", "32", 62.1, 60.3, 57.9],
-      ["Bảng của OTT-Vid", "FastVID", "32", 62.1, 59.0, 55.9],
-      ["Dự án tự chạy", "Uniform", "128", dense, u25, u10]
-    ];
-    var mx = [0, 0, 0, 0];
-    LIT.forEach(function(r){ var v = [r[4], r[5], r[4] ? 100 * r[4] / r[3] : 0, r[5] ? 100 * r[5] / r[3] : 0]; for(var i = 0; i < 4; i++) if(v[i] && v[i] > mx[i]) mx[i] = v[i]; });
-    function sc(v){ return Math.abs(v * 10 - Math.round(v * 10)) < 1e-6 ? v.toFixed(1) : v.toFixed(2); }
-    function c(v, i, isPct){ return v ? '<td class="n' + (v === mx[i] ? ' best' : '') + '">' + (isPct ? ovF(v, 1) + '%' : sc(v)) + '</td>' : '<td class="n mut">—</td>'; }
-    h += '<p style="margin-top:22px"><strong>Số trong các paper trên cùng backbone Qwen2.5-VL-7B</strong> (để tham khảo; mỗi paper dùng cấu hình đánh giá và số frame riêng nên không so trực tiếp được).</p>';
-    h += '<div class="ov-tw"><table class="ov-t"><thead><tr><th>Nguồn con số</th><th>Phương pháp</th><th class="n">Frame</th><th class="n">Không nén</th><th class="n">Giữ 25%</th><th class="n">Giữ 10%</th><th class="n">% ở 25%</th><th class="n">% ở 10%</th></tr></thead><tbody>';
-    LIT.forEach(function(r){
-      h += '<tr><td' + (r[0] === "Dự án tự chạy" ? '><strong>' + r[0] + '</strong>' : ' class="mut">' + r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="n">' + r[2] + '</td><td class="n">' + sc(r[3]) + '</td>' +
-           c(r[4], 0, false) + c(r[5], 1, false) + c(r[4] ? 100 * r[4] / r[3] : null, 2, true) + c(r[5] ? 100 * r[5] / r[3] : null, 3, true) + '</tr>';
-    });
-    h += '</tbody></table></div><div class="ov-note">“Bảng của SCORE, FastVID” nghĩa là số của FastVID do nhóm SCORE chạy lại, in trong paper SCORE. Các số này đã đối chiếu với PDF gốc. % tính riêng trên VideoMME, khác cột % trong paper (trung bình nhiều benchmark).</div></div>';
+    h += '</tbody></table></div><div class="ov-note">Ô đậm là cao nhất trong cùng mức giữ. Tất cả do dự án tự chạy trên cùng cấu hình (mục 01). HDS-MAP 3D là bản cuối (chỉ KL): 10% trung bình 3 seed, 40% trung bình 2 seed, 25% và 5% một seed (seed thứ 2 đang chấm), 2% trung bình 2 seed trên VideoMME/LVBench.</div></div>';
 
     /* 5 */
+    var H = D.hds, Ho = D.holitom;
     h += '<div class="ov-sec"><h3><span class="ov-num">05</span>Hiện trạng</h3>' +
-         '<p><strong>Chưa hướng query-agnostic nào vượt Uniform có ý nghĩa thống kê, ở bất kỳ mức giữ nào từ 40% xuống 2%.</strong></p>' +
-         '<div class="ov-tw"><table class="ov-t"><thead><tr><th>Hướng đã thử</th><th>Kết quả so với Uniform cùng mức giữ</th><th>Kết luận</th></tr></thead><tbody>' +
-         '<tr><td>KiToKe (chạy lại, siêu tham số của paper)</td><td>Thấp hơn ở cả 4 mức đã chạy (40 / 25 / 5 / 2%), z từ −2.9 đến −5.4</td><td><span class="ov-pill bad">Thua</span></td></tr>' +
-         '<tr><td>DySeg + STPrune (bản gốc)</td><td>Thấp hơn 0.9–1.9 điểm; có ý nghĩa ở 25 / 5 / 2%, chưa có ý nghĩa ở 40 / 10%</td><td><span class="ov-pill bad">Thua</span></td></tr>' +
-         '<tr><td>DySeg bỏ bước gộp token, chọn cách đều trong từng đoạn</td><td>63.15 so với 63.07 ở 25% (z = +0.12)</td><td><span class="ov-pill eq">Hòa</span></td></tr>' +
-         '<tr><td>Kiểu V-CAST (tự cài lại theo paper)</td><td>62.37 ở 25%, thấp hơn 0.70 điểm (z = −1.08)</td><td><span class="ov-pill eq">Hòa</span></td></tr>' +
-         '<tr><td>DSTA-Scorer v2 (train bằng RL, chọn theo unit thời gian)</td><td>60.22 ở 25%, thấp hơn 2.85 điểm (z = −3.63)</td><td><span class="ov-pill bad">Thua</span></td></tr>' +
-         '<tr><td>Trần: chọn theo attention, không thấy câu hỏi</td><td>63.07 ở 25%, bằng đúng Uniform (z = 0.00)</td><td><span class="ov-pill eq">Hòa</span></td></tr>' +
+         '<p><strong>HDS-MAP 3D vượt HoliTom và Uniform ở các mức nén mạnh (2–10%); ngang nhau ở 25%; còn thua HoliTom khoảng 1 điểm ở 40%.</strong></p>' +
+         '<div class="ov-tw"><table class="ov-t"><thead><tr><th>Mức giữ</th><th>So với HoliTom (VideoMME / LVBench / MLVU dev)</th><th>% của Dense trên VideoMME</th><th>Kết luận</th></tr></thead><tbody>' +
+         '<tr><td>2%</td><td>' + d(H[2], Ho[2], 1) + ' / ' + d(H[2], Ho[2], 2) + ' / ' + d(H[2], Ho[2], 0) + '</td><td>' + p(H[2], 1) + '</td><td><span class="ov-pill ok">Thắng</span></td></tr>' +
+         '<tr><td>5%</td><td>' + d(H[5], Ho[5], 1) + ' / ' + d(H[5], Ho[5], 2) + ' / ' + d(H[5], Ho[5], 0) + '</td><td>' + p(H[5], 1) + '</td><td><span class="ov-pill ok">Thắng</span></td></tr>' +
+         '<tr><td>10%</td><td>' + d(H[10], Ho[10], 1) + ' / ' + d(H[10], Ho[10], 2) + ' / ' + d(H[10], Ho[10], 0) + '</td><td>' + p(H[10], 1) + '</td><td><span class="ov-pill ok">Thắng</span></td></tr>' +
+         '<tr><td>25%</td><td>' + d(H[25], Ho[25], 1) + ' / ' + d(H[25], Ho[25], 2) + ' / ' + d(H[25], Ho[25], 0) + '</td><td>' + p(H[25], 1) + '</td><td><span class="ov-pill eq">Hòa</span></td></tr>' +
+         '<tr><td>40%</td><td>' + d(H[40], Ho[40], 1) + ' / ' + d(H[40], Ho[40], 2) + ' / ' + d(H[40], Ho[40], 0) + '</td><td>' + p(H[40], 1) + '</td><td><span class="ov-pill bad">Thua nhẹ</span></td></tr>' +
          '</tbody></table></div>' +
-         '<ul style="margin-top:12px"><li>Uniform tụt chậm: giữ 5% còn ' + pct(5) + ' của Dense, giữ 2% còn ' + pct(2) + '.</li>' +
-         '<li>Bước gộp token làm giảm điểm: bỏ nó đi thì DySeg lên ngang Uniform.</li>' +
-         '<li>Chọn theo cả unit thời gian kém chọn theo từng token ngay cả khi chưa học gì (61.48 so với 63.07 ở 25%).</li></ul></div>';
+         '<ul style="margin-top:12px"><li><strong>Những thay đổi đã thử nhưng không cải thiện</strong> (chọn trên MLVU dev): thêm CE có cổng, KL trên mẫu hỏi–đáp, phân bổ token thích ứng (chọn hộp có học, ngân sách theo đoạn thời gian). Bản cuối giữ loss chỉ KL, lưới hộp cố định.</li>' +
+         '<li><strong>Lượng dữ liệu train gần như không ảnh hưởng:</strong> 640 → 4.342 video cho MLVU dev phẳng (64–65,6); train hội tụ sau ~500–1.000 bước. Train trên clip 30 giây vẫn dùng được cho video 1–2 giờ.</li>' +
+         '<li><strong>Ổn định giữa các seed:</strong> 3 seed ở 10% cho MLVU dev 64,26–64,72.</li></ul></div>';
 
     /* 6 */
     h += '<div class="ov-sec" style="margin-bottom:50px"><h3><span class="ov-num">06</span>Hướng tiếp theo</h3>' +
-         '<ul><li><strong>Chạy nốt trần Attention ở 10%.</strong> Ở 25% trần này bằng Uniform; nếu ở 10% nó cao hơn rõ thì còn chỗ cho một scorer được train.</li>' +
-         '<li><strong>Chạy mã chính thức của FastVID bằng cấu hình đánh giá của dự án,</strong> đặt cạnh Uniform ở 25% và 10%, để loại khả năng “thua vì cài lại sai”.</li>' +
-         '<li><strong>Train theo đúng công thức SCORE:</strong> chọn từng token, 16 cách chọn mỗi video, phần thưởng so với bản không nén, có giai đoạn khởi động. Nhắm vào mức giữ 10% trở xuống.</li></ul>' +
+         '<ul><li><strong>Giai đoạn 1 bằng softmax + giảm nhiệt độ</strong> (thay argmax + STE, theo góp ý): đang train 2 biến thể ở 10% — chuyển dần về argmax, và gộp token có trọng số cả khi test.</li>' +
+         '<li><strong>Thu hẹp khoảng cách ở 25–40%,</strong> nơi HoliTom (gộp token) đang ngang hoặc nhỉnh hơn.</li>' +
+         '<li><strong>Đo thời gian thực tế:</strong> prefill, bộ nhớ KV-cache và chi phí của mô-đun nén ở từng mức giữ.</li>' +
+         '<li><strong>Thêm seed</strong> cho bảng chính ở 2 / 5 / 25 / 40%.</li></ul>' +
          '<p class="ov-note">Chi tiết từng thí nghiệm: <a href="#" onclick="ENGINE_switchTab(\'benchmark\');window.scrollTo(0,0);return false;">tab Benchmark</a> · ' +
-         'Thiết kế từng hướng: <a href="#" onclick="ENGINE_switchTab(\'idea\');window.scrollTo(0,0);return false;">tab Idea</a>.</p></div>';
+         'Thiết kế phương pháp: <a href="#" onclick="ENGINE_switchTab(\'idea\');window.scrollTo(0,0);return false;">tab Idea</a>.</p></div>';
 
     root.innerHTML = h;
-    ovBindChart(ALL, dense);
+    root.querySelectorAll("[data-ov-bk]").forEach(function(bt){
+      bt.addEventListener("click", function(){ var v = bt.getAttribute("data-ov-bk"); ovDrawChart(v === "avg" ? "avg" : Number(v)); });
+    });
+    ovDrawChart(OV_CUR);
   }
 
 /* OVERALL-JS-END */
@@ -1297,9 +1254,10 @@ function ENGINE(){
   function computeColMax(bench){
     var max = {};
     bench.columns.forEach(function(col){
-      if(col.type !== "number") return;
+      if(col.type !== "number" && !col.num) return;
       var best = null;
       bench.rows.forEach(function(row){
+        if(row.noMax) return;
         var cell = row.cells[col.id];
         if(!cell || cell.v === "" || cell.v === undefined || cell.v === null) return;
         var n = Number(cell.v);
@@ -1316,24 +1274,46 @@ function ENGINE(){
     var root = document.getElementById("benchmark-root");
     if(!root) return;
     var html = '<div class="bb-tabs">';
-    STATE.benchmarks.forEach(function(b){
+    var benches = STATE.benchmarks.filter(function(b){ return b.kind !== "ablation"; });
+    if(!benches.some(function(b){ return b.id === STATE.activeBenchmarkId; })) STATE.activeBenchmarkId = benches.length ? benches[0].id : null;
+    benches.forEach(function(b){
       var active = b.id === STATE.activeBenchmarkId;
       html += '<button class="bb-tab'+(active?' active':'')+'" onclick="ENGINE_switchBenchmark(\''+b.id+'\')">'+esc(b.name)+'</button>';
     });
     html += '<button class="btn primary small" onclick="ENGINE_addBenchmark()">+ Backbone</button>';
     html += '</div>';
 
-    var bench = STATE.benchmarks.find(function(b){ return b.id === STATE.activeBenchmarkId; });
+    var bench = benches.find(function(b){ return b.id === STATE.activeBenchmarkId; });
     if(!bench){
       root.innerHTML = html + '<div class="empty-state">Chưa có bảng backbone nào. Bấm "+ Backbone" để tạo bảng đầu tiên.</div>';
+      renderAblation();
       return;
     }
-    html += renderBenchmarkToolbar(bench);
+    root.innerHTML = html + renderBenchTable(bench);
+    renderAblation();
+  }
+
+  /* tab Ablation study: bang benchmark co kind = "ablation", ve bang cung bo cong cu */
+  function renderAblation(){
+    var root = document.getElementById("ablation-root");
+    if(!root) return;
+    var bench = STATE.benchmarks.find(function(b){ return b.kind === "ablation"; });
+    root.innerHTML = bench ? renderBenchTable(bench) : '<div class="empty-state">Chưa có bảng ablation.</div>';
+  }
+
+  function renderBenchTable(bench){
+    var html = renderBenchmarkToolbar(bench);
+    if(bench.paperLink !== undefined){   /* bang ablation: link toi paper (Overleaf) de doc method */
+      html += '<div class="bb-paperlink">📄 Method: '
+        + (bench.paperLink ? '<a href="'+esc(bench.paperLink)+'" target="_blank" rel="noopener">đọc paper (Overleaf) ↗</a>' : '<i>chưa có link Overleaf</i>')
+        + ' <button class="btn ghost small" onclick="ENGINE_setPaperLink(\''+bench.id+'\')">✎ Sửa link</button>'
+        + (bench.desc ? '<div class="bb-desc">'+esc(bench.desc)+'</div>' : '') + '</div>';
+    }
     html += '<div class="bb-wrap"><table class="bb-table">';
     html += renderBenchmarkHead(bench);
     html += '<tbody>' + renderBenchmarkBody(bench) + '</tbody>';
     html += '</table></div>';
-    root.innerHTML = html;
+    return html;
   }
 
   function renderBenchmarkToolbar(bench){
@@ -1466,7 +1446,9 @@ function ENGINE(){
       var rows = rowsInCategory(bench, cat.id);
       rows.forEach(function(r){ claimed[r.id] = true; });
       html += categoryHeaderRow(bench, cat, totalCols, false, rows.length);
-      if(!bbIsCollapsed(bench, cat)) html += renderRowsBlock(bench, columns, rows, colMax);
+      /* bang ablation: in dam gia tri cao nhat TRONG TUNG MUC (khong phai ca bang) */
+      var cm = bench.kind === "ablation" ? computeColMax({columns: columns, rows: rows}) : colMax;
+      if(!bbIsCollapsed(bench, cat)) html += renderRowsBlock(bench, columns, rows, cm);
     });
     var orphan = bench.rows.filter(function(r){ return !claimed[r.id]; });
     if(orphan.length || !cats.length){
@@ -1485,14 +1467,18 @@ function ENGINE(){
     var attrs = ' data-bench="'+bench.id+'" data-row="'+row.id+'" data-col="'+col.id+'"';
     if(rowSpan > 1) attrs += ' rowspan="'+rowSpan+'"';
     if(colSpan > 1) attrs += ' colspan="'+colSpan+'"';
-    var isMax = colMax && col.type==="number" && val!=="" && !isNaN(Number(val)) && Number(val)===colMax[col.id];
+    if(colSpan > 1 && cIdx === 0){   /* dong giai thich gop ca hang: khong gioi han do rong / khong dinh cot */
+      return '<td class="bb-info"'+attrs+' contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">'+esc(val)+'</td>';
+    }
+    var isNum = col.type === "number" || !!col.num;
+    var isMax = colMax && isNum && !row.noMax && val!=="" && !isNaN(Number(val)) && Number(val)===colMax[col.id];
     var markCls = cell.marked ? " marked" : "";
     if(col.type === "tick"){
       var tv = val || "";
       var label = tv === "free" ? "✓ Free" : tv === "based" ? "● Based" : "—";
       return '<td class="tick tick-'+(tv||"none")+markCls+'" style="'+style+'"'+attrs+' onclick="ENGINE_cycleTick(this)">'+label+'</td>';
     }
-    var cls = col.type === "number" ? "num" : "";
+    var cls = isNum ? "num" : "";
     if(isMax) cls += " col-max";
     cls += markCls;
     return '<td class="'+cls+'" style="'+style+'"'+attrs+' contenteditable="true" onfocus="ENGINE_selectCellEl(this)" onblur="ENGINE_commitCell(this)" onkeydown="ENGINE_cellKeydown(event,this)">'+esc(val)+'</td>';
@@ -1773,6 +1759,15 @@ function ENGINE(){
     var bench = STATE.benchmarks.find(function(b){ return b.id === id; });
     openPromptModal("Đổi tên backbone:", bench.name, function(name){
       bench.name = name;
+      saveAndRender();
+    });
+  };
+  window.ENGINE_setPaperLink = function(id){
+    var bench = STATE.benchmarks.find(function(b){ return b.id === id; });
+    openPromptModal("Link paper (Overleaf, http/https):", bench.paperLink || "", function(v){
+      v = (v || "").trim();
+      if(v && !/^https?:\/\//i.test(v)) return;
+      bench.paperLink = v;
       saveAndRender();
     });
   };

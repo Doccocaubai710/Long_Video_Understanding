@@ -1,0 +1,84 @@
+KET QUA DOT HDS-MAP 3D (outputs/hds2) -- cap nhat 2026-10-28 09:41 UTC
+Video-MME 2.700 cau (short/medium/long), LVBench 1.549 cau (video ~1 gio), MLVU-Test 502 cau (3 phut - 2 gio).
+Qwen2.5-VL-7B, 128 frame. z = McNemar so cap tung cau, |z| > 1,96 la co y nghia. Muc chinh: giu 10% token.
+Tien do tung buoc: outputs/hds2/STATUS*.txt. Ke hoach: outputs/hds2/queue.sh (dau file).
+
+== Video-MME ==
+
+cau hinh                   n   short  medium    long  overall   so voi moc (diem chenh, z)
+H3noDF_r010             2700   73.22   62.11   54.33    63.22  uniform_r010 +3.63 (z=+4.58) | holitom_r010 +1.89 (z=+2.59) | RAP_r010 +1.63 (z=+2.37) | vidcom2_r010 +3.30 (z=+4.11) | ELA_r010 +2.07 (z=+2.98) | dense -1.93 (z=-3.01) | H3_r010 +0.70 (z=+1.30) | H4_r010 -0.11 (z=-0.20) | H5_r010 +0.37 (z=+0.65)
+                       -> H3 bo deform (hop nhin tu dich)
+H3noSM_r010             2700   73.44   61.22   53.22    62.63  uniform_r010 +3.04 (z=+3.84) | holitom_r010 +1.30 (z=+1.76) | RAP_r010 +1.04 (z=+1.54) | vidcom2_r010 +2.70 (z=+3.41) | ELA_r010 +1.48 (z=+2.16) | dense -2.52 (z=-3.94) | H3_r010 +0.11 (z=+0.21) | H4_r010 -0.70 (z=-1.31) | H5_r010 -0.22 (z=-0.38)
+                       -> H3 bo self-mask
+H3s1_r010               2700   73.89   63.11   54.11    63.70  uniform_r010 +4.11 (z=+5.25) | holitom_r010 +2.37 (z=+3.26) | RAP_r010 +2.11 (z=+3.07) | vidcom2_r010 +3.78 (z=+4.74) | ELA_r010 +2.56 (z=+3.66) | dense -1.44 (z=-2.31) | H3_r010 +1.19 (z=+2.07) | H4_r010 +0.37 (z=+0.67) | H5_r010 +0.85 (z=+1.48)
+                       -> H3 seed 1
+H4s1_r010               2700   74.11   63.44   53.89    63.81  uniform_r010 +4.22 (z=+5.33) | holitom_r010 +2.48 (z=+3.34) | RAP_r010 +2.22 (z=+3.23) | vidcom2_r010 +3.89 (z=+4.81) | ELA_r010 +2.67 (z=+3.85) | dense -1.33 (z=-2.06) | H3_r010 +1.30 (z=+2.23) | H4_r010 +0.48 (z=+0.88) | H5_r010 +0.96 (z=+1.64)
+                       -> H4 seed 1
+R10S_r010               2700   71.22   60.67   52.78    61.56  uniform_r010 +1.96 (z=+3.02) | holitom_r010 +0.22 (z=+0.30) | RAP_r010 -0.04 (z=-0.09) | vidcom2_r010 +1.63 (z=+2.03) | ELA_r010 +0.41 (z=+0.91) | dense -3.59 (z=-5.08) | H3_r010 -0.96 (z=-1.36) | H4_r010 -1.78 (z=-2.52) | H5_r010 -1.30 (z=-1.85)
+                       -> RAP R10E + video dai ghep (doi chung cua H4)
+
+== LVBench ==
+
+cau hinh                   n entity  event u key inf reasoni tempora summari  overall   so voi moc (diem chenh, z)
+H4s1_r010               1549   39.64   38.97   43.37   42.86   33.85   36.36    39.83  uniform_r010 -0.06 (z=-0.06) | holitom_r010 +0.26 (z=+0.24) | R10E_r010 +0.77 (z=+0.77) | H4_r010 +0.32 (z=+0.38) | H5_r010 +0.13 (z=+0.15)
+                       -> H4 seed 1
+R10S_r010               1549   41.25   38.02   46.43   43.54   29.23   40.00    40.48  uniform_r010 +0.58 (z=+0.64) | holitom_r010 +0.90 (z=+0.89) | R10E_r010 +1.42 (z=+2.29) | H4_r010 +0.97 (z=+0.99) | H5_r010 +0.77 (z=+0.81)
+                       -> RAP R10E + video dai ghep (doi chung cua H4)
+
+== MLVU-Test ==
+
+cau hinh                   n      TR      AO      AC     NQA      ER     PQA  overall   so voi moc (diem chenh, z)
+H4s1_r010                502   85.71   38.57   21.67   50.00   43.40   60.00    49.40  uniform_r010 +2.99 (z=+1.78) | holitom_r010 +3.78 (z=+2.47) | R10E_r010 +0.20 (z=+0.13) | H4_r010 +0.40 (z=+0.29) | H5_r010 +1.59 (z=+1.18)
+                       -> H4 seed 1
+R10S_r010                502   84.62   35.71   21.67   50.00   49.06   54.00    48.41  uniform_r010 +1.99 (z=+1.47) | holitom_r010 +2.79 (z=+1.75) | R10E_r010 -0.80 (z=-0.85) | H4_r010 -0.60 (z=-0.36) | H5_r010 +0.60 (z=+0.37)
+                       -> RAP R10E + video dai ghep (doi chung cua H4)
+
+== Train (dong val moi nhat trong *.metrics.jsonl) ==
+
+H3noDF: buoc train 4000, val o buoc 4000: kl_rap=0.0375, kl_uniform=0.0940, gap_closed=0.7446, hop_rate=0.8700, move_t=0.7729, move_s=0.7179, raer=0.3260, ce_rap=1.2925, ce_dense=1.2682
+H3noGate: buoc train 2053, val o buoc 2000: kl_rap=0.0671, kl_uniform=0.0940, gap_closed=0.4123, hop_rate=0.8866, move_t=0.8068, move_s=0.7532, raer=0.0000, ce_rap=1.3242, ce_dense=1.2682
+H3noSM: buoc train 4000, val o buoc 4000: kl_rap=0.0382, kl_uniform=0.0940, gap_closed=0.7071, hop_rate=0.8748, move_t=0.7867, move_s=0.7299, raer=0.3304, ce_rap=1.2961, ce_dense=1.2682
+H3s1: buoc train 4000, val o buoc 4000: kl_rap=0.0376, kl_uniform=0.0940, gap_closed=0.7961, hop_rate=0.8877, move_t=0.8074, move_s=0.7233, raer=0.3329, ce_rap=1.2876, ce_dense=1.2682
+H4s1: buoc train 4000, val o buoc 4000: kl_rap=0.0340, kl_uniform=0.0887, gap_closed=0.8188, hop_rate=0.9044, move_t=0.8111, move_s=0.7892, raer=0.3294, ce_rap=1.2030, ce_dense=1.1873
+R10S: buoc train 4000, val o buoc 4000: kl_rap=0.0388, kl_uniform=0.0887, gap_closed=0.7623, ce_rap=1.2079, ce_dense=1.1873
+  (kl_rap < kl_uniform = ban nen gan ban xem du hon Uniform; hop_rate = ti le neo roi tam hop)
+
+== 20 dong cuoi STATUS_card1.txt ==
+
+2026-10-26 09:49:19 [vnptai-hoang-very-high1-0-10] KEEPALIVE START (pid 6114)
+2026-10-26 09:49:21 [vnptai-hoang-very-high1-0-10] QUEUE START card 1 (pid 6025, NVIDIA A100-SXM4-40GB)
+2026-10-26 09:49:21 [vnptai-hoang-very-high1-0-10] START train R10S (lan 1)
+2026-10-26 09:53:09 [vnptai-hoang-very-high1-0-10] KEEPALIVE START (pid 8025)
+2026-10-26 09:53:11 [vnptai-hoang-very-high1-0-10] QUEUE START card 1 (pid 7937, NVIDIA A100-SXM4-40GB)
+2026-10-26 09:53:35 [vnptai-hoang-very-high1-0-10] KEEPALIVE START (pid 8609)
+2026-10-26 09:53:37 [vnptai-hoang-very-high1-0-10] QUEUE START card 1 (pid 8511, NVIDIA A100-SXM4-40GB)
+2026-10-26 19:03:44 [vnptai-hoang-very-high1-0-10] START eval videomme/R10S (lan 1)
+2026-10-26 20:12:53 [vnptai-hoang-very-high1-0-10] DONE eval videomme/R10S
+2026-10-26 20:12:54 [vnptai-hoang-very-high1-0-10] START train H4s1 (lan 1)
+2026-10-27 05:33:40 [vnptai-hoang-very-high1-0-10] START eval videomme/H4s1 (lan 1)
+2026-10-27 06:42:07 [vnptai-hoang-very-high1-0-10] DONE eval videomme/H4s1
+2026-10-27 06:42:09 [vnptai-hoang-very-high1-0-10] START eval lvbench/C1 (lan 1)
+2026-10-27 07:12:32 [vnptai-hoang-very-high1-0-10] DONE eval lvbench/C1
+2026-10-27 07:12:34 [vnptai-hoang-very-high1-0-10] START eval mlvu/C1 (lan 1)
+2026-10-27 07:36:51 [vnptai-hoang-very-high1-0-10] DONE eval mlvu/C1
+2026-10-27 07:36:52 [vnptai-hoang-very-high1-0-10] QUEUE DONE card 1
+2026-10-27 07:39:21 [vnptai-hoang-very-high1-0-10] KEEPALIVE queue da xong het, dung keepalive
+
+== 20 dong cuoi STATUS_card2.txt ==
+
+2026-10-26 09:51:26 [vnptai-vlm-hoang03-0-74] KEEPALIVE START (pid 3046)
+2026-10-26 09:51:35 [vnptai-vlm-hoang03-0-74] QUEUE START card 2 (pid 3021, NVIDIA A100-SXM4-40GB)
+2026-10-26 09:51:35 [vnptai-vlm-hoang03-0-74] START train H3s1 (lan 1)
+2026-10-26 14:54:43 [vnptai-vlm-hoang03-0-74] START train H3noSM (lan 1)
+2026-10-26 19:58:00 [vnptai-vlm-hoang03-0-74] START train H3noDF (lan 1)
+2026-10-27 01:02:17 [vnptai-vlm-hoang03-0-74] START eval videomme/C2 (lan 1)
+2026-10-27 03:35:40 [vnptai-vlm-hoang03-0-75] KEEPALIVE START (pid 657)
+2026-10-27 03:37:11 [vnptai-vlm-hoang03-0-75] QUEUE START card 2 (pid 632, NVIDIA A100-SXM4-40GB)
+2026-10-27 03:37:11 [vnptai-vlm-hoang03-0-75] START eval videomme/H3s1 (lan 1)
+2026-10-27 03:50:14 [vnptai-vlm-hoang03-0-75] DONE eval videomme/H3s1
+2026-10-27 03:50:17 [vnptai-vlm-hoang03-0-75] START eval videomme/H3noDF (lan 1)
+2026-10-27 04:00:12 [vnptai-vlm-hoang03-0-75] DONE eval videomme/H3noDF
+2026-10-27 04:00:13 [vnptai-vlm-hoang03-0-75] START eval videomme/H3noSM (lan 1)
+2026-10-27 04:09:57 [vnptai-vlm-hoang03-0-75] DONE eval videomme/H3noSM
+2026-10-27 04:09:58 [vnptai-vlm-hoang03-0-75] START train H3noGate (lan 1)
+

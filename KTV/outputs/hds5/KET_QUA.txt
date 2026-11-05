@@ -1,0 +1,70 @@
+KET QUA DOT HDS-MAP 3D (outputs/hds5) -- cap nhat 2026-10-30 02:01 UTC
+Video-MME 2.700 cau (short/medium/long), LVBench 1.549 cau (video ~1 gio), MLVU-Test 502 cau (3 phut - 2 gio).
+Qwen2.5-VL-7B, 128 frame. z = McNemar so cap tung cau, |z| > 1,96 la co y nghia. Muc chinh: giu 10% token.
+Tien do tung buoc: outputs/hds5/STATUS*.txt. Ke hoach: outputs/hds5/queue.sh (dau file).
+
+== Video-MME ==
+
+cau hinh                   n   short  medium    long  overall   so voi moc (diem chenh, z)
+H10ce5_r040             2700   76.00   62.78   54.67    64.48  uniform_r040 +0.41 (z=+0.70) | holitom_r040 -0.78 (z=-1.36) | RAP_r040 +0.15 (z=+0.28) | vidcom2_r040 -0.96 (z=-1.64) | ELA_r040 -0.11 (z=-0.21) | dense -0.67 (z=-1.41)
+                       -> H3 o 40%, KL + CE-gate (CE chi tren token thay doan dung)
+H9ce5_r025              2700   75.44   63.56   54.11    64.37  uniform_r025 +1.30 (z=+1.98) | holitom_r025 +0.52 (z=+0.80) | RAP_r025 +0.19 (z=+0.32) | vidcom2_r025 +0.41 (z=+0.60) | ELA_r025 +0.19 (z=+0.32) | dense -0.78 (z=-1.45) | H5_r025 +0.33 (z=+0.63)
+                       -> H3 o 25%, KL + CE-gate
+
+== LVBench ==
+
+cau hinh                   n entity  event u key inf reasoni tempora summari  overall   so voi moc (diem chenh, z)
+H10ce5_r040             1549   43.04   42.40   48.98   45.58   35.38   41.82    43.45  uniform_r040 +1.55 (z=+1.92) | holitom_r040 -0.97 (z=-1.25)
+                       -> H3 o 40%, KL + CE-gate (CE chi tren token thay doan dung)
+H9ce5_r025              1549   41.61   39.92   49.49   45.58   33.85   40.00    42.03  uniform_r025 +0.32 (z=+0.34) | holitom_r025 -0.32 (z=-0.37)
+                       -> H3 o 25%, KL + CE-gate
+
+== MLVU-Test ==
+
+(chua co ket qua)
+
+== Train (dong val moi nhat trong *.metrics.jsonl) ==
+
+H10ce10: buoc train 1771, val o buoc 1750: kl_rap=0.0166, kl_uniform=0.0186, gap_closed=0.3506, hop_rate=0.4897, move_t=0.3720, move_s=0.1177, raer=0.0000, ce_rap=1.2810, ce_dense=1.2682
+H10ce5: buoc train 4000, val o buoc 4000: kl_rap=0.0225, kl_uniform=0.0186, gap_closed=2.0308, hop_rate=0.4878, move_t=0.3686, move_s=0.1191, raer=0.2100, ce_rap=1.2479, ce_dense=1.2682
+H9ce10: buoc train 2498, val o buoc 2250: kl_rap=0.0559, kl_uniform=0.0371, gap_closed=1.2161, hop_rate=0.7429, move_t=0.7556, move_s=0.2316, raer=0.2230, ce_rap=1.2587, ce_dense=1.2682
+H9ce5: buoc train 4000, val o buoc 4000: kl_rap=0.0259, kl_uniform=0.0371, gap_closed=1.3074, hop_rate=0.7363, move_t=0.7411, move_s=0.2283, raer=0.2453, ce_rap=1.2546, ce_dense=1.2682
+  (kl_rap < kl_uniform = ban nen gan ban xem du hon Uniform; hop_rate = ti le neo roi tam hop)
+
+== 20 dong cuoi STATUS_card1.txt ==
+
+2026-10-29 10:00:00 [vlm-paper-training-2gpu-0-1] KEEPALIVE START (pid 4007977)
+2026-10-29 10:00:02 [vlm-paper-training-2gpu-0-1] QUEUE START card 1 (pid 4007889, NVIDIA A100-SXM4-40GB)
+2026-10-29 10:00:02 [vlm-paper-training-2gpu-0-1] START eval mlvudev/baseA (lan 1)
+2026-10-29 12:31:15 [vlm-paper-training-2gpu-0-1] DONE eval mlvudev/baseA
+2026-10-29 12:31:26 [vlm-paper-training-2gpu-0-1] START eval lvbench/baseA (lan 1)
+2026-10-29 13:48:44 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/baseA
+2026-10-29 13:48:51 [vlm-paper-training-2gpu-0-1] START train H9ce5 (lan 1)
+2026-10-29 19:19:41 [vlm-paper-training-2gpu-0-1] START eval videomme/H9ce5 (lan 1)
+2026-10-29 20:38:24 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H9ce5
+2026-10-29 20:38:34 [vlm-paper-training-2gpu-0-1] START eval lvbench/H9ce5 (lan 1)
+2026-10-29 21:06:48 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/H9ce5
+2026-10-29 21:06:53 [vlm-paper-training-2gpu-0-1] START eval mlvudev/H9ce5 (lan 1)
+2026-10-29 22:36:37 [vlm-paper-training-2gpu-0-1] DONE eval mlvudev/H9ce5
+2026-10-29 22:36:41 [vlm-paper-training-2gpu-0-1] START train H9ce10 (lan 1)
+
+== 20 dong cuoi STATUS_card2.txt ==
+
+2026-10-29 10:00:02 [vlm-paper-training-2gpu-0-1] KEEPALIVE START (pid 4008120)
+2026-10-29 10:00:04 [vlm-paper-training-2gpu-0-1] QUEUE START card 2 (pid 4008024, NVIDIA A100-SXM4-40GB)
+2026-10-29 10:00:05 [vlm-paper-training-2gpu-0-1] START eval mlvudev/baseB (lan 1)
+2026-10-29 12:43:08 [vlm-paper-training-2gpu-0-1] START eval mlvudev/baseB (lan 2)
+2026-10-29 12:51:23 [vlm-paper-training-2gpu-0-1] START eval mlvudev/baseB (lan 3)
+2026-10-29 12:59:33 [vlm-paper-training-2gpu-0-1] START eval mlvudev/baseB (lan 4)
+2026-10-29 13:07:37 [vlm-paper-training-2gpu-0-1] FAIL eval mlvudev/baseB
+2026-10-29 13:07:41 [vlm-paper-training-2gpu-0-1] START eval lvbench/baseB (lan 1)
+2026-10-29 14:01:06 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/baseB
+2026-10-29 14:01:09 [vlm-paper-training-2gpu-0-1] START train H10ce5 (lan 1)
+2026-10-29 19:57:42 [vlm-paper-training-2gpu-0-1] START eval videomme/H10ce5 (lan 1)
+2026-10-29 21:20:23 [vlm-paper-training-2gpu-0-1] DONE eval videomme/H10ce5
+2026-10-29 21:20:28 [vlm-paper-training-2gpu-0-1] START eval lvbench/H10ce5 (lan 1)
+2026-10-29 21:52:51 [vlm-paper-training-2gpu-0-1] DONE eval lvbench/H10ce5
+2026-10-29 21:52:55 [vlm-paper-training-2gpu-0-1] START eval mlvudev/H10ce5 (lan 1)
+2026-10-29 23:24:53 [vlm-paper-training-2gpu-0-1] DONE eval mlvudev/H10ce5
+2026-10-29 23:24:59 [vlm-paper-training-2gpu-0-1] START train H10ce10 (lan 1)
+

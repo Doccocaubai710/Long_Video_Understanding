@@ -1,0 +1,73 @@
+DOT HDS7 -- PLAN 3 NGAY (30/10 17:30 -> 2/11 17:30 gio VN), 2 x A100 40GB. Da duyet 30/10.
+Ket qua cap nhat lien tuc: outputs/hds7/KET_QUA.txt (sau moi job + moi 30 phut). Tien do: STATUS_gpu0.txt, STATUS_gpu1.txt.
+Chay lai sau khi pod khoi dong lai: bash /home/hoang/Long_Video_Understanding/KTV/outputs/hds7/start.sh
+
+NGUYEN TAC
+- Muc chinh 10%. Cau hinh goc H3ce = KL + CE-gate 0.2, cua so +-3, s2_start 2000, lr 1e-4, 4000 buoc, data LLaVA 2.569 video.
+- Chon cau hinh CHI tren MLVU dev. VideoMME + LVBench cham 1 lan o cuoi.
+- Quy tac hoa: chenh < 1 diem MLVU dev -> giu mac dinh (nhieu seed o 10% ~1,2 diem).
+- Train lien tuc, cham gop nhieu checkpoint 1 lan (eval_multi).
+
+THI NGHIEM (10%, 4000 buoc)
+ Nhom 1 (chon C*):  L1 CE-gate 0.5 | L2 CE-gate 1.0 | L3 CE khong gate 0.2 | L4 H3ce seed 1 | W1 cua so +-1 | W2 cua so +-5
+                    H3noGate train tiep (bang ablation thanh phan). Co san: H3, H3s1 (KL), H3ce.
+ C*: outputs/hds7/choose_cstar.py tu chon khi cham xong MLVU dev nhom 1 (ly do: CSTAR_ly_do.txt).
+ Nhom 2 (theo C*):  Dq 1/4 data (640) | Dh 1/2 data (1.280) | D2x ~1,7x data (4.342 video, chi 1.773 video tai them co caption; neu chua tai xong -> Dx8 1/8 = 320)
+                    S2 seed khac | X25, X5 C* o 25% / 5% | V1 C* + Vript (neu C* != H3ce, nguoc lai CEo = chi CE caption)
+ Du phong:          GPU0: S3 (seed thu 3), X40 | GPU1: H3s2 (KL seed 2) hoac L4s2, X2
+
+THU TU
+ GPU0: [H3cv dang chay] -> L1 -> L3 -> W1 -> MLVU(W1) -> [C*] -> Dq -> Dh -> X25 -> X5 -> MLVU(X25,X5)
+       -> VideoMME + LVBench(S2,Dq,Dh,D2x/Dx8,H3cv,X25,X5) -> S3 -> X40 -> cham 3 bo
+ GPU1: [eval RAP LVBench hds6] -> L2 -> L4 -> W2 -> MLVU(H3,H3s1,H3cv,L1..L4,W2) -> H3noGate -> MLVU(H3noGate)
+       -> [C*] -> D2x/Dx8 -> S2 -> V1/CEo -> MLVU(Dq,Dh,D2x/Dx8,S2,V1/CEo)
+       -> VideoMME + LVBench(L1..L4,W1,W2,H3noGate,V1/CEo) -> H3s2/L4s2 -> X2 -> cham 3 bo
+
+GIAI DOAN 0 (da lam 30/10)
+- rap/train_rap_elastic.py: them --max_videos, --extra_video_root, --max_extra (ban cu: train_rap_elastic.py.bak_20261030).
+- Tai them 2 tar LLaVA-Video-178K (0_30_s videos_2,3) vao Datasets/LLaVA-Video-178K-x2 (thu muc rieng, tap 1x khong doi).
+- Kiem tra trung video: Vript (682 / 1.000) va LLaVA 1x KHONG trung YouTube ID nao voi VideoMME (900) va LVBench (103).
+  (MLVU dev dat ten file khong theo YouTube ID nen chua kiem duoc.)
+- Chi so val lam proxy: tuong quan Spearman voi VideoMME 10% (13 checkpoint): gap_closed 0,60, kl_rap -0,48, ce_rap -0,47;
+  voi LVBench <= 0,45 -> khong du tin, van chon bang MLVU dev.
+- Phat hien: DPP gan nhu khong hoat dong trong HDS (dpp=0 o ~95-100% so buoc) -> sua cau trong paper.
+
+NOI TIEP (them 31/10, chay tu dong khi queue chinh xong -- card khong bao gio ranh; keepalive tu chuyen sang)
+ GPU0 (gpu0_extra.sh): NGce = C* bo cong (1-r) train tu dau -> cham 3 bo -> lap vo han C* seed 4, 6, 8, ... (cham 3 bo moi seed)
+ GPU1 (gpu1_extra.sh): D2x8k = 1,7x data, 8000 buoc -> L2s1 = CE-gate 1.0 seed 1 -> lap vo han C* seed 5, 7, 9, ...
+ Muon dung: pkill -f "outputs/hds7/(keepalive|gpu)" (keepalive se chay lai queue neu chi giet queue).
+ (2/11 09:00 VN) UU TIEN muc 40%, cua so +-3: GPU0 K40 (chi KL, seed 0) -> X40s1 (C*, seed 1) -> cham X40s1 -> NGce (resume) ...
+                 GPU1 K40s1 (chi KL, seed 1) -> cham K40 + K40s1 -> L2s1 (resume) ... Ket qua: muc 7 trong KET_QUA.txt.
+
+PLAN 20 GIO (2/11 17:30 -> 3/11 ~14:00 VN) -- chot huong CHI KL; thu 1 thay doi co the cai thien (Q1)
+ GPU0: X40s1 (dang chay, ~22:30) -> cham 3 bo -> K5 (chi KL 5%) -> K2s1 (chi KL 2%, seed 1) -> cham K2s1  [-> K5s1, NGce, seed C*...]
+ GPU1: cham K40+K40s1 (~19:15) -> Q1 = chi KL + --qa_prob 0.5 --w_ce_qa 0 (KL tren phan phoi dap an cua ban day du, khong dung dap an dung)
+       -> cham 3 bo -> q1_gate.py: DAT neu TB VM+LVB >= chi KL + 1.0 va MLVU dev >= chi KL + 0.5 -> them Q1s1
+       -> K25 (chi KL 25%) -> cham K5 + K25  [-> K25s1, L2s1, seed C*...]
+ Ket qua: KET_QUA.txt muc 1 (Q1), 7 (40%), 8 (bang chinh chi KL). Hinh: python outputs/hds7/figs/make_figs.py
+
+PHAN BO TOKEN THICH UNG (3/11 14:00 VN) -- bo K5s1/K25s1 (se resume sau), moi card 1 cach, 10%, chi KL
+ GPU0: BX10 = cach 1, chon hop co hoc (--hds_alloc box): luoi min 2K hop, diem moi hop, giu K hop cao nhat (prior rai deu o buoc 0)
+ GPU1: SG10 = cach 2, ngan sach theo doan thoi gian (--hds_alloc seg --alloc_floor 0.5): doan dai = chieu thoi gian hop goc
+ -> cham 3 bo -> K5s1 / K25s1 (resume) -> ... Code: rap/hds_model.py (BoxSelectSlider, SegBudgetSlider; ban cu .bak_20261103).
+ Ket qua: muc 9 trong KET_QUA.txt (so voi chi KL 3 seed: MLVU dev 64,43, TB VM+LVB 51,89).
+
+PLAN 20 GIO #2 (3/11 14:30 -> 4/11 ~10:30 VN) -- re nhanh tu dong theo alloc_gate.py (tieu chi dat truoc, giong Q1:
+ TB VM+LVB >= chi KL 3 seed + 1.0 VA MLVU dev >= chi KL + 0.5; ly do ghi vao ALLOC_gate.txt)
+ GPU0: BX10 (~21:00) -> cham 3 bo (~00:30) -> DAT: BX10s1 + BX5 -> cham | KHONG DAT: K5s1 (resume) + D20 (20 video) -> cham
+       -> lap vo han: K5s{k} + K2s{k}, k = 2, 3, ...
+ GPU1: SG10 (~21:00) -> cham 3 bo (~00:30) -> DAT: SG10s1 + SG5 -> cham | KHONG DAT: K25s1 (resume) + D80 (80 video) -> cham
+       -> lap vo han: K25s{k} + K40s{k}, k = 2, 3, ...
+ Ket qua: KET_QUA.txt muc 9 (10%), 9b (5%), 8 (bang chinh chi KL, them seed).
+
+THU FEEDBACK GIAI DOAN 1 (4/11 10:17 VN) -- xuoi softmax + giam nhiet do thay argmax + STE; TAM NGUNG vong seed
+ GPU0: SM10 = --hds_soft anneal --tau1 0.05 (xuoi soft khi train, tau cosine 1.0 -> 0.05, 15% buoc cuoi + test = argmax)
+ GPU1: SMg10 = --hds_soft merge --tau1 0.3 (xuoi soft ca khi test = gop token co trong so trong hop)
+ -> cham 3 bo cung K5s1+D20 (GPU0) / K25s1+D80 (GPU1) -> du phong: vong seed cu. Code: rap/hds_model.py (ban cu .bak_20261104).
+
+ABLATION 25% / 40% (5/11 11:53 VN) -- theo y kien: 10% da on, tim cach nang 25% / 40%. Ket qua: tab Ablation tren web public (push_ablation.py tu day).
+ GPU0 nhom C: do luoi lambda co dinh, 1 lambda chung (0 / 0,5 = mac dinh K25 / K40 / 1 / 2) o x25 + x40 -> pick_lambda.py -> do min -> VM + LVB.
+      (truoc do: cham not VideoMME / LVBench K25s2, K40s2 = moc tham chieu)
+ GPU1 nhom D: BK2 / BK4 = hop to 2x / 4x, chon 2 / 4 token moi hop (40%: mac dinh bo trang 20% so hop) | BM1 = vuot bien 1 token. x25 + x40.
+ Code: rap/hds_model.py (lam_mode, pen_scale, box_shape, box_margin + giai trung, box_k; ban cu .bak_20261105), train: --lam_mode --box_k ...
+ Xong -> vong seed chi KL (cho anh duyet seed moi).
